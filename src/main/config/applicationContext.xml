@@ -27,7 +27,7 @@
 			expression="edu.zju.bme.clever.webisite.controller.*" />
 	</context:component-scan>
     
-    <jaxws:client 
+    <!-- <jaxws:client 
     	id="wsclient"
 		serviceClass="edu.zju.bme.clever.service.CleverService"
 		address="${service.url}?wsdl">
@@ -37,12 +37,12 @@
     	id="wsclientvalidation"
 		serviceClass="edu.zju.bme.clever.service.CleverService"
 		address="${validation.url}?wsdl">
-	</jaxws:client>
+	</jaxws:client> -->
 	
 	
 	<!-- hibernate start -->
 	<bean id="c3p0DataSource" destroy-method="close" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <property name="driverClass" value="net.sourceforge.jtds.jdbc.Driver" />
+        <property name="driverClass" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
         <property name="jdbcUrl" value="${database.url}" />
         <property name="user" value="${database.username}" />
         <property name="password" value="${database.password}" />
