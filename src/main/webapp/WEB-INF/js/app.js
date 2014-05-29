@@ -1,0 +1,1 @@
+angular.module('cleverManagementApp', [ 'ui.bootstrap', 'clever.management.directives.mainarea' ]);
