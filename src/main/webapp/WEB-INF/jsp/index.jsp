@@ -16,17 +16,35 @@ pageEncoding="UTF-8"%>
 	<body ng-controller="AppCtrl">
 		<!-- header -->
 		<%@ include file="jspf/header.jspf"%>
+		<div class="container content-container" >
+			<div class="row" style="margin-bottom: 20px">
+				<div class="btn-group">
+					<div class="col-xs-12 col-md-12 col-lg-12">
+						<button type="button" class="btn btn-default" ng-click="openUploadModal('lg')">
+							<span class="glyphicon glyphicon-upload"></span> Upload archetypes
+						</button>
+						<button type="button" class="btn btn-default">
+							<span class="glyphicon glyphicon-plus"></span> New archetype
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="row" style="height: 500px">
+				<div class="col-xs-12 col-md-12 col-lg-12 hbox">
+					<nav ng-show="!isNavbarCollapsed" id="navbar">
+						dfdfasdf
+					</nav>
+					<splitter>
+						<i style="cursor: pointer" ng-click="openNavbar()" ng-show="isNavbarCollapsed"><span class="glyphicon glyphicon-chevron-right" ></span></i>
+						<i style="cursor: pointer" ng-click="collapseNavbar()" ng-show="!isNavbarCollapsed"><span class="glyphicon glyphicon-chevron-left" ></span></i>
+					</splitter>
+					<div class="flexBox">
+						dfasfasd
+					</div>
+				</div>
 
-		<mainarea>
-			<mainarea-navbar>
-			<span style="background-color: red">{{isNavbarCollapsed}}</span>		
-			</mainarea-navbar>
-			<mainarea-splitter>
-			</mainarea-splitter>
-			<mainarea-content style="background-color: blue">
-			{{isNavbarCollapsed}}
-			</mainarea-content>
-		</mainarea>
+			</div>
+		</div>
 
 		<!-- footer -->
 		<%@ include file="jspf/footer.jspf"%>

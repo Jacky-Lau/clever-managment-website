@@ -1,9 +1,33 @@
 angular.module('clever.management.directives.mainarea', []).directive('mainarea', function() {
 	return {
 		restrict : 'EA',
-		controller : mainareaCtrl,
+		scope : {},
+		controller : function($scope) {
+
+			$scope.isNavbarCollapsed = false;
+			$scope.collapseNavbar = function() {
+				$scope.isNavbarCollapsed = true;
+			};
+			$scope.openNavbar = function() {
+				$scope.isNavbarCollapsed = false;
+			};
+			$scope.navbarWidth = 300;
+			this.setNavbarWidth = function(width) {
+				$scope.navbarWidth = width;
+			};
+			$scope.getNavbarStyle = function(nvabarWidth) {
+				return {
+					width : nvabarWidth
+				};
+			};
+
+		},
 		link : function(scope, element, attrs) {
 			element.addClass('hbox');
+			element.css({
+				height : '500px',
+				width : '100%'
+			});
 		},
 	};
 }).directive('mainareaNavbar', function() {
@@ -11,7 +35,9 @@ angular.module('clever.management.directives.mainarea', []).directive('mainarea'
 		require : '^mainarea',
 		transclude : true,
 		restrict : 'EA',
-		controller : mainareaNavbarCtrl,
+		controller : function($scope){
+			
+		},
 		templateUrl : 'resources/components/mainarea/mainarea-navbar.html'
 	};
 }).directive('mainareaSplitter', ['$document',
@@ -19,11 +45,19 @@ function($document) {
 	return {
 		require : '^mainarea',
 		restrict : 'EA',
-		controller : mainareaSplitterCtrl,
+		controller : function($scope){
+			
+		},
 		link : function(scope, element, attrs, mainareaCtrl) {
 			var startX = 0;
-			var minWidth = attrs.minWidth || 335;
-			var maxWidth = attrs.maxWidth || 966;
+			var minWidth = attrs.minWidth || 350;
+			var maxWidth = attrs.maxWidth || 900;
+
+			element.css({
+				height : '100%',
+				cursor : 'e-resize',
+				display : 'block'
+			});
 
 			element.on('mousedown', function(event) {
 				// Prevent default dragging of selected content
@@ -43,7 +77,7 @@ function($document) {
 				if (nextWidth > maxWidth) {
 					nextWidth = maxWidth;
 				}
-				
+
 				mainareaCtrl.setNavbarWidth(nextWidth);
 				console.log(nextWidth);
 			}
@@ -60,6 +94,8 @@ function($document) {
 	return {
 		require : '^mainarea',
 		restrict : 'EA',
-		controller : mainareaContentCtrl
+		controller : function($scope){
+			
+		}
 	};
 });

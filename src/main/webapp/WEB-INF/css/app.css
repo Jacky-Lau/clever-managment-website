@@ -18,3 +18,40 @@
 	-moz-box-orient: vertical;
 	-ms-flex-direction: column;
 }
+
+.flexBox {
+	position: relative;
+	height: 100%;
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	-ms-flex: 1;
+}
+
+#navbar {
+	background-color: whiteSmoke;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+	margin: -1px;
+}
+
+.content-container {
+	width: 100%;
+	padding: 0 15px;
+}
+
+.fileinput-button {
+	position: relative;
+	overflow: hidden;
+}
+
+.fileinput-button input {
+position: absolute;
+top: 0;
+right: 0;
+margin: 0;
+opacity: 0;
+-ms-filter: 'alpha(opacity=0)';
+font-size: 200px;
+direction: ltr;
+cursor: pointer;
+}

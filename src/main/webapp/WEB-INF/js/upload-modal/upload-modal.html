@@ -1,0 +1,41 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="cancel()">
+		&times;
+	</button>
+	<h3 class="modal-title">{{title}}</h3>
+</div>
+<div class="modal-body">
+	<div class="content-container">
+		<div class="row">
+			<div class="col-xs-12 col-md-12 col-lg-12">
+				<button class="btn btn-success fileinput-button">
+					<span class="glyphicon glyphicon-plus"></span> Add files...
+					<input id="inputFiles" type="file" files-model multiple>
+				</button>
+			</div>
+		</div>
+		<br/>
+		<div class="row">
+			<div class="col-xs-12 col-md-12 col-lg-12" style="max-height: 400px; overflow: auto">
+				<table role="presentation" class="table table-striped" ng-show="fileList.length">
+					<tbody>
+						<tr ng-repeat="file in fileList | orderBy:file.name">
+							<td>{{file.name}}</td>
+							<td>{{file.size/1024 | number:0}}KB</td>
+							<td><button class="btn btn-warning"><span class="glyphicon glyphicon-circle"></span></button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<br/>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="ok()" disabled="!isUploadEnabled">
+		Start upload
+	</button>
+	<button class="btn btn-warning" ng-click="cancel()">
+		Cancel
+	</button>
+</div>

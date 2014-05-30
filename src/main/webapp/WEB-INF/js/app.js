@@ -1,1 +1,2 @@
-angular.module('cleverManagementApp', [ 'ui.bootstrap', 'clever.management.directives.mainarea' ]);
+angular.module('clever.management.directives', ['clever.management.directives.splitter','clever.management.directives.filesModel']);
+angular.module('cleverManagementApp', [ 'ui.bootstrap', 'clever.management.directives' ]);
