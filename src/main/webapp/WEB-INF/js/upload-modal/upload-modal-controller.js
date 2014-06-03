@@ -1,11 +1,15 @@
 function uploadModalCtrl($scope, $modalInstance) {
 
 	$scope.title = "Upload Archetypes";
-	$scope.isUploadEnabled = false;
 	$scope.fileList = [];
+	$scope.commitSequence = null;
 
-	$scope.ok = function() {
-		$modalInstance.close();
+	$scope.isUploadEnabled = function() {
+		return $scope.commitSequence == null && $scope.fileList.length > 0;
+	};
+
+	$scope.uploadFiles = function() {
+
 	};
 
 	$scope.cancel = function() {
@@ -13,9 +17,9 @@ function uploadModalCtrl($scope, $modalInstance) {
 	};
 
 	$scope.deleteFile = function(fileName) {
-		for ( i = 0; i < $scope.fileList; i++) {
-			if (fileList[i].name == fileName) {
-				fileList.splice(i, 1);
+		for ( i = 0; i < $scope.fileList.length; i++) {
+			if ($scope.fileList[i].name == fileName) {
+				$scope.fileList.splice(i, 1);
 			}
 		}
 	};

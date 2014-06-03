@@ -17,12 +17,26 @@
 		<br/>
 		<div class="row">
 			<div class="col-xs-12 col-md-12 col-lg-12" style="max-height: 400px; overflow: auto">
-				<table role="presentation" class="table table-striped" ng-show="fileList.length">
+				<table role="presentation" class="table table-striped table-hover" ng-show="fileList.length">
 					<tbody>
-						<tr ng-repeat="file in fileList | orderBy:file.name">
-							<td>{{file.name}}</td>
-							<td>{{file.size/1024 | number:0}}KB</td>
-							<td><button class="btn btn-warning"><span class="glyphicon glyphicon-circle"></span></button></td>
+						<tr ng-repeat="file in fileList | orderBy:file.name" ng-class="{TOUPLOAD: '', UPLOADED: 'success', EXISTED: 'info', CHANGED: 'warning', INVALID: 'danger'}[file.status]">
+							<td style="vertical-align: middle;">
+								<span ng-show="file.status=='TOUPLOAD'"><span class="glyphicon glyphicon-plus-sign"></span> To upload</span>
+								<span ng-show="file.status=='UPLOADED'"><span class="glyphicon glyphicon-ok-sign"></span> Uploaded</span>
+								<span ng-show="file.status=='EXISTED'"><span class="glyphicon glyphicon-info-sign"></span> Existed</span>
+								<span ng-show="file.status=='CHANGED'"><span class="glyphicon glyphicon-question-sign"></span> Changed</span>
+								<span ng-show="file.status=='INVALID'"><span class="glyphicon glyphicon-remove-sign"></span> Invalid</span>
+							</td>
+							<td style="vertical-align: middle;">{{file.file.name}}</td>
+							<td style="vertical-align: middle;">{{file.file.size/1024 | number:0}}KB</td>
+							<td style="vertical-align: middle;">
+								<button ng-show="file.status=='TOUPLOAD'" type="button" class="btn btn-warning" ng-click="deleteFile(file.file.name)">
+									Delete
+								</button>
+								<button ng-show="file.status=='CHANGED'" type="button" class="btn btn-warning" ng-click="deleteFile(file.file.name)">
+									Overwrite
+								</button>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -32,7 +46,7 @@
 	</div>
 </div>
 <div class="modal-footer">
-	<button class="btn btn-primary" ng-click="ok()" disabled="!isUploadEnabled">
+	<button class="btn btn-primary" ng-click="uploadFiles()" ng-disabled="!isUploadEnabled()">
 		Start upload
 	</button>
 	<button class="btn btn-warning" ng-click="cancel()">
