@@ -14,4 +14,5 @@ public interface ArchetypePersistanceService {
 	public CommitSequence getNewCommitSequence();
 
 	public CommitSequence getCommitSequenceById(Integer id);
+	
 }

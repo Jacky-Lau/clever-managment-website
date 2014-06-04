@@ -18,7 +18,6 @@ import org.hibernate.criterion.Restrictions;
  * 
  * @param <T>
  */
-@SuppressWarnings("unchecked")
 public class GenericDaoImpl<T, ID extends Serializable> implements
 		GenericDao<T, ID> {
 	private Class<T> clazz;
@@ -77,7 +76,7 @@ public class GenericDaoImpl<T, ID extends Serializable> implements
 	}
 
 	@Override
-	public List<T> findByHQL(String hql, Object... params) {
+	public List findByHQL(String hql, Object... params) {
 		Query query = this.getSession().createQuery(hql);
 		for (int i = 0; params != null && i < params.length; i++) {
 			query.setParameter(i, params);
@@ -86,7 +85,7 @@ public class GenericDaoImpl<T, ID extends Serializable> implements
 	}
 
 	@Override
-	public List<T> findByHQL(String hql, Map<String, ?> map) {
+	public List findByHQL(String hql, Map<String, ?> map) {
 		Query query = this.getSession().createQuery(hql);
 		query.setProperties(map);
 		return query.list();

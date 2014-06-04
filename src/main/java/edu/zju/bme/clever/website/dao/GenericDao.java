@@ -18,9 +18,9 @@ public interface GenericDao<T, ID extends Serializable> {
 
 	public T findById(ID id);
 
-	public List<T> findByHQL(String hql, Object... params);
+	public List findByHQL(String hql, Object... params);
 
-	public List<T> findByHQL(String hql, Map<String, ?> map);
+	public List findByHQL(String hql, Map<String, ?> map);
 	
 	public List<T> selectAll();
 

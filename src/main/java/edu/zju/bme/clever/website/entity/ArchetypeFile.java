@@ -44,6 +44,10 @@ public class ArchetypeFile implements Serializable{
 	@ManyToOne
 	private CommitSequence commitSequence;
 	
+	public ArchetypeFile(){
+		
+	}
+	
 	public Integer getId() {
 		return id;
 	}
