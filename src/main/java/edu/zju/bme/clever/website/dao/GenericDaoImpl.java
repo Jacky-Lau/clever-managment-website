@@ -50,7 +50,7 @@ public class GenericDaoImpl<T, ID extends Serializable> implements
 	public void save(T entity) {
 		this.getSession().save(entity);
 	}
-	
+
 	@Override
 	public void update(T entity) {
 		this.getSession().update(entity);
@@ -90,6 +90,12 @@ public class GenericDaoImpl<T, ID extends Serializable> implements
 		Query query = this.getSession().createQuery(hql);
 		query.setProperties(map);
 		return query.list();
+	}
+
+	@Override
+	public List<T> selectAll() {
+		String hql = "from " + clazz.getName();
+		return this.findByHQL(hql);
 	}
 
 	@Override

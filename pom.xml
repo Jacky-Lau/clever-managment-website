@@ -21,6 +21,7 @@
 		<jetty.version>9.0.7.v20131107</jetty.version>
 		<cometD.version>2.8.0</cometD.version>
 		<hibernate.version>4.3.0.Final</hibernate.version>
+		<openEHR.version>1.0.5.3</openEHR.version>
 		<server.port>9095</server.port>
 	</properties>
 
@@ -33,8 +34,8 @@
 				<database.url>jdbc:sqlserver://172.16.100.33;instanceName=SXDYY;databaseName=CLEVER_MANAGEMENT_WEBSITE_DEV</database.url>
 				<database.username>sa</database.username>
 				<database.password>@Sxdyy0808</database.password>
-				<service.url>http://localhost:9091/clever-service-orm/CleverService</service.url>
-				<validation.url>http://localhost:9093/clever-service-orm/CleverService</validation.url>
+				<service.url>http://172.16.100.63:9091/clever-service-orm/CleverService</service.url>
+				<validation.url>http://172.16.100.63:9093/clever-service-orm/CleverService</validation.url>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -83,28 +84,28 @@
 					</httpConnector>
 				</configuration>
 			</plugin>
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.cxf</groupId> -->
-<!-- 				<artifactId>cxf-codegen-plugin</artifactId> -->
-<!-- 				<version>${cxf.version}</version> -->
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<id>generate-sources</id> -->
-<!-- 						<phase>generate-sources</phase> -->
-<!-- 						<configuration> -->
-<!-- 							<sourceRoot>${basedir}/target/generated-sources</sourceRoot> -->
-<!-- 							<wsdlOptions> -->
-<!-- 								<wsdlOption> -->
-<!-- 									<wsdl>${service.url}?wsdl</wsdl> -->
-<!-- 								</wsdlOption> -->
-<!-- 							</wsdlOptions> -->
-<!-- 						</configuration> -->
-<!-- 						<goals> -->
-<!-- 							<goal>wsdl2java</goal> -->
-<!-- 						</goals> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-<!-- 			</plugin> -->
+			<plugin>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-codegen-plugin</artifactId>
+				<version>${cxf.version}</version>
+				<executions>
+					<execution>
+						<id>generate-sources</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<sourceRoot>${basedir}/target/generated-sources</sourceRoot>
+							<wsdlOptions>
+								<wsdlOption>
+									<wsdl>${service.url}?wsdl</wsdl>
+								</wsdlOption>
+							</wsdlOptions>
+						</configuration>
+						<goals>
+							<goal>wsdl2java</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 		<resources>
 			<resource>
@@ -123,7 +124,7 @@
 			</resource>
 		</resources>
 	</build>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -331,6 +332,18 @@
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
 			<version>${jackson.version}</version>
+		</dependency>
+
+		<!-- openEHR -->
+		<dependency>
+			<groupId>openehr</groupId>
+			<artifactId>adl-parser</artifactId>
+			<version>${openEHR.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>openehr</groupId>
+			<artifactId>adl-serializer</artifactId>
+			<version>${openEHR.version}</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

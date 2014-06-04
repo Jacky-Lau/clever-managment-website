@@ -28,8 +28,6 @@ public class CommitSequence implements Serializable {
 	@GeneratedValue
 	@Column(name="ID")
 	private Integer id;
-	@Column(name="COMMIT_VALIDATION")
-	private String commitValidation;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "COMMIT_TIME")
 	private Calendar commitTime;
@@ -39,12 +37,6 @@ public class CommitSequence implements Serializable {
 	}
 	public void setId(Integer id) {
 		this.id = id;
-	}
-	public String getCommitValidation() {
-		return commitValidation;
-	}
-	public void setCommitValidation(String commitValidation) {
-		this.commitValidation = commitValidation;
 	}
 	public Calendar getCommitTime() {
 		return commitTime;

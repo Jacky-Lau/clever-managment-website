@@ -22,12 +22,12 @@
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" /> 
 	
     <context:annotation-config />
-    <context:component-scan base-package="du.zju.bme.clever.webisite">
+    <context:component-scan base-package="edu.zju.bme.clever.website">
 		<context:exclude-filter type="regex"
 			expression="edu.zju.bme.clever.webisite.controller.*" />
 	</context:component-scan>
     
-    <!-- <jaxws:client 
+    <jaxws:client 
     	id="wsclient"
 		serviceClass="edu.zju.bme.clever.service.CleverService"
 		address="${service.url}?wsdl">
@@ -37,7 +37,7 @@
     	id="wsclientvalidation"
 		serviceClass="edu.zju.bme.clever.service.CleverService"
 		address="${validation.url}?wsdl">
-	</jaxws:client> -->
+	</jaxws:client>
 	
 	
 	<!-- hibernate start -->

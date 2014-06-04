@@ -21,6 +21,8 @@ public interface GenericDao<T, ID extends Serializable> {
 	public List<T> findByHQL(String hql, Object... params);
 
 	public List<T> findByHQL(String hql, Map<String, ?> map);
+	
+	public List<T> selectAll();
 
 	public T findUniqueByProperty(String propertyName, Object value);
 }

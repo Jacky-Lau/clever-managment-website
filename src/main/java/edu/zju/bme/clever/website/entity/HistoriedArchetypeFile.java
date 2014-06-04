@@ -30,7 +30,8 @@ public class HistoriedArchetypeFile implements Serializable{
 	@GeneratedValue
 	@Column(name="ID")
 	private Integer id;
-	@Column(name="NAME", unique = true)
+	// @Column(name="NAME", unique = true) the historied version need not to be unique
+	@Column(name="NAME")
 	private String name;
 	@Lob
 	@Column(name="CONTENT")

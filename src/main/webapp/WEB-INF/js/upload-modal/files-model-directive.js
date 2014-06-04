@@ -14,11 +14,14 @@ function($parse) {
 					}
 					if (!contained) {
 						$scope.fileList.push({
+							name : newFiles[i].name,
+							size : newFiles[i].size,
 							file : newFiles[i],
 							status : 'TOUPLOAD'
 						});
 					}
 				}
+				$element.val('');
 				$scope.$apply();
 			});
 		}
