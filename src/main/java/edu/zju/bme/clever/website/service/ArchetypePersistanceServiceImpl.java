@@ -51,7 +51,6 @@ public class ArchetypePersistanceServiceImpl implements
 		historiedArchetypeFile.setName(archetypeFile.getName());
 		historiedArchetypeFile.setContent(archetypeFile.getContent());
 		historiedArchetypeFile.setCommitSequence(archetypeFile.getCommitSequence());
-		historiedArchetypeFile.setDescription(archetypeFile.getDescription());
 		historiedArchetypeFile.setHistoriedTime(Calendar.getInstance());
 		this.archetypeFileDao.save(archetypeFile);
 		this.historiedArchetypeFileDao.save(historiedArchetypeFile);
@@ -59,11 +58,11 @@ public class ArchetypePersistanceServiceImpl implements
 	
 	@Override
 	public void updateArchetypeFile(ArchetypeFile archetypeFile){
+		archetypeFile.setModifyTime(Calendar.getInstance());
 		HistoriedArchetypeFile historiedArchetypeFile = new HistoriedArchetypeFile();
 		historiedArchetypeFile.setName(archetypeFile.getName());
 		historiedArchetypeFile.setContent(archetypeFile.getContent());
 		historiedArchetypeFile.setCommitSequence(archetypeFile.getCommitSequence());
-		historiedArchetypeFile.setDescription(archetypeFile.getDescription());
 		historiedArchetypeFile.setHistoriedTime(Calendar.getInstance());
 		this.archetypeFileDao.update(archetypeFile);
 		this.historiedArchetypeFileDao.save(historiedArchetypeFile);

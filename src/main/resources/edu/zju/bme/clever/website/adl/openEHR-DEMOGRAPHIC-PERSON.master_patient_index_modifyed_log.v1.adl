@@ -1,0 +1,376 @@
+archetype (adl_version=1.4)
+	openEHR-DEMOGRAPHIC-PERSON.master_patient_index_modifyed_log.v1
+
+concept
+	[at0000]	-- Master patient index
+language
+	original_language = <[ISO_639-1::zh]>
+description
+	original_author = <
+		["name"] = <"">
+	>
+	details = <
+		["zh"] = <
+			language = <[ISO_639-1::zh]>
+			purpose = <"">
+			use = <"">
+			misuse = <"">
+			copyright = <"">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <>
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"4A2B6B9C2D8579267AB857E0CE944162">
+	>
+
+definition
+	PERSON[at0000] matches {	-- Master patient index
+		details matches {
+			ITEM_TREE[at0001] matches {	-- Tree
+				items cardinality matches {1..*; unordered} matches {
+					ELEMENT[at0004] occurrences matches {0..1} matches {	-- patient_id
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0005] occurrences matches {0..1} matches {	-- name
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0006] occurrences matches {0..1} matches {	-- name_phonetic
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0007] occurrences matches {0..1} matches {	-- gender
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0008] occurrences matches {0..1} matches {	-- date_of_birth
+						value matches {
+							DV_DATE_TIME matches {*}
+						}
+					}
+					ELEMENT[at0009] occurrences matches {0..1} matches {	-- birth_place
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0010] occurrences matches {0..1} matches {	-- nationality
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0011] occurrences matches {0..1} matches {	-- ethnic_group
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0012] occurrences matches {0..1} matches {	-- marital_status
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0013] occurrences matches {0..1} matches {	-- career
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0014] occurrences matches {0..1} matches {	-- degree
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0015] occurrences matches {0..1} matches {	-- blood_type_abo
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0016] occurrences matches {0..1} matches {	-- blood_type_rh
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0017] occurrences matches {0..1} matches {	-- identity_card_no
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0018] occurrences matches {0..1} matches {	-- household_no
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0019] occurrences matches {0..1} matches {	-- passport_no
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0020] occurrences matches {0..1} matches {	-- military_id
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0021] occurrences matches {0..1} matches {	-- health_insurance_id
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0022] occurrences matches {0..1} matches {	-- health_card_no
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0023] occurrences matches {0..1} matches {	-- email
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0024] occurrences matches {0..1} matches {	-- mailing_address
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0025] occurrences matches {0..1} matches {	-- zip_code
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0026] occurrences matches {0..1} matches {	-- phone_no_mobile
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0027] occurrences matches {0..1} matches {	-- phone_no_home
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0028] occurrences matches {0..1} matches {	-- phone_no_business
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0029] occurrences matches {0..1} matches {	-- death_indicator
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0030] occurrences matches {0..1} matches {	-- death_time
+						value matches {
+							DV_DATE_TIME matches {*}
+						}
+					}
+					ELEMENT[at0031] occurrences matches {0..1} matches {	-- created_date
+						value matches {
+							DV_DATE_TIME matches {*}
+						}
+					}
+					ELEMENT[at0032] occurrences matches {0..1} matches {	-- created_by
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0042] occurrences matches {0..1} matches {	-- patient_healthcare_type_code
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0043] occurrences matches {0..1} matches {	-- patient_healthcare_type_name
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0044] occurrences matches {0..1} matches {	-- patient_healthcare_property_code
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0045] occurrences matches {0..1} matches {	-- patient_healthcare_property_name
+						value matches {
+							DV_TEXT matches {*}
+						}
+					}
+					ELEMENT[at0046] occurrences matches {0..1} matches {	-- mpi_serial_no
+						value matches {
+							DV_COUNT matches {*}
+						}
+					}
+					ELEMENT[at0047] occurrences matches {0..1} matches {	-- edit_time
+						value matches {
+							DV_DATE_TIME matches {*}
+						}
+					}
+					ELEMENT[at0048] occurrences matches {0..1} matches {	-- serial_no
+						value matches {
+							DV_COUNT matches {*}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["zh"] = <
+			items = <
+				["at0000"] = <
+					text = <"Master patient index">
+					description = <"unknown">
+				>
+				["at0001"] = <
+					text = <"Patient details">
+					description = <"*">
+				>
+			
+				["at0004"] = <
+					text = <"patient_id">
+					description = <"*">
+				>
+				["at0005"] = <
+					text = <"name">
+					description = <"*">
+				>
+				["at0006"] = <
+					text = <"name_phonetic">
+					description = <"*">
+				>
+				["at0007"] = <
+					text = <"gender">
+					description = <"*">
+				>
+				["at0008"] = <
+					text = <"date_of_birth">
+					description = <"*">
+				>
+				["at0009"] = <
+					text = <"birth_place">
+					description = <"*">
+				>
+				["at0010"] = <
+					text = <"nationality">
+					description = <"*">
+				>
+				["at0011"] = <
+					text = <"ethnic_group">
+					description = <"*">
+				>
+				["at0012"] = <
+					text = <"marital_status">
+					description = <"*">
+				>
+				["at0013"] = <
+					text = <"career">
+					description = <"*">
+				>
+				["at0014"] = <
+					text = <"degree">
+					description = <"*">
+				>
+				["at0015"] = <
+					text = <"blood_type_abo">
+					description = <"*">
+				>
+				["at0016"] = <
+					text = <"blood_type_rh">
+					description = <"*">
+				>
+				["at0017"] = <
+					text = <"identity_card_no">
+					description = <"*">
+				>
+				["at0018"] = <
+					text = <"household_no">
+					description = <"*">
+				>
+				["at0019"] = <
+					text = <"passport_no">
+					description = <"*">
+				>
+				["at0020"] = <
+					text = <"military_id">
+					description = <"*">
+				>
+				["at0021"] = <
+					text = <"health_insurance_id">
+					description = <"*">
+				>
+				["at0022"] = <
+					text = <"health_card_no">
+					description = <"*">
+				>
+				["at0023"] = <
+					text = <"email">
+					description = <"*">
+				>
+				["at0024"] = <
+					text = <"mailing_address">
+					description = <"*">
+				>
+				["at0025"] = <
+					text = <"zip_code">
+					description = <"*">
+				>
+				["at0026"] = <
+					text = <"phone_no_mobile">
+					description = <"*">
+				>
+				["at0027"] = <
+					text = <"phone_no_home">
+					description = <"*">
+				>
+				["at0028"] = <
+					text = <"phone_no_business">
+					description = <"*">
+				>
+				["at0029"] = <
+					text = <"death_indicator">
+					description = <"*">
+				>
+				["at0030"] = <
+					text = <"death_time">
+					description = <"*">
+				>
+				["at0031"] = <
+					text = <"created_date">
+					description = <"*">
+				>
+				["at0032"] = <
+					text = <"created_by">
+					description = <"*">
+				>
+				["at0042"] = <
+					text = <"patient_healthcare_type_code">
+					description = <"*">
+				>
+				["at0043"] = <
+					text = <"patient_healthcare_type_name">
+					description = <"*">
+				>
+				["at0044"] = <
+					text = <"patient_healthcare_property_code">
+					description = <"*">
+				>
+				["at0045"] = <
+					text = <"patient_healthcare_property_name">
+					description = <"*">
+				>
+				["at0046"] = <
+					text = <"mpi_serial_no">
+					description = <"*">
+				>
+				["at0047"] = <
+					text = <"edit_time">
+					description = <"*">
+				>
+				["at0048"] = <
+					text = <"serial_no">
+					description = <"*">
+				>
+			>
+		>
+	>

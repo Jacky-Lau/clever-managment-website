@@ -19,65 +19,66 @@ import org.hibernate.annotations.DynamicUpdate;
 @Entity
 @Table(name = "HISTORIED_ARCHETYPE_FILE")
 @DynamicUpdate(true)
-public class HistoriedArchetypeFile implements Serializable{
-	
+public class HistoriedArchetypeFile implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -418395783754963084L;
-	
+
 	@Id
 	@GeneratedValue
-	@Column(name="ID")
+	@Column(name = "ID")
 	private Integer id;
-	// @Column(name="NAME", unique = true) the historied version need not to be unique
-	@Column(name="NAME")
+	// @Column(name="NAME", unique = true) the historied version need not to be
+	// unique
+	@Column(name = "NAME")
 	private String name;
 	@Lob
-	@Column(name="CONTENT")
+	@Column(name = "CONTENT")
 	private String content;
-	@Lob
-	@Column(name="DESCRIPTION")
-	private String description;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "HISTORIED_TIME")
 	private Calendar historiedTime;
 	@ManyToOne
 	private CommitSequence commitSequence;
-	
+
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+
 	public Calendar getHistoriedTime() {
 		return historiedTime;
 	}
+
 	public void setHistoriedTime(Calendar historiedTime) {
 		this.historiedTime = historiedTime;
 	}
+
 	public CommitSequence getCommitSequence() {
 		return commitSequence;
 	}
+
 	public void setCommitSequence(CommitSequence commitSequence) {
 		this.commitSequence = commitSequence;
 	}

@@ -1,9 +1,15 @@
 package edu.zju.bme.clever.website.controller;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.openehr.am.archetype.Archetype;
+import org.openehr.am.serialize.ADLSerializer;
+import org.openehr.rm.common.resource.ResourceDescription;
+import org.openehr.rm.common.resource.ResourceDescriptionItem;
+import org.openehr.rm.support.identification.ArchetypeID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import se.acode.openehr.parser.ADLParser;
 import edu.zju.bme.clever.website.dao.CommitSequenceDao;
 import edu.zju.bme.clever.website.entity.ArchetypeFile;
 import edu.zju.bme.clever.website.entity.CommitSequence;
@@ -56,49 +63,77 @@ public class FileUploadController {
 		FileUploadResult result = new FileUploadResult();
 		result.setFileName(fileName);
 		String fileStatus = FileUploadStatusConstant.UPLOADED;
-		// Check the uploaded file
-		if (FileUtil.getFileType(file).compareToIgnoreCase("adl") == 0) {
-			// Parse the archetype
-			ArchetypeUtil archetypeUtil = new ArchetypeUtil(file);
-			String archetypeId = archetypeUtil.getArchetypeId();
-			String archetypeContent = archetypeUtil.getArchetypeContent();
-			String archetypeDescription = archetypeUtil
-					.getArchetypeDescription();
-			// Validate the archetype
-			if (!archetypeId.isEmpty()
-					&& !archetypeContent.isEmpty()
-					&& this.archetypeValidationService
-							.validate(archetypeContent)) {
-				ArchetypeFile archetypeFileFromDB = this.archetypePersistanceService
-						.getArchetypeByName(archetypeId);
-				ArchetypeFile uploadedArchetypeFile = new ArchetypeFile();
-				uploadedArchetypeFile.setCommitSequence(commitSequence);
-				uploadedArchetypeFile.setModifyTime(Calendar.getInstance());
-				uploadedArchetypeFile.setContent(archetypeContent);
-				uploadedArchetypeFile.setName(archetypeId);
-				uploadedArchetypeFile.setDescription(archetypeDescription);
-
-				if (archetypeFileFromDB != null) {
-					if (archetypeFileFromDB.getContent().compareTo(
-							archetypeContent) == 0) {
-						fileStatus = FileUploadStatusConstant.EXISTED;
-					} else {
-						if (overwriteChange) {
-							// save the archetype
-							uploadedArchetypeFile.setId(archetypeFileFromDB.getId());
-							this.archetypePersistanceService
-									.updateArchetypeFile(uploadedArchetypeFile);
-						} else {
-							fileStatus = FileUploadStatusConstant.CHANGED;
-						}
+		String archetypeId = "";
+		String archetypeContent = "";
+		String zhPurpose = "";
+		String zhKeywords = "";
+		String zhUse = "";
+		// Parse the archetype
+		try {
+			ADLParser parser = new ADLParser(file.getInputStream(), "UTF-8");
+			Archetype archetype = parser.parse();
+			ArchetypeID archetypeIdNode = archetype.getArchetypeId();
+			archetypeId = archetypeIdNode.toString();
+			ResourceDescription resourceDescription = archetype
+					.getDescription();
+			List<ResourceDescriptionItem> resourceDescriptionItems = resourceDescription
+					.getDetails();
+			for (ResourceDescriptionItem resourceDescriptionItem : resourceDescriptionItems) {
+				if (resourceDescriptionItem.getLanguage().getCodeString()
+						.equals("zh")) {
+					if (resourceDescriptionItem.getPurpose() != null) {
+						zhPurpose = resourceDescriptionItem.getPurpose();
 					}
+					if (resourceDescriptionItem.getUse() != null) {
+						zhUse = resourceDescriptionItem.getUse();
+					}
+					if (resourceDescriptionItem.getKeywords() != null) {
+						zhKeywords = String.join("|",
+								resourceDescriptionItem.getKeywords());
+					}
+				}
+			}
+			ADLSerializer adlSerilizer = new ADLSerializer();
+			archetypeContent = adlSerilizer.output(archetype);
+		} catch (Exception ex) {
+			this.logger.info("Persist file {} failed.", ex);
+			fileStatus = FileUploadStatusConstant.INVALID;
+			result.setFileStatus(fileStatus);
+			return result;
+		}
+
+		// Validate the archetype
+		if (this.archetypeValidationService.validate(archetypeContent)) {
+			ArchetypeFile archetypeFileFromDB = this.archetypePersistanceService
+					.getArchetypeByName(archetypeId);
+			ArchetypeFile uploadedArchetypeFile = new ArchetypeFile();
+			uploadedArchetypeFile.setCommitSequence(commitSequence);
+			uploadedArchetypeFile.setModifyTime(Calendar.getInstance());
+			uploadedArchetypeFile.setContent(archetypeContent);
+			uploadedArchetypeFile.setName(archetypeId);
+			uploadedArchetypeFile.setKeywords(zhKeywords);
+			uploadedArchetypeFile.setPurpose(zhPurpose);
+			uploadedArchetypeFile.setUse(zhUse);
+
+			if (archetypeFileFromDB != null) {
+				if (archetypeFileFromDB.getContent()
+						.compareTo(archetypeContent) == 0) {
+					fileStatus = FileUploadStatusConstant.EXISTED;
 				} else {
-					// save the archetype
-					this.archetypePersistanceService
-							.saveArchetypeFile(uploadedArchetypeFile);
+					if (overwriteChange) {
+						// save the archetype
+						uploadedArchetypeFile
+								.setId(archetypeFileFromDB.getId());
+						this.archetypePersistanceService
+								.updateArchetypeFile(uploadedArchetypeFile);
+					} else {
+						fileStatus = FileUploadStatusConstant.CHANGED;
+					}
 				}
 			} else {
-				fileStatus = FileUploadStatusConstant.INVALID;
+				// save the archetype
+				this.archetypePersistanceService
+						.saveArchetypeFile(uploadedArchetypeFile);
 			}
 		} else {
 			fileStatus = FileUploadStatusConstant.INVALID;

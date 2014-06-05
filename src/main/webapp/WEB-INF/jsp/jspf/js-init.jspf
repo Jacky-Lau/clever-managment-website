@@ -2,6 +2,8 @@
 <script
 src="/clever-management-website/resources/lib/jquery-2.1.1.js"></script>
 <script
+src="/clever-management-website/resources/lib/bootstrap.min.js"></script>
+<script
 src="/clever-management-website/resources/lib/angular.js"></script>
 <script
 src="/clever-management-website/resources/lib/ui-bootstrap-tpls-0.11.0.js"></script>
@@ -15,6 +17,8 @@ src="/clever-management-website/resources/upload-modal/upload-modal-controller.j
 src="/clever-management-website/resources/upload-modal/files-model-directive.js"></script>
 <script
 src="/clever-management-website/resources/upload-modal/file-upload-service.js"></script>
+<script
+src="/clever-management-website/resources/archetype-acquire-service.js"></script>
 <script
 src="/clever-management-website/resources/app.js"></script>
 <script

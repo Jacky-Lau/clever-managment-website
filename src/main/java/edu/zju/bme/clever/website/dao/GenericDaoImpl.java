@@ -18,6 +18,7 @@ import org.hibernate.criterion.Restrictions;
  * 
  * @param <T>
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class GenericDaoImpl<T, ID extends Serializable> implements
 		GenericDao<T, ID> {
 	private Class<T> clazz;

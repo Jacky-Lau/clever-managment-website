@@ -1,0 +1,184 @@
+archetype (adl_version=1.4)
+	openEHR-EHR-OBSERVATION.exam_master.v1
+
+concept
+	[at0000]	-- Exam master
+language
+	original_language = <[ISO_639-1::zh]>
+description
+	original_author = <
+		["name"] = <"">
+	>
+	details = <
+		["zh"] = <
+			language = <[ISO_639-1::zh]>
+			purpose = <"">
+			use = <"">
+			misuse = <"">
+			copyright = <"">
+		>
+	>
+	lifecycle_state = <"0">
+	other_contributors = <>
+	other_details = <
+		["MD5-CAM-1.0.1"] = <"F481627E3FE48D3BD334329ACB536953">
+	>
+
+definition
+	OBSERVATION[at0000] matches {	-- Exam master
+		data matches {
+			HISTORY[at0001] matches {	-- Event Series
+				events cardinality matches {1..*; unordered} matches {
+					EVENT[at0002] occurrences matches {0..1} matches {	-- Any event
+						data matches {
+							ITEM_TREE[at0003] matches {	-- Tree
+								items cardinality matches {0..*; unordered} matches {
+									ELEMENT[at0004] occurrences matches {0..1} matches {	-- exam_id
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0005] occurrences matches {0..1} matches {	-- patient_id
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0006] occurrences matches {0..1} matches {	-- visit_id
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0007] occurrences matches {0..1} matches {	-- exam_req_id
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0008] occurrences matches {0..1} matches {	-- his_exam_id
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0009] occurrences matches {0..1} matches {	-- exam_dept_name
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0010] occurrences matches {0..1} matches {	-- exam_dept_code
+										value matches {
+											DV_TEXT matches {*}
+										}
+									}
+									ELEMENT[at0011] occurrences matches {0..1} matches {	-- scheduled_date_time
+										value matches {
+											DV_DATE_TIME matches {*}
+										}
+									}
+									ELEMENT[at0012] occurrences matches {0..1} matches {	-- exam_time
+										value matches {
+											DV_DATE_TIME matches {*}
+										}
+									}
+									ELEMENT[at0013] occurrences matches {0..1} matches {	-- exam_status
+										value matches {
+											DV_COUNT matches {*}
+										}
+									}
+									ELEMENT[at0014] occurrences matches {0..1} matches {	-- is_read
+										value matches {
+											DV_COUNT matches {*}
+										}
+									}
+									ELEMENT[at0015] occurrences matches {0..1} matches {	-- is_normal
+										value matches {
+											DV_COUNT matches {*}
+										}
+									}
+									ELEMENT[at0016] occurrences matches {0..1} matches {	-- serial_no
+										value matches {
+											DV_COUNT matches {*}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+ontology
+	term_definitions = <
+		["zh"] = <
+			items = <
+				["at0000"] = <
+					text = <"Exam master">
+					description = <"unknown">
+				>
+				["at0001"] = <
+					text = <"Event Series">
+					description = <"@ internal @">
+				>
+				["at0002"] = <
+					text = <"Any event">
+					description = <"*">
+				>
+				["at0003"] = <
+					text = <"Tree">
+					description = <"@ internal @">
+				>
+				["at0004"] = <
+					text = <"exam_id">
+					description = <"*">
+				>
+				["at0005"] = <
+					text = <"patient_id">
+					description = <"*">
+				>
+				["at0006"] = <
+					text = <"visit_id">
+					description = <"*">
+				>
+				["at0007"] = <
+					text = <"exam_req_id">
+					description = <"*">
+				>
+				["at0008"] = <
+					text = <"his_exam_id">
+					description = <"*">
+				>
+				["at0009"] = <
+					text = <"exam_dept_name">
+					description = <"*">
+				>
+				["at0010"] = <
+					text = <"exam_dept_code">
+					description = <"*">
+				>
+				["at0011"] = <
+					text = <"scheduled_date_time">
+					description = <"*">
+				>
+				["at0012"] = <
+					text = <"exam_time">
+					description = <"*">
+				>
+				["at0013"] = <
+					text = <"exam_status">
+					description = <"*">
+				>
+				["at0014"] = <
+					text = <"is_read">
+					description = <"*">
+				>
+				["at0015"] = <
+					text = <"is_normal">
+					description = <"*">
+				>
+				["at0016"] = <
+					text = <"serial_no">
+					description = <"*">
+				>
+			>
+		>
+	>

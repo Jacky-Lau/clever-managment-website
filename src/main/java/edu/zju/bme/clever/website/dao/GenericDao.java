@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings({ "rawtypes" })
 public interface GenericDao<T, ID extends Serializable> {
 
 	public void save(T entity);
