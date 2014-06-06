@@ -1,8 +1,16 @@
 function AppCtrl($scope, $modal, archetypeRetrieveService) {
 
-	$scope.isNavbarCollapsed = false;
+	$scope.isNavbarCollapsed = true;
 
-	$scope.openNavbar = function() {
+	$scope.archetypeList = [];
+
+	retrieveArchetypeFileList();
+
+	$scope.tabs = [];
+
+	$scope.selectedArchetypeId = 0;
+
+	$scope.expandNavbar = function() {
 		$scope.isNavbarCollapsed = false;
 	};
 
@@ -10,9 +18,9 @@ function AppCtrl($scope, $modal, archetypeRetrieveService) {
 		$scope.isNavbarCollapsed = true;
 	};
 
-	$scope.archetypeList = [];
-
-	retrieveArchetypeFileList();
+	$scope.selectOverview = function() {
+		$scope.selectedArchetypeId = 0;
+	};
 
 	$scope.selectArchetype = function(archetype) {
 		var contained = false;
@@ -34,10 +42,6 @@ function AppCtrl($scope, $modal, archetypeRetrieveService) {
 		$scope.selectedArchetypeId = archetype.id;
 	};
 
-	$scope.tabs = [];
-
-	$scope.selectedArchetypeId = -1;
-
 	$scope.selectTab = function(tab) {
 		$scope.selectedArchetypeId = tab.id;
 	};
@@ -49,11 +53,14 @@ function AppCtrl($scope, $modal, archetypeRetrieveService) {
 			$scope.selectedArchetypeId = $scope.tabs[newSelectedIndex].id;
 		}
 		$scope.tabs.splice(index, 1);
+		if ($scope.tabs.length == 0) {
+			$scope.selectedArchetypeId = 0;
+		}
 	};
 
 	$scope.openUploadModal = function(size) {
 		var modalInstance = $modal.open({
-			templateUrl : 'resources/upload-modal/upload-modal.html',
+			templateUrl : 'js/upload-modal/upload-modal.html',
 			controller : uploadModalCtrl,
 			backdrop : 'static',
 			size : size,

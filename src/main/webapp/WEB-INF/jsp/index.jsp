@@ -7,11 +7,11 @@ pageEncoding="UTF-8"%>
 		<title>CLEVER Management</title>
 		<!-- css init -->
 		<link rel="stylesheet"
-		href="/clever-management-website/resources/font.css" />
+		href="/clever-management-website/css/font.css" />
 		<link rel="stylesheet"
-		href="/clever-management-website/resources/lib/bootstrap.min.css" />
+		href="/clever-management-website/css/lib/bootstrap.min.css" />
 		<link rel="stylesheet"
-		href="/clever-management-website/resources/app.css" />
+		href="/clever-management-website/css/app.css" />
 	</head>
 	<body ng-controller="AppCtrl">
 		<!-- header -->
@@ -52,21 +52,24 @@ pageEncoding="UTF-8"%>
 						<!-- archetype list -->
 						<div class="flexBox">						
 							<div class="list-group" ng-show="archetypeList.length > 0" style="max-height: 750px; overflow: auto;">
-								<a href="#" class="list-group-item" ng-click="selectArchetypeById(0)" ng-class="{'active': selectedArchetypeId == 0}"><b>Overview</b></a>
-								<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/resources/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+								<a href="#" class="list-group-item" ng-click="selectOverview()" ng-class="{'active': selectedArchetypeId == 0}"><b>Overview</b></a>
+								<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 								<a href="#" class="list-group-item" ng-repeat="archetype in archetypeList | filter:archetypeListFilter | orderBy:'name'" ng-click="selectArchetype(archetype)" ng-class="{'active': archetype.id == selectedArchetypeId}">{{archetype.name}}</a>
 							</div>
 						</div>
 					</nav>
 					<!-- splitter -->
 					<splitter>
-						<i style="cursor: pointer" ng-click="openNavbar()" ng-show="isNavbarCollapsed"><span class="glyphicon glyphicon-chevron-right" ></span></i>
+						<i style="cursor: pointer" ng-click="expandNavbar()" ng-show="isNavbarCollapsed"><span class="glyphicon glyphicon-chevron-right" ></span></i>
 						<i style="cursor: pointer" ng-click="collapseNavbar()" ng-show="!isNavbarCollapsed"><span class="glyphicon glyphicon-chevron-left" ></span></i>
 					</splitter>
 					<!-- content display -->
 					<div class="flexBox">
 						<!-- Nav tabs -->
 						<ul class="nav nav-tabs">
+							<li ng-class="{'active': selectedArchetypeId == 0}">
+								<a href="#tab_overview" data-toggle="tab"><b>&nbsp;Overview&nbsp;</b></a>
+							</li>
 							<li ng-repeat="tab in tabs" ng-class="{'active': tab.id == selectedArchetypeId}">
 								<a href="{{'#tab_' + tab.id}}" data-toggle="tab" ng-click="selectTab(tab)">{{tab.title}}&nbsp;<span class="close" ng-click="closeTab(tab)"> &times; </span></a>
 							</li>
@@ -74,8 +77,14 @@ pageEncoding="UTF-8"%>
 
 						<!-- Tab panes -->
 						<div class="tab-content">
+							<div class="tab-pane" ng-class="{'active': selectedArchetypeId == 0}" id="tab_overview">
+								<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+								<overview ng-show="archetypeList.length > 0">
+									Overview
+								</overview>
+							</div>
 							<div class="tab-pane" ng-class="{'active': tab.id == selectedArchetypeId}" id="{{'tab_' + tab.id}}" ng-repeat="tab in tabs">
-								<span ng-show="tab.content == ''"><img src="/clever-management-website/resources/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+								<span ng-show="tab.content == ''"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 								{{tab.content}}
 							</div>
 						</div>

@@ -1,8 +1,8 @@
 @font-face{
 	font-family: 'Glyphicons Halflings';
-	src:url(/clever-management-website/resources/glyphicons-halflings-regular.eot);
-	src:url(/clever-management-website/resources/glyphicons-halflings-regular.eot?#iefix) format('embedded-opentype'),
-		url(/clever-management-website/resources/glyphicons-halflings-regular.woff) format('woff'),
-		url(/clever-management-website/resources/glyphicons-halflings-regular.ttf) format('truetype'),
-		url(/clever-management-website/resources/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format('svg');
+	src:url(/clever-management-website/font/glyphicons-halflings-regular.eot);
+	src:url(/clever-management-website/font/glyphicons-halflings-regular.eot?#iefix) format('embedded-opentype'),
+		url(/clever-management-website/font/glyphicons-halflings-regular.woff) format('woff'),
+		url(/clever-management-website/font/glyphicons-halflings-regular.ttf) format('truetype'),
+		url(/clever-management-website/font/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format('svg');
 }

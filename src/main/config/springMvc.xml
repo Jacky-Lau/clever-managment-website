@@ -14,8 +14,8 @@
 
 	<mvc:annotation-driven />
 
-	<mvc:resources location="/WEB-INF/js/,/WEB-INF/css/,/WEB-INF/img/,/WEB-INF/fonts/"
-		mapping="/resources/**" />
+	<mvc:resources location="/WEB-INF/"
+		mapping="/**" />
 
 	<context:component-scan base-package="edu.zju.bme.clever.website.controller" />
 
