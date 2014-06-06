@@ -18,7 +18,9 @@ src="/clever-management-website/resources/upload-modal/files-model-directive.js"
 <script
 src="/clever-management-website/resources/upload-modal/file-upload-service.js"></script>
 <script
-src="/clever-management-website/resources/archetype-acquire-service.js"></script>
+src="/clever-management-website/resources/archetype-retrieve-service.js"></script>
+<script
+src="/clever-management-website/resources/app-config.js"></script>
 <script
 src="/clever-management-website/resources/app.js"></script>
 <script
