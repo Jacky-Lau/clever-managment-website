@@ -1,10 +1,31 @@
-<div class="container content-container" ng-transclude>
+<div class="container content-container">
 	<div class="row">
-		<div class="col-xs-12 col-md-12 col-lg-12">
+		<div class="col-xs-12 col-md-12 col-lg-12" style="padding: 5px 0px;">
+			<!-- Single button -->
+			<div class="input-group">
+				<span class="input-group-addon">Overview Layout:</span>
+				<div class="btn-group pull-left" dropdown is-open="isDropdownOpened">
+					<button type="button" class="btn btn-default dropdown-toggle">
+						{{currentLayout.name}} <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li ng-repeat="layout in layouts">
+							<a href ng-click="selectLayout(layout)">{{layout.name}}</a>
+						</li>
+					</ul>
+				</div>
+				<div class="btn-group pull-right">
+				<button type="button" class="btn btn-default" ng-click="zoomIn()">
+					<span class="glyphicon glyphicon-zoom-in"></span>
+				</button>
+				<button type="button" class="btn btn-default" ng-click="zoomOut()">
+					<span class="glyphicon glyphicon-zoom-out"></span>
+				</button>
+			</div>
+			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-12 col-md-12 col-lg-12" id="overview-container">
-		</div>
+		<div class="col-xs-12 col-md-12 col-lg-12" id="overview-container" ng-transclude></div>
 	</div>
 </div>

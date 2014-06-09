@@ -9,6 +9,23 @@ function() {
 		templateUrl : 'js/overview/overview.html',
 		transclude : true,
 		replace : true,
+		controller : function($scope, $element, $attrs){
+			
+			$scope.isDropdownOpened = false;
+			
+			$scope.zoomIn = function(){
+				$scope.graph.zoomIn();
+			};
+			
+			$scope.zoomOut = function(){
+				$scope.graph.zoomOut();
+			};
+			
+			$scope.selectLayout = function(layout){
+				$scope.currentLayout = layout;
+				$scope.isDropdownOpened = false;
+			};
+		},
 		link : function(scope, element, attrs) {
 
 			// Checks if the browser is supported
@@ -22,15 +39,15 @@ function() {
 				var container = element.find('#overview-container').context;
 				
 				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				scope.graph = new mxGraph(container);
 				
-				graph.centerZoom = false;
+				scope.graph.centerZoom = false;
 				
 				// Enables HTML markup in all labels
-				graph.setHtmlLabels(true);
+				scope.graph.setHtmlLabels(true);
 				
 				// Override folding to allow for tables
-				graph.isCellFoldable = function(cell, collapse) {
+				scope.graph.isCellFoldable = function(cell, collapse) {
 					return this.getModel().isVertex(cell);
 				};
 				
@@ -38,28 +55,28 @@ function() {
 				//mxEvent.disableContextMenu(container);
 				
 				// Installs a custom tooltip for cells
-				graph.getTooltipForCell = function(cell){
+				scope.graph.getTooltipForCell = function(cell){
 					return cell.value.name;
 				};
 				
 				// Enables tooltips
-				graph.setTooltips(true);
+				scope.graph.setTooltips(true);
 				
 				// Overrides method to disallow edge label editing
-				graph.isCellEditable = function(cell)
+				scope.graph.isCellEditable = function(cell)
 				{
 					return false;
 				};
 				
 				// Overrides method to provide a cell label in the display
-				graph.convertValueToString = function(cell)
+				scope.graph.convertValueToString = function(cell)
 				{
 					return cell.value.name;
 				};
 				
 				// Installs a handler for double click events in the graph
 				// that shows an alert box				
-				graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
+				scope.graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
 					var cell = evt.getProperty('cell');
 					if (cell != null) {
 						scope.$apply(function(){
@@ -70,61 +87,53 @@ function() {
 					evt.consume();
 				});
 				
-				// Highlights the vertices when the mouse enters
-				// var highlight = new mxCellTracker(graph, '#00FF00');
-							
-				// Adds zoom buttons in top, left corner
-				var buttons = document.createElement('div');
-				buttons.style.position = 'absolute';
-				buttons.style.overflow = 'visible';
 
-				var bs = graph.getBorderSizes();
-				buttons.style.top = (container.offsetTop + bs.y) + 'px';
-				buttons.style.left = (container.offsetLeft + bs.x) + 'px';
-
-				var btnLeft = 5;
-				var bw = 16;
-				var bh = 16;
-
-				if (mxClient.IS_QUIRKS) {
-						bw -= 1;
-						bh -= 1;
-				}
-
-				function addButton(label, funct) {
-					var btn = document.createElement('div');
-					mxUtils.write(btn, label);
-					btn.style.position = 'absolute';
-					btn.style.backgroundColor = 'white';
-					btn.style.border = '1px solid gray';
-					btn.style.textAlign = 'center';
-					btn.style.fontSize = '10px';
-					btn.style.cursor = 'pointer';
-					btn.style.width = bw + 'px';
-					btn.style.height = bh + 'px';
-					btn.style.left = btnLeft + 'px';
-					btn.style.top = '5px';
-					btn.style.webkitUserSelect = 'none';
-
-					mxEvent.addListener(btn, 'click', function(evt) {
-						funct();
-						mxEvent.consume(evt);
-					});
-
-					btnLeft += bw + 5;
-					buttons.appendChild(btn);
+				// Layouts
+				// Circle layout, too big
+				var circleLayout = {
+					name : 'Circle',
+					layout : new mxCircleLayout(scope.graph)
 				};
 
-				addButton('+', function() {
-					graph.zoomIn();
+				// Compact tree layout, not work
+				var compactLayout = {
+					name : 'Compact tree',
+					layout : new mxCompactTreeLayout(scope.graph)
+				};
+
+				// Edge label layout, not work
+				var edgeLayout = {
+					name : 'Edge',
+					layout : new mxEdgeLabelLayout(scope.graph)
+				};
+
+				// Stack layout, work, but very simple
+				var stackLayout = {
+					name : 'Stack',
+					layout : new mxStackLayout(scope.graph, true, 30)
+				};
+				stackLayout.layout.wrap = stackLayout.layout.getParentSize(scope.graph.getDefaultParent()).width;
+
+				scope.layouts = [circleLayout, compactLayout, edgeLayout, stackLayout]; 
+				
+				scope.currentLayout = stackLayout;
+				
+				function applyLayout(layout){
+					scope.graph.getModel().beginUpdate();
+					try {
+						layout.layout.execute(scope.graph.getDefaultParent());
+					} finally {
+						// Updates the display
+						scope.graph.getModel().endUpdate();
+					}
+				}
+		
+				scope.$watch('currentLayout', function(newLayout) {
+					applyLayout(newLayout);
 				});
-
-				addButton('-', function() {
-					graph.zoomOut();
-				}); 
-							
-
-				container.appendChild(buttons);
+				
+				// Highlights the vertices when the mouse enters
+				// var highlight = new mxCellTracker(graph, '#00FF00');
 
 				// Adds cells to the model in a single step
 				var cellWidth = 200;
@@ -133,49 +142,29 @@ function() {
 				// is normally the first child of the root (ie. layer 0).
 				scope.$watch('archetypeList', function(archetypeList) {
 					if (archetypeList.length > 0) {
-						graph.getModel().beginUpdate();
-						var parent = graph.getDefaultParent();
+						scope.graph.getModel().beginUpdate();
+						var parent = scope.graph.getDefaultParent();
 						try {
 							angular.forEach(scope.archetypeList, function(value, index) {
-								var v = graph.insertVertex(parent, null, value, 0, 0, cellWidth, 0);
+								var vertex = scope.graph.insertVertex(parent, null, value, 0, 0, cellWidth, 0);
 								// Updates the height of the cell (override width
 								// for table width is set to 100%)
-								graph.updateCellSize(v);
-								v.geometry.width = cellWidth;
-								v.geometry.alternateBounds = new mxRectangle(0, 0, cellWidth, 27);
+								scope.graph.updateCellSize(vertex);
+								vertex.geometry.width = cellWidth;
+								vertex.geometry.alternateBounds = new mxRectangle(0, 0, cellWidth, 27);
 							});
-
-							// Circle layout, too big
-							//var layout = new mxCircleLayout(graph);
-							//layout.execute(parent);
-							
-							// Partition layout, bad
-							//var layout = new mxPartitionLayout(graph, true, 10, 20);
-							//layout.execute(parent);
-							
-							// Compact tree layout, not work
-							//var layout = new mxCompactTreeLayout(graph);
-							//layout.execute(parent);
-							
-							// Edge label layout, not work
-							//var layout = new mxEdgeLabelLayout(graph);
-							//layout.execute(parent);
-							
-							// Stack layout, work, but very simple
-							var layout = new mxStackLayout(graph, true, 30);
-							layout.wrap = layout.getParentSize(parent).width;
-							layout.execute(parent);
-							
+							applyLayout(scope.currentLayout);
 						} finally {
 							// Updates the display
-							graph.getModel().endUpdate();
+							scope.graph.getModel().endUpdate();
 						}
 					}
+					
 				});
 				
 				// Overrides getLabel to return empty labels for edges and
 				// short markup for collapsed cells.
-				graph.getLabel = function(cell) {
+				scope.graph.getLabel = function(cell) {
 					if (this.getModel().isVertex(cell)) {
 						
 						var archetypeName = cell.value.name;
