@@ -8,6 +8,8 @@ function AppCtrl($scope, $modal, archetypeRetrieveService) {
 
 	$scope.tabs = [];
 
+	$scope.tabTitleLength = 15;
+
 	$scope.selectedArchetypeId = 0;
 
 	$scope.expandNavbar = function() {
@@ -42,6 +44,12 @@ function AppCtrl($scope, $modal, archetypeRetrieveService) {
 		$scope.selectedArchetypeId = archetype.id;
 	};
 
+	$scope.getTabTitle = function(tab) {
+		if (tab.title.length > $scope.tabTitleLength) {
+			return tab.title.substring(0, $scope.tabTitleLength) + '...';
+		}
+	};
+
 	$scope.selectTab = function(tab) {
 		$scope.selectedArchetypeId = tab.id;
 	};
@@ -68,6 +76,7 @@ function AppCtrl($scope, $modal, archetypeRetrieveService) {
 
 		modalInstance.result.then(function(uploadedFileCount) {
 			if (uploadedFileCount > 0) {
+				$scope.archetypeList = [];
 				retrieveArchetypeFileList();
 			}
 		});

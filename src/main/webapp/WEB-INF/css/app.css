@@ -45,17 +45,42 @@
 }
 
 .fileinput-button input {
-position: absolute;
-top: 0;
-right: 0;
-margin: 0;
-opacity: 0;
--ms-filter: 'alpha(opacity=0)';
-font-size: 200px;
-direction: ltr;
-cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	opacity: 0;
+	-ms-filter: 'alpha(opacity=0)';
+	font-size: 200px;
+	direction: ltr;
+	cursor: pointer;
 }
 
 splitter {
 	padding: 0px 5px;
+}
+
+/* over view style */
+table.title {
+	border-color: black;
+	border-collapse: collapse;
+	cursor: move;
+}
+table.title th {
+	font-size: 10pt;
+	white-space: nowrap;
+	background: lightgray;
+	font-weight: bold;
+}
+table.erd {
+	font-size: 10pt;
+	border-color: black;
+	border-collapse: collapse;
+	overflow: auto;
+	cursor: move;
+	white-space: nowrap;
+	background: #C3D9FF;
+}
+table.erd td {
+	border-color: black;
 }

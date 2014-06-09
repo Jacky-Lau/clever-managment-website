@@ -19,8 +19,8 @@ pageEncoding="UTF-8"%>
 		<div class="container content-container" >
 			<!-- toolbar -->
 			<div class="row" style="margin-bottom: 20px">
-				<div class="btn-group">
-					<div class="col-xs-12 col-md-12 col-lg-12">
+				<div class="col-xs-12 col-md-12 col-lg-12">
+					<div class="btn-group">
 						<button type="button" class="btn btn-default" ng-click="openUploadModal('lg')">
 							<span class="glyphicon glyphicon-upload"></span> Upload archetypes
 						</button>
@@ -50,7 +50,7 @@ pageEncoding="UTF-8"%>
 							</div>
 						</div>
 						<!-- archetype list -->
-						<div class="flexBox">						
+						<div class="flexBox">
 							<div class="list-group" ng-show="archetypeList.length > 0" style="max-height: 750px; overflow: auto;">
 								<a href="#" class="list-group-item" ng-click="selectOverview()" ng-class="{'active': selectedArchetypeId == 0}"><b>Overview</b></a>
 								<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
@@ -68,22 +68,20 @@ pageEncoding="UTF-8"%>
 						<!-- Nav tabs -->
 						<ul class="nav nav-tabs">
 							<li ng-class="{'active': selectedArchetypeId == 0}">
-								<a href="#tab_overview" data-toggle="tab"><b>&nbsp;Overview&nbsp;</b></a>
+								<a ng-click="selectOverview()" style="cursor: pointer;"><b>&nbsp;Overview&nbsp;</b></a>
 							</li>
 							<li ng-repeat="tab in tabs" ng-class="{'active': tab.id == selectedArchetypeId}">
-								<a href="{{'#tab_' + tab.id}}" data-toggle="tab" ng-click="selectTab(tab)">{{tab.title}}&nbsp;<span class="close" ng-click="closeTab(tab)"> &times; </span></a>
+								<a ng-click="selectTab(tab)" style="cursor: pointer;" tooltip-placement="bottom" tooltip-popup-delay='500' tooltip='{{tab.title}}'>{{getTabTitle(tab)}}&nbsp;<span class="close" ng-click="closeTab(tab)"> &times; </span></a>
 							</li>
 						</ul>
 
 						<!-- Tab panes -->
 						<div class="tab-content">
-							<div class="tab-pane" ng-class="{'active': selectedArchetypeId == 0}" id="tab_overview">
+							<div class="tab-pane" ng-class="{'active': selectedArchetypeId == 0}" style="overflow: auto;height: 750px;">
 								<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-								<overview ng-show="archetypeList.length > 0">
-									Overview
-								</overview>
+								<div overview ng-show="archetypeList.length > 0" archetype-list="archetypeList" double-click="selectArchetype"></div>
 							</div>
-							<div class="tab-pane" ng-class="{'active': tab.id == selectedArchetypeId}" id="{{'tab_' + tab.id}}" ng-repeat="tab in tabs">
+							<div class="tab-pane" ng-class="{'active': tab.id == selectedArchetypeId}" ng-repeat="tab in tabs">
 								<span ng-show="tab.content == ''"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 								{{tab.content}}
 							</div>
