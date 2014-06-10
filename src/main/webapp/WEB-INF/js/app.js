@@ -1,3 +1,4 @@
-angular.module('clever.management.directives', ['clever.management.directives.splitter', 'clever.management.directives.overview', 'clever.management.directives.filesModel']);
+angular.module('clever.management.directives', ['clever.management.directives.splitter', 'clever.management.directives.overview', 'clever.management.directives.filesModel', 'clever.management.directives.archetypeTreeview']);
 angular.module('clever.management.services', ['clever.management.services.fileUpload', 'clever.management.services.archetypeRetrieve']);
-angular.module('cleverManagementApp', ['ui.bootstrap', 'clever.management.directives', 'clever.management.services', 'clever.management.config']);
+angular.module('clever.management.filters', ['clever.management.filters.pretty']);
+angular.module('cleverManagementApp', ['ui.bootstrap', 'clever.management.directives', 'clever.management.services', 'clever.management.filters', 'clever.management.config']);

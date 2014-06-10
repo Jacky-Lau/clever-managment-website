@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.openehr.am.archetype.Archetype;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,16 +26,40 @@ public class ArchetypeProviderController {
 		return this.archetypeProviderService.getArchetypeList();
 	}
 	
+	@RequestMapping(value = "/archetype/id/{id}.xml", method = RequestMethod.GET)
+	@ResponseBody
+	public String getArchetypeXmlById(@PathVariable Integer id){
+		return this.archetypeProviderService.getArchetypeXmlById(id);
+	}
+	
+	@RequestMapping(value = "/archetype/name/{name}.xml", method = RequestMethod.GET)
+	@ResponseBody
+	public String getArchetypeXmlByName(@PathVariable String name){
+		return this.archetypeProviderService.getArchetypeXmlByName(name);
+	}
+	
+	@RequestMapping(value = "/archetype/id/{id}.adl", method = RequestMethod.GET)
+	@ResponseBody
+	public String getArchetypeAdlById(@PathVariable Integer id){
+		return this.archetypeProviderService.getArchetypeAdlById(id);
+	}
+	
+	@RequestMapping(value = "/archetype/name/{name}.adl", method = RequestMethod.GET)
+	@ResponseBody
+	public String getArchetypeAdlByName(@PathVariable String name){
+		return this.archetypeProviderService.getArchetypeAdlByName(name);
+	}
+	
 	@RequestMapping(value = "/archetype/id/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public String getArchetypeById(@PathVariable Integer id){
-		return this.archetypeProviderService.getArchetypeXmlById(id);
+	public Archetype getArchetypeById(@PathVariable Integer id){
+		return this.archetypeProviderService.getArchetypeById(id);
 	}
 	
 	@RequestMapping(value = "/archetype/name/{name}", method = RequestMethod.GET)
 	@ResponseBody
-	public String getArchetypeByName(@PathVariable String name){
-		return this.archetypeProviderService.getArchetypeXmlByName(name);
+	public Archetype getArchetypeByName(@PathVariable String name){
+		return this.archetypeProviderService.getArchetypeByName(name);
 	}
 	
 }

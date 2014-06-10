@@ -81,9 +81,35 @@ pageEncoding="UTF-8"%>
 								<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 								<div overview ng-show="archetypeList.length > 0" archetype-list="archetypeList" double-click="selectArchetype"></div>
 							</div>
-							<div class="tab-pane" ng-class="{'active': tab.id == selectedArchetypeId}" ng-repeat="tab in tabs">
-								<span ng-show="tab.content == ''"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-								{{tab.content}}
+							<div class="tab-pane" ng-class="{'active': tab.id == selectedArchetypeId}" ng-repeat="tab in tabs" ng-controller="tabContentCtrl">
+								<h4>{{tab.title}}</h4>
+								<!-- Nav tabs -->
+								<ul class="nav nav-tabs">
+									<li ng-class="{'active': selectedTab == 'Tree'}">
+										<a ng-click="selectTab('Tree')" style="cursor: pointer;">Tree View</a>
+									</li>
+									<li ng-class="{'active': selectedTab == 'Xml'}">
+										<a ng-click="selectTab('Xml')" style="cursor: pointer;">XML</a>
+									</li>
+									<li ng-class="{'active': selectedTab == 'Adl'}">
+										<a ng-click="selectTab('Adl')" style="cursor: pointer;">ADL</a>
+									</li>
+								</ul>
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<div class="tab-pane" ng-class="{'active': selectedTab == 'Tree'}" style="overflow: auto;height: 700px;">
+										<span ng-show="tab.xml == ''"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+										<archetype-treeview archetype-xml="tab.xml"></archetype-treeview>
+									</div>
+									<div class="tab-pane" ng-class="{'active': selectedTab == 'Xml'}" style="overflow: auto;height: 700px;">
+										<span ng-show="tab.xml == ''"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+										<pre ng-bind-html-unsafe="text|pretty">{{tab.xml}}</pre>
+									</div>
+									<div class="tab-pane" ng-class="{'active': selectedTab == 'Adl'}" style="overflow: auto;height: 700px;">
+										<span ng-show="tab.adl == ''"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+										<pre ng-bind-html-unsafe="text|pretty">{{tab.adl}}</pre>
+									</div>
+								</div>						
 							</div>
 						</div>
 					</div>

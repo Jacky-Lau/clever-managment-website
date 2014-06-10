@@ -1,16 +1,21 @@
-<!-- js init -->
 <script
 src="/clever-management-website/js/lib/jquery-2.1.1.js"></script>
 <!-- <script
 src="/clever-management-website/js/lib/bootstrap.min.js"></script> -->
+<script
+src="/clever-management-website/js/lib/xml2json.js"></script>
 <script
 src="/clever-management-website/js/lib/angular.js"></script>
 <script
 src="/clever-management-website/js/lib/mxClient-src.js"></script>
 <script
 src="/clever-management-website/js/lib/ui-bootstrap-tpls-0.11.0.js"></script>
+<!-- <script
+src="/clever-management-website/js/lib/angular-resource.js"></script> -->
 <script
-src="/clever-management-website/js/lib/angular-resource.js"></script>
+src="/clever-management-website/js/pretty-filter.js"></script>
+<script
+src="/clever-management-website/js/archetype-treeview/archetype-treeview-directive.js"></script>
 <script
 src="/clever-management-website/js/splitter/splitter-directive.js"></script>
 <script
@@ -23,6 +28,8 @@ src="/clever-management-website/js/upload-modal/files-model-directive.js"></scri
 src="/clever-management-website/js/upload-modal/file-upload-service.js"></script>
 <script
 src="/clever-management-website/js/archetype-retrieve-service.js"></script>
+<script
+src="/clever-management-website/js/tab-content-controller.js"></script>
 <script
 src="/clever-management-website/js/app-config.js"></script>
 <script

@@ -35,10 +35,14 @@ function AppCtrl($scope, $modal, archetypeRetrieveService) {
 			var index = $scope.tabs.push({
 				'id' : archetype.id,
 				'title' : archetype.name,
-				'content' : ''
+				'xml' : '',
+				'adl' : '',
 			});
-			archetypeRetrieveService.getArchetypeById(archetype.id).then(function(archetypeXml) {
-				$scope.tabs[index - 1].content = archetypeXml;
+			archetypeRetrieveService.getArchetypeXmlById(archetype.id).then(function(archetypeXml) {
+				$scope.tabs[index - 1].xml = archetypeXml;
+			});
+			archetypeRetrieveService.getArchetypeAdlById(archetype.id).then(function(archetypeAdl) {
+				$scope.tabs[index - 1].adl = archetypeAdl;
 			});
 		}
 		$scope.selectedArchetypeId = archetype.id;
@@ -46,7 +50,7 @@ function AppCtrl($scope, $modal, archetypeRetrieveService) {
 
 	$scope.getTabTitle = function(tab) {
 		if (tab.title.length > $scope.tabTitleLength) {
-			return tab.title.substring(0, $scope.tabTitleLength) + '...';
+			return tab.title.substring(0, $scope.tabTitleLength / 2) + '...' + tab.title.substring(tab.title.length - $scope.tabTitleLength / 2, tab.title.length);
 		}
 	};
 

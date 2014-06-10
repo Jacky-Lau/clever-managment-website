@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.openehr.am.archetype.Archetype;
 import org.openehr.am.serialize.XMLSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 
 	@Resource(name = "archetypeFileDao")
 	private ArchetypeFileDao archetypeFileDao;
-	
+
 	@Override
 	public List<ArchetypeBriefInfo> getArchetypeList() {
 		List<ArchetypeBriefInfo> archetypeList = new ArrayList<ArchetypeBriefInfo>();
@@ -46,24 +47,61 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 	public String getArchetypeXmlByName(String name) {
 		ArchetypeFile file = this.archetypeFileDao.findUniqueByProperty("name",
 				name);
-		return this.serializeArchetype(file.getContent());
+		return this.serializeArchetype(this.parseArchetype(file.getContent()));
 	}
 
 	@Override
 	public String getArchetypeXmlById(Integer id) {
 		ArchetypeFile file = this.archetypeFileDao.findById(id);
-		return this.serializeArchetype(file.getContent());
+		return this.serializeArchetype(this.parseArchetype(file.getContent()));
+	}
+	
+	@Override
+	public String getArchetypeAdlByName(String name) {
+		ArchetypeFile file = this.archetypeFileDao.findUniqueByProperty("name",
+				name);
+		return file.getContent();
 	}
 
-	protected String serializeArchetype(String archetype) {
-		XMLSerializer xmlSerializer = new XMLSerializer();
+	@Override
+	public String getArchetypeAdlById(Integer id) {
+		ArchetypeFile file = this.archetypeFileDao.findById(id);
+		return file.getContent();
+	}
+
+	protected Archetype parseArchetype(String archetype) {
 		ADLParser parser = new ADLParser(archetype);
-		String xml = "";
 		try {
-			xml = xmlSerializer.output(parser.parse());
+			return parser.parse();
+		} catch (Exception ex) {
+			this.logger.info("Parse archetype failed.", ex);
+		}
+		return null;
+	}
+
+	protected String serializeArchetype(Archetype archetype) {
+		if (archetype == null) {
+			throw new IllegalArgumentException("Archetype is null.");
+		}
+		XMLSerializer xmlSerializer = new XMLSerializer();
+		try {
+			return xmlSerializer.output(archetype);
 		} catch (Exception ex) {
 			this.logger.info("Serialize archetype failed.", ex);
 		}
-		return xml;
+		return null;
+	}
+
+	@Override
+	public Archetype getArchetypeByName(String name) {
+		ArchetypeFile file = this.archetypeFileDao.findUniqueByProperty("name",
+				name);
+		return this.parseArchetype(file.getContent());
+	}
+
+	@Override
+	public Archetype getArchetypeById(Integer id) {
+		ArchetypeFile file = this.archetypeFileDao.findById(id);
+		return this.parseArchetype(file.getContent());
 	}
 }

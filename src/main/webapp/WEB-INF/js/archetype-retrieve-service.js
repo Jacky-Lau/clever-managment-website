@@ -7,14 +7,26 @@ function($http, ARCHETYPE_LIST_URL, ARCHETYPE_BY_ID_URL, ARCHETYPE_BY_NAME_URL) 
 		});
 	};
 
-	this.getArchetypeById = function(archetypeId) {
-		return $http.get(ARCHETYPE_BY_ID_URL + archetypeId).then(function(response) {
+	this.getArchetypeXmlById = function(archetypeId) {
+		return $http.get(ARCHETYPE_BY_ID_URL + archetypeId + '.xml').then(function(response) {
 			return response.data;
 		});
 	};
 
-	this.getArchetypeByName = function(archetypeName) {
-		return $http.get(ARCHETYPE_BY_NAME_URL + archetypeName).then(function(response) {
+	this.getArchetypeXmlByName = function(archetypeName) {
+		return $http.get(ARCHETYPE_BY_NAME_URL + archetypeName + '.xml').then(function(response) {
+			return response.data;
+		});
+	};
+	
+	this.getArchetypeAdlById = function(archetypeId) {
+		return $http.get(ARCHETYPE_BY_ID_URL + archetypeId + '.adl').then(function(response) {
+			return response.data;
+		});
+	};
+
+	this.getArchetypeAdlByName = function(archetypeName) {
+		return $http.get(ARCHETYPE_BY_NAME_URL + archetypeName + '.adl').then(function(response) {
 			return response.data;
 		});
 	};
