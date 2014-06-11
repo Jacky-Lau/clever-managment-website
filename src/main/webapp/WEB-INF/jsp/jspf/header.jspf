@@ -12,7 +12,10 @@ pageEncoding="UTF-8"%>
 		<div class="collapse navbar-collapse" id="clever-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
 				<li>
-					<a href="#"><b>User Guide</b></a>
+					<a href="#" ng-click="openUploadModal('lg')"><b><span class="glyphicon glyphicon-upload"></span> Upload Archetypes</b></a>
+				</li>
+				<li>
+					<a href="#">User Guide</a>
 				</li>
 				<li>
 					<a href="#">About</a>

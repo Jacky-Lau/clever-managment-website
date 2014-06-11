@@ -12,24 +12,13 @@ pageEncoding="UTF-8"%>
 		href="/clever-management-website/css/lib/bootstrap.min.css" />
 		<link rel="stylesheet"
 		href="/clever-management-website/css/app.css" />
+		<link rel="stylesheet"
+		href="/clever-management-website/css/abn-tree.css" />
 	</head>
 	<body ng-controller="AppCtrl">
 		<!-- header -->
 		<%@ include file="jspf/header.jspf"%>
 		<div class="container content-container" >
-			<!-- toolbar -->
-			<div class="row" style="margin-bottom: 20px">
-				<div class="col-xs-12 col-md-12 col-lg-12">
-					<div class="btn-group">
-						<button type="button" class="btn btn-default" ng-click="openUploadModal('lg')">
-							<span class="glyphicon glyphicon-upload"></span> Upload archetypes
-						</button>
-						<button type="button" class="btn btn-default">
-							<span class="glyphicon glyphicon-plus"></span> New archetype
-						</button>
-					</div>
-				</div>
-			</div>
 			<div class="row" style="max-height: 800px">
 				<div class="col-xs-12 col-md-12 col-lg-12 hbox">
 					<!-- left side navbar -->
@@ -59,7 +48,7 @@ pageEncoding="UTF-8"%>
 						</div>
 					</nav>
 					<!-- splitter -->
-					<splitter>
+					<splitter is-adjust-enabled="!isNavbarCollapsed" style="height: 800px;">
 						<i style="cursor: pointer" ng-click="expandNavbar()" ng-show="isNavbarCollapsed"><span class="glyphicon glyphicon-chevron-right" ></span></i>
 						<i style="cursor: pointer" ng-click="collapseNavbar()" ng-show="!isNavbarCollapsed"><span class="glyphicon glyphicon-chevron-left" ></span></i>
 					</splitter>
@@ -77,9 +66,9 @@ pageEncoding="UTF-8"%>
 
 						<!-- Tab panes -->
 						<div class="tab-content">
-							<div class="tab-pane" ng-class="{'active': selectedArchetypeId == 0}" style="overflow: auto;height: 750px;">
+							<div class="tab-pane" ng-class="{'active': selectedArchetypeId == 0}" style="height: 750px;">
 								<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-								<div overview ng-show="archetypeList.length > 0" archetype-list="archetypeList" double-click="selectArchetype"></div>
+								<div overview ng-show="archetypeList.length > 0" archetype-list="archetypeList" double-click="selectArchetype(selectedArchetype)"></div>
 							</div>
 							<div class="tab-pane" ng-class="{'active': tab.id == selectedArchetypeId}" ng-repeat="tab in tabs" ng-controller="tabContentCtrl">
 								<h4>{{tab.title}}</h4>
@@ -97,17 +86,17 @@ pageEncoding="UTF-8"%>
 								</ul>
 								<!-- Tab panes -->
 								<div class="tab-content">
-									<div class="tab-pane" ng-class="{'active': selectedTab == 'Tree'}" style="overflow: auto;height: 700px;">
-										<span ng-show="tab.xml == ''"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-										<archetype-treeview archetype-xml="tab.xml"></archetype-treeview>
+									<div class="tab-pane" ng-class="{'active': selectedTab == 'Tree'}" style="height: 700px;">
+										<span ng-show="!tab.xml"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+										<archetype-treeview ng-show="tab.xml" archetype-xml="tab.xml"></archetype-treeview>
 									</div>
 									<div class="tab-pane" ng-class="{'active': selectedTab == 'Xml'}" style="overflow: auto;height: 700px;">
-										<span ng-show="tab.xml == ''"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-										<pre ng-bind-html-unsafe="text|pretty">{{tab.xml}}</pre>
+										<span ng-show="!tab.xml"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+										<pre ng-show="tab.xml" ng-bind-html-unsafe="text|pretty">{{tab.xml}}</pre>
 									</div>
 									<div class="tab-pane" ng-class="{'active': selectedTab == 'Adl'}" style="overflow: auto;height: 700px;">
-										<span ng-show="tab.adl == ''"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-										<pre ng-bind-html-unsafe="text|pretty">{{tab.adl}}</pre>
+										<span ng-show="!tab.adl"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+										<pre ng-show="tab.adl" ng-bind-html-unsafe="text|pretty">{{tab.adl}}</pre>
 									</div>
 								</div>						
 							</div>

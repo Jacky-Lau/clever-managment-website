@@ -2,10 +2,10 @@ function uploadModalCtrl($scope, $modalInstance, fileUploadService) {
 
 	$scope.title = "Upload Archetypes";
 	$scope.fileList = [];
-	$scope.commitSequence = null;
+	$scope.commitSequence;
 
 	$scope.isUploadEnabled = function() {
-		return $scope.commitSequence == null && $scope.fileList.length > 0;
+		return !!$scope.commitSequence && $scope.fileList.length > 0;
 	};
 
 	$scope.ok = function() {
@@ -19,7 +19,7 @@ function uploadModalCtrl($scope, $modalInstance, fileUploadService) {
 	};
 
 	$scope.uploadFiles = function() {
-		if ($scope.commitSequence == null) {
+		if (!!$scope.commitSequence) {
 			fileUploadService.getCommitSequence().then(function(commitSequence) {
 				$scope.commitSequence = commitSequence;
 				uploadFiles();

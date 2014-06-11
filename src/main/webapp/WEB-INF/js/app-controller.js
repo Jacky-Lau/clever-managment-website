@@ -1,4 +1,6 @@
 function AppCtrl($scope, $modal, archetypeRetrieveService) {
+	
+	var undefined;
 
 	$scope.isNavbarCollapsed = true;
 
@@ -35,8 +37,8 @@ function AppCtrl($scope, $modal, archetypeRetrieveService) {
 			var index = $scope.tabs.push({
 				'id' : archetype.id,
 				'title' : archetype.name,
-				'xml' : '',
-				'adl' : '',
+				'xml' : undefined,
+				'adl' : undefined,
 			});
 			archetypeRetrieveService.getArchetypeXmlById(archetype.id).then(function(archetypeXml) {
 				$scope.tabs[index - 1].xml = archetypeXml;

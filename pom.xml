@@ -30,12 +30,13 @@
 			<id>dev</id>
 			<properties>
 				<env>dev</env>
-				<tomcat.url>http://localhost:${server.port}/manager/text</tomcat.url>
+				<server.host>172.16.100.63</server.host>
+				<tomcat.url>http://${server.host}:9095/manager/text</tomcat.url>
 				<database.url>jdbc:sqlserver://172.16.100.33;instanceName=SXDYY;databaseName=CLEVER_MANAGEMENT_WEBSITE_DEV</database.url>
 				<database.username>sa</database.username>
 				<database.password>@Sxdyy0808</database.password>
-				<service.url>http://172.16.100.63:9091/clever-service-orm/CleverService</service.url>
-				<validation.url>http://172.16.100.63:9093/clever-service-orm/CleverService</validation.url>
+				<service.url>http://${server.host}:9091/clever-service-orm/CleverService</service.url>
+				<validation.url>http://${server.host}:9093/clever-service-orm/CleverService</validation.url>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>

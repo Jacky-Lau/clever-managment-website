@@ -4,7 +4,7 @@ function() {
 		restrict : 'EA',
 		scope : {
 			archetypeList : '=',
-			doubleClick : '='
+			doubleClick : '&'
 		},
 		templateUrl : 'js/overview/overview.html',
 		transclude : true,
@@ -36,7 +36,7 @@ function() {
 				
 			} else {
 				
-				var container = element.find('#overview-container').context;
+				var container = element.find('#overview-container')[0];
 				
 				// Creates the graph inside the given container
 				scope.graph = new mxGraph(container);
@@ -80,9 +80,10 @@ function() {
 					var cell = evt.getProperty('cell');
 					if (cell != null) {
 						scope.$apply(function(){
-							scope.doubleClick(cell.value);
-						});
-						
+							scope.doubleClick({
+								selectedArchetype : cell.value
+							});
+						});				
 					}
 					evt.consume();
 				});
@@ -112,9 +113,15 @@ function() {
 					name : 'Stack',
 					layout : new mxStackLayout(scope.graph, true, 30)
 				};
+				
+				var organicLayout = {
+					name : 'Organic',
+					layout : new mxFastOrganicLayout(scope.graph)
+				};
+				
 				stackLayout.layout.wrap = stackLayout.layout.getParentSize(scope.graph.getDefaultParent()).width;
 
-				scope.layouts = [circleLayout, compactLayout, edgeLayout, stackLayout]; 
+				scope.layouts = [stackLayout, circleLayout, compactLayout, edgeLayout, organicLayout ]; 
 				
 				scope.currentLayout = stackLayout;
 				
@@ -124,7 +131,11 @@ function() {
 						layout.layout.execute(scope.graph.getDefaultParent());
 					} finally {
 						// Updates the display
-						scope.graph.getModel().endUpdate();
+						var morph = new mxMorphing(scope.graph);
+						morph.addListener(mxEvent.DONE, function() {
+							scope.graph.getModel().endUpdate();
+						});
+						morph.startAnimation();				
 					}
 				}
 		

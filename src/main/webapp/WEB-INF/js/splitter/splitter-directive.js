@@ -2,11 +2,12 @@ angular.module('clever.management.directives.splitter', []).directive('splitter'
 function($document) {
 	return {
 		restrict : 'EA',
-		scope: {},
+		scope : {
+			isAdjustEnabled : '='
+		},
 		link : function(scope, element, attrs) {
 
 			element.css({
-				height : '100%',
 				cursor : 'e-resize',
 				display : 'block',
 				'text-align' : 'center'
@@ -21,17 +22,19 @@ function($document) {
 			element.prev().width(minWidth);
 
 			element.on('mousedown', function(event) {
-				if (direction == 'right') {
-					resizeEl = element.next();
-				} else {
-					resizeEl = element.prev();
+				if (scope.isAdjustEnabled) {
+					if (direction == 'right') {
+						resizeEl = element.next();
+					} else {
+						resizeEl = element.prev();
+					}
+					dragging = true;
+					startWidth = resizeEl.width();
+					startX = event.screenX;
+					jQuery('body').css('-webkit-user-select', 'none').css('-moz-user-select', '-none').css('-ms-user-select', 'none').css('cursor', 'e-resize');
+					$document.on('mousemove', mousemove);
+					$document.on('mouseup', mouseup);
 				}
-				dragging = true;
-				startWidth = resizeEl.width();
-				startX = event.screenX;
-				jQuery('body').css('-webkit-user-select', 'none').css('-moz-user-select', '-none').css('-ms-user-select', 'none').css('cursor', 'e-resize');
-				$document.on('mousemove', mousemove);
-				$document.on('mouseup', mouseup);
 			});
 
 			function mousemove(event) {

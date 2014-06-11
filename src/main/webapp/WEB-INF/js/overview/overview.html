@@ -3,7 +3,7 @@
 		<div class="col-xs-12 col-md-12 col-lg-12" style="padding: 5px 0px;">
 			<!-- Single button -->
 			<div class="input-group">
-				<span class="input-group-addon">Overview Layout:</span>
+				<span class="input-group-addon">Layout:</span>
 				<div class="btn-group pull-left" dropdown is-open="isDropdownOpened">
 					<button type="button" class="btn btn-default dropdown-toggle">
 						{{currentLayout.name}} <span class="caret"></span>
@@ -15,17 +15,17 @@
 					</ul>
 				</div>
 				<div class="btn-group pull-right">
-				<button type="button" class="btn btn-default" ng-click="zoomIn()">
-					<span class="glyphicon glyphicon-zoom-in"></span>
-				</button>
-				<button type="button" class="btn btn-default" ng-click="zoomOut()">
-					<span class="glyphicon glyphicon-zoom-out"></span>
-				</button>
-			</div>
+					<button type="button" class="btn btn-default" ng-click="zoomIn()">
+						<span class="glyphicon glyphicon-zoom-in"></span>
+					</button>
+					<button type="button" class="btn btn-default" ng-click="zoomOut()">
+						<span class="glyphicon glyphicon-zoom-out"></span>
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-12 col-md-12 col-lg-12" id="overview-container" ng-transclude></div>
+		<div class="col-xs-12 col-md-12 col-lg-12" id="overview-container" style="overflow: auto;height: 750px;width: 100%;" ng-transclude></div>
 	</div>
 </div>
