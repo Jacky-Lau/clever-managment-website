@@ -1,4 +1,4 @@
-function uploadModalCtrl($scope, $modalInstance, fileUploadService) {
+function UploadModalCtrl($scope, $modalInstance, fileUploadService) {
 
 	$scope.title = "Upload Archetypes";
 	$scope.fileList = [];

@@ -63,12 +63,12 @@ pageEncoding="UTF-8"%>
 								<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 								<div overview ng-show="archetypeList.length > 0" archetype-list="archetypeList" double-click="selectArchetype(selectedArchetype)"></div>
 							</div>
-							<div class="tab-pane" ng-class="{'active': tab.id == selectedArchetypeId}" ng-repeat="tab in tabs" ng-controller="tabContentCtrl">
+							<div class="tab-pane" ng-class="{'active': tab.id == selectedArchetypeId}" ng-repeat="tab in tabs" ng-controller="ArchetypeDisplayCtrl" ng-init="init(tab)">
 								<h4>{{tab.title}}</h4>
 								<!-- Nav tabs -->
 								<ul class="nav nav-tabs">
-									<li ng-class="{'active': selectedTab == 'Tree'}">
-										<a ng-click="selectTab('Tree')" style="cursor: pointer;">Tree View</a>
+									<li ng-class="{'active': selectedTab == 'Definition'}">
+										<a ng-click="selectTab('Definition')" style="cursor: pointer;">Definition</a>
 									</li>
 									<li ng-class="{'active': selectedTab == 'Xml'}">
 										<a ng-click="selectTab('Xml')" style="cursor: pointer;">XML</a>
@@ -79,7 +79,7 @@ pageEncoding="UTF-8"%>
 								</ul>
 								<!-- Tab panes -->
 								<div class="tab-content">
-									<div class="tab-pane" ng-class="{'active': selectedTab == 'Tree'}" style="height: 700px;">
+									<div class="tab-pane" ng-class="{'active': selectedTab == 'Definition'}" style="height: 700px;">
 										<span ng-show="!tab.xml"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 										<archetype-treeview ng-show="tab.xml" archetype-xml="tab.xml"></archetype-treeview>
 									</div>

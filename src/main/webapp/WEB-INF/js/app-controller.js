@@ -75,7 +75,7 @@ function AppCtrl($scope, $modal, archetypeRetrieveService) {
 	$scope.openUploadModal = function(size) {
 		var modalInstance = $modal.open({
 			templateUrl : 'js/upload-modal/upload-modal.html',
-			controller : uploadModalCtrl,
+			controller : UploadModalCtrl,
 			backdrop : 'static',
 			size : size,
 		});
