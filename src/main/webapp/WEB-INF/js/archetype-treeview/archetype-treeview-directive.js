@@ -8,8 +8,23 @@ function() {
 		templateUrl : 'js/archetype-treeview/archetype-treeview.html',
 		link : function(scope, element, attrs) {
 			scope.treeControl = {};
+			
+			scope.isExpandedAll = false;
+
+			scope.$watch('isExpandedAll', function(newValue, oldValue) {
+				if (newValue) {
+					if(scope.treeControl.expand_all){
+						scope.treeControl.expand_all();
+					}				
+				} else {
+					if(scope.treeControl.collapse_all){
+						scope.treeControl.collapse_all();
+					}			
+				}
+			}); 
+			
 			scope.$watch('archetypeXml', function(archetypeXml) {
-				if (!!archetypeXml) {
+				if (archetypeXml) {
 					var x2js = new X2JS();
 					var archetype = x2js.xml_str2json(archetypeXml).archetype;
 					var ontology = parseOntology(archetype);
@@ -49,30 +64,32 @@ function() {
 			}
 
 			function extractNode(node, ontology) {
-				var type, attribute, nodeId, ontologyText;
+				var type, attribute, nodeOntology;
 				type = node.rm_type_name;
 				attribute = node.rm_attribute_name;
-				if (!!node.node_id) {
-					nodeId = node.node_id;
-					ontologyText = getOntologyById(nodeId, ontology).text;
+				if (node.node_id) {
+					nodeOntology = getOntologyById(node.node_id, ontology);
 				}
 				// return {
 				// type : type,
 				// attribute : attribute,
 				// ontology : ontology
 				// };
-				var label;
-				if (!!type) {
-					label = 'Type: ' + type;
+				var label, labelType;
+				if (type) {
+					labelType = 'type';
+					label = type;
 				}
-				if (!!attribute) {
-					label = 'Attribute: ' + attribute;
-				}
-				if (!!ontologyText) {
-					label += ' Ontology: ' + ontologyText;
+				else if (attribute) {
+					labelType = 'attribute';
+					label =  attribute;
 				}
 				return {
-					label : label
+					label : {
+							type : labelType,
+							text : label,
+							ontology : nodeOntology
+						}			
 				};
 			}
 
@@ -80,7 +97,7 @@ function() {
 				if (angular.isArray(attributes)) {
 					angular.forEach(attributes, function(value) {
 						var node = extractNode(value, ontology);
-						if (!!value.children) {
+						if (value.children) {
 							node.children = [];
 							processType(value.children, node.children, ontology);
 						}
@@ -88,7 +105,7 @@ function() {
 					});
 				} else {
 					var node = extractNode(attributes, ontology);
-					if (!!attributes.children) {
+					if (attributes.children) {
 						node.children = [];
 						processType(attributes.children, node.children, ontology);
 					}
@@ -100,7 +117,7 @@ function() {
 				if (angular.isArray(type)) {
 					angular.forEach(type, function(value) {
 						var node = extractNode(value, ontology);
-						if (!!value.attributes) {
+						if (value.attributes) {
 							node.children = [];
 							processAttributes(value.attributes, node.children, ontology);
 						}
@@ -108,7 +125,7 @@ function() {
 					});
 				} else {
 					var node = extractNode(type, ontology);
-					if (!!type.attributes) {
+					if (type.attributes) {
 						node.children = [];
 						processAttributes(type.attributes, node.children, ontology);
 					}

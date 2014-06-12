@@ -6,14 +6,7 @@ pageEncoding="UTF-8"%>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 		<title>CLEVER Management</title>
 		<!-- css init -->
-		<link rel="stylesheet"
-		href="/clever-management-website/css/font.css" />
-		<link rel="stylesheet"
-		href="/clever-management-website/css/lib/bootstrap.min.css" />
-		<link rel="stylesheet"
-		href="/clever-management-website/css/app.css" />
-		<link rel="stylesheet"
-		href="/clever-management-website/css/abn-tree.css" />
+		<%@ include file="jspf/css-init.jspf"%>
 	</head>
 	<body ng-controller="AppCtrl">
 		<!-- header -->
@@ -41,9 +34,9 @@ pageEncoding="UTF-8"%>
 						<!-- archetype list -->
 						<div class="flexBox">
 							<div class="list-group" ng-show="archetypeList.length > 0" style="max-height: 750px; overflow: auto;">
-								<a href="#" class="list-group-item" ng-click="selectOverview()" ng-class="{'active': selectedArchetypeId == 0}"><b>Overview</b></a>
+								<a href class="list-group-item" ng-click="selectOverview()" ng-class="{'active': selectedArchetypeId == 0}"><b>Overview</b></a>
 								<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-								<a href="#" class="list-group-item" ng-repeat="archetype in archetypeList | filter:archetypeListFilter | orderBy:'name'" ng-click="selectArchetype(archetype)" ng-class="{'active': archetype.id == selectedArchetypeId}">{{archetype.name}}</a>
+								<a href ng-show="archetypeList.length > 0" class="list-group-item" ng-repeat="archetype in archetypeList | filter:archetypeListFilter | orderBy:'name'" ng-click="selectArchetype(archetype)" ng-class="{'active': archetype.id == selectedArchetypeId}">{{archetype.name}}</a>
 							</div>
 						</div>
 					</nav>
