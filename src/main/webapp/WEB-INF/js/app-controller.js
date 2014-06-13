@@ -37,14 +37,8 @@ function AppCtrl($scope, $modal, archetypeRetrieveService) {
 			var index = $scope.tabs.push({
 				'id' : archetype.id,
 				'title' : archetype.name,
-				'xml' : undefined,
-				'adl' : undefined,
-			});
-			archetypeRetrieveService.getArchetypeXmlById(archetype.id).then(function(archetypeXml) {
-				$scope.tabs[index - 1].xml = archetypeXml;
-			});
-			archetypeRetrieveService.getArchetypeAdlById(archetype.id).then(function(archetypeAdl) {
-				$scope.tabs[index - 1].adl = archetypeAdl;
+				'xmlPromise' : archetypeRetrieveService.getArchetypeXmlById(archetype.id),
+				'adlPromise' : archetypeRetrieveService.getArchetypeAdlById(archetype.id),
 			});
 		}
 		$scope.selectedArchetypeId = archetype.id;

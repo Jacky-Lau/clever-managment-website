@@ -5,7 +5,7 @@ function UploadModalCtrl($scope, $modalInstance, fileUploadService) {
 	$scope.commitSequence;
 
 	$scope.isUploadEnabled = function() {
-		return !!$scope.commitSequence && $scope.fileList.length > 0;
+		return !$scope.commitSequence && $scope.fileList.length > 0;
 	};
 
 	$scope.ok = function() {
@@ -19,7 +19,7 @@ function UploadModalCtrl($scope, $modalInstance, fileUploadService) {
 	};
 
 	$scope.uploadFiles = function() {
-		if (!!$scope.commitSequence) {
+		if (!$scope.commitSequence) {
 			fileUploadService.getCommitSequence().then(function(commitSequence) {
 				$scope.commitSequence = commitSequence;
 				uploadFiles();

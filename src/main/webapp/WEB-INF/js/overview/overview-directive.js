@@ -4,7 +4,8 @@ function() {
 		restrict : 'EA',
 		scope : {
 			archetypeList : '=',
-			doubleClick : '&'
+			doubleClick : '&',
+			animation : '@'
 		},
 		templateUrl : 'js/overview/overview.html',
 		transclude : true,
@@ -27,6 +28,8 @@ function() {
 			};
 		},
 		link : function(scope, element, attrs) {
+			
+			var animation = scope.animation || 'false';
 
 			// Checks if the browser is supported
 			if (!mxClient.isBrowserSupported()) {
@@ -54,13 +57,13 @@ function() {
 				// Disables built-in context menu
 				//mxEvent.disableContextMenu(container);
 				
+				// Enables tooltips
+				scope.graph.setTooltips(true);
+				
 				// Installs a custom tooltip for cells
 				scope.graph.getTooltipForCell = function(cell){
 					return cell.value.name;
 				};
-				
-				// Enables tooltips
-				scope.graph.setTooltips(true);
 				
 				// Overrides method to disallow edge label editing
 				scope.graph.isCellEditable = function(cell)
@@ -88,90 +91,6 @@ function() {
 					evt.consume();
 				});
 				
-
-				// Layouts
-				// Circle layout, too big
-				var circleLayout = {
-					name : 'Circle',
-					layout : new mxCircleLayout(scope.graph)
-				};
-
-				// Compact tree layout, not work
-				var compactLayout = {
-					name : 'Compact tree',
-					layout : new mxCompactTreeLayout(scope.graph)
-				};
-
-				// Edge label layout, not work
-				var edgeLayout = {
-					name : 'Edge',
-					layout : new mxEdgeLabelLayout(scope.graph)
-				};
-
-				// Stack layout, work, but very simple
-				var stackLayout = {
-					name : 'Stack',
-					layout : new mxStackLayout(scope.graph, true, 30)
-				};
-				
-				var organicLayout = {
-					name : 'Organic',
-					layout : new mxFastOrganicLayout(scope.graph)
-				};
-				
-				stackLayout.layout.wrap = stackLayout.layout.getParentSize(scope.graph.getDefaultParent()).width;
-
-				scope.layouts = [stackLayout, circleLayout, compactLayout, edgeLayout, organicLayout ]; 
-				
-				scope.currentLayout = stackLayout;
-				
-				function applyLayout(layout){
-					scope.graph.getModel().beginUpdate();
-					try {
-						layout.layout.execute(scope.graph.getDefaultParent());
-					} finally {
-						// Updates the display
-						var morph = new mxMorphing(scope.graph);
-						morph.addListener(mxEvent.DONE, function() {
-							scope.graph.getModel().endUpdate();
-						});
-						morph.startAnimation();				
-					}
-				}
-		
-				scope.$watch('currentLayout', function(newLayout) {
-					applyLayout(newLayout);
-				});
-				
-				// Highlights the vertices when the mouse enters
-				// var highlight = new mxCellTracker(graph, '#00FF00');
-
-				// Adds cells to the model in a single step
-				var cellWidth = 200;
-				var labelWidth = 75;
-				// Gets the default parent for inserting new cells. This
-				// is normally the first child of the root (ie. layer 0).
-				scope.$watch('archetypeList', function(archetypeList) {
-					if (archetypeList.length > 0) {
-						scope.graph.getModel().beginUpdate();
-						var parent = scope.graph.getDefaultParent();
-						try {
-							angular.forEach(scope.archetypeList, function(value, index) {
-								var vertex = scope.graph.insertVertex(parent, null, value, 0, 0, cellWidth, 0);
-								// Updates the height of the cell (override width
-								// for table width is set to 100%)
-								scope.graph.updateCellSize(vertex);
-								vertex.geometry.width = cellWidth;
-								vertex.geometry.alternateBounds = new mxRectangle(0, 0, cellWidth, 27);
-							});
-							applyLayout(scope.currentLayout);
-						} finally {
-							// Updates the display
-							scope.graph.getModel().endUpdate();
-						}
-					}
-					
-				});
 				
 				// Overrides getLabel to return empty labels for edges and
 				// short markup for collapsed cells.
@@ -211,8 +130,95 @@ function() {
 					} else {
 						return '';
 					}
+				};			
+
+				// Layouts
+				// Circle layout, too big
+				var circleLayout = {
+					name : 'Circle',
+					layout : new mxCircleLayout(scope.graph)
 				};
 
+				// Compact tree layout, not work
+				var compactLayout = {
+					name : 'Compact tree',
+					layout : new mxCompactTreeLayout(scope.graph)
+				};
+
+				// Edge label layout, not work
+				var edgeLayout = {
+					name : 'Edge',
+					layout : new mxEdgeLabelLayout(scope.graph)
+				};
+
+				// Stack layout, work, but very simple
+				var stackLayout = {
+					name : 'Stack',
+					layout : new mxStackLayout(scope.graph, true, 30, 10, 10)
+				};
+				
+				var organicLayout = {
+					name : 'Organic',
+					layout : new mxFastOrganicLayout(scope.graph)
+				};
+				
+				stackLayout.layout.wrap = stackLayout.layout.getParentSize(scope.graph.getDefaultParent()).width;
+
+				scope.layouts = [stackLayout, circleLayout, compactLayout, edgeLayout, organicLayout ]; 
+				
+				scope.currentLayout = stackLayout;
+				
+				function applyLayout(layout){
+					scope.graph.getModel().beginUpdate();
+					try {
+						layout.layout.execute(scope.graph.getDefaultParent());
+					} finally {
+						// Updates the display
+						if (animation == 'true') {
+							var morph = new mxMorphing(scope.graph);
+							morph.addListener(mxEvent.DONE, function() {
+								scope.graph.getModel().endUpdate();
+							});
+							morph.startAnimation();
+						} else {
+							scope.graph.getModel().endUpdate();
+						}					
+					}
+				}
+		
+				scope.$watch('currentLayout', function(newLayout) {
+					applyLayout(newLayout);
+				});
+				
+				// Highlights the vertices when the mouse enters
+				// var highlight = new mxCellTracker(graph, '#00FF00');
+
+				// Adds cells to the model in a single step
+				var cellWidth = 200;
+				var labelWidth = 75;
+				// Gets the default parent for inserting new cells. This
+				// is normally the first child of the root (ie. layer 0).
+				scope.$watch('archetypeList', function(archetypeList) {
+					if (archetypeList.length > 0) {
+						scope.graph.getModel().beginUpdate();
+						var parent = scope.graph.getDefaultParent();
+						try {
+							scope.graph.removeCells(scope.graph.getChildVertices(parent));
+							angular.forEach(scope.archetypeList, function(value, index) {
+								var vertex = scope.graph.insertVertex(parent, null, value, 0, 0, cellWidth, 0);
+								// Updates the height of the cell (override width
+								// for table width is set to 100%)
+								scope.graph.updateCellSize(vertex);
+								vertex.geometry.width = cellWidth;
+								vertex.geometry.alternateBounds = new mxRectangle(0, 0, cellWidth, 27);
+							});
+						} finally {
+							// Updates the display
+							scope.graph.getModel().endUpdate();
+						}
+						applyLayout(scope.currentLayout);
+					}				
+				});
 			}
 		},
 	};

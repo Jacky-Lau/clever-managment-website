@@ -70910,7 +70910,7 @@ mxTooltipHandler.prototype.reset = function(me, restart)
 		var x = me.getX();
 		var y = me.getY();
 		var stateSource = me.isSource(state.shape) || me.isSource(state.text);
-
+	
 		this.thread = window.setTimeout(mxUtils.bind(this, function()
 		{
 			if (!this.graph.isEditing() && !this.graph.panningHandler.isMenuShowing())

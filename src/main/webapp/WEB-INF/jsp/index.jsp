@@ -21,10 +21,9 @@ pageEncoding="UTF-8"%>
 								<div class="panel-heading">
 									<div class="panel-title row">
 										<input type="text" placeholder="Filter by name" class="form-control pull-left" style="width: 50%;margin-left: 15px;" ng-model="archetypeListFilter">
-										<a class="pull-right" data-toggle="collapse" data-parent="#accordion" href="#collapseAdvancedSearch" style="vertical-align: middle;padding: 6px 12px;">Advanced</a>
 									</div>
 								</div>
-								<div id="collapseAdvancedSearch" class="panel-collapse collapse">
+								<div class="panel-collapse collapse">
 									<div class="panel-body">
 										Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
 									</div>
@@ -61,14 +60,42 @@ pageEncoding="UTF-8"%>
 						<div class="tab-content">
 							<div class="tab-pane" ng-class="{'active': selectedArchetypeId == 0}" style="height: 750px;">
 								<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-								<div overview ng-show="archetypeList.length > 0" archetype-list="archetypeList" double-click="selectArchetype(selectedArchetype)"></div>
+								<div overview ng-show="archetypeList.length > 0" archetype-list="archetypeList" double-click="selectArchetype(selectedArchetype)" animation="false"></div>
 							</div>
 							<div class="tab-pane" ng-class="{'active': tab.id == selectedArchetypeId}" ng-repeat="tab in tabs" ng-controller="ArchetypeDisplayCtrl" ng-init="init(tab)">
-								<h4>{{tab.title}}</h4>
+								<div class="container content-container">
+									<div class="row">
+										<div class="col-xs-8 col-md-8 col-lg-8">
+											<h3>{{title}}</h3>
+										</div>
+										<div class="col-xs-4 col-md-4 col-lg-4">
+											<div class="input-group pull-right" style="padding: 5px;width: 260px;margin-top: 5px;">
+												<span class="input-group-addon" style="width: 100px;">Language:</span>
+												<div class="btn-group" dropdown is-open="isDropdownOpened">
+													<button type="button" class="btn btn-default dropdown-toggle" style="width: 160px;">
+														{{selectedLanguage}} <span class="glyphicon glyphicon-chevron-down pull-right" style="margin-top: 2px;"></span>
+													</button>
+													<ul class="dropdown-menu" role="menu">
+														<li ng-repeat="language in languages">
+															<a href class="text-center" ng-click="selectLanguage(language)">{{language}}</a>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
 								<!-- Nav tabs -->
 								<ul class="nav nav-tabs">
+									<li ng-class="{'active': selectedTab == 'Header'}">
+										<a ng-click="selectTab('Header')" style="cursor: pointer;">Header</a>
+									</li>
 									<li ng-class="{'active': selectedTab == 'Definition'}">
 										<a ng-click="selectTab('Definition')" style="cursor: pointer;">Definition</a>
+									</li>
+									<li ng-class="{'active': selectedTab == 'Terminology'}">
+										<a ng-click="selectTab('Terminology')" style="cursor: pointer;">Terminology</a>
 									</li>
 									<li ng-class="{'active': selectedTab == 'Xml'}">
 										<a ng-click="selectTab('Xml')" style="cursor: pointer;">XML</a>
@@ -79,19 +106,45 @@ pageEncoding="UTF-8"%>
 								</ul>
 								<!-- Tab panes -->
 								<div class="tab-content">
+									<!-- Header -->
+									<div class="tab-pane" ng-class="{'active': selectedTab == 'Header'}" style="overflow: auto;height: 700px;">
+										<span ng-show="!xmlText"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+										<header-tab ng-show="xmlText" archetype-id="header.id" concept-code="header.concept" description="currentDescription" terminology="currentTerminology"></header-tab>
+									</div>
+									<!-- Definition -->
 									<div class="tab-pane" ng-class="{'active': selectedTab == 'Definition'}" style="height: 700px;">
-										<span ng-show="!tab.xml"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-										<archetype-treeview ng-show="tab.xml" archetype-xml="tab.xml"></archetype-treeview>
+										<span ng-show="!xmlText"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+										<div ng-show="xmlText" class="container content-container">
+											<div class="row" style="padding: 5px 0px;">
+												<div class="col-xs-12 col-md-12 col-lg-12">
+													<span><b>Expand All:&nbsp;&nbsp;&nbsp;</b></span>
+													<toggle-switch model="isExpandedAll">
+														<toggle-switch>
+												</div>
+											</div>
+											<div class="row" style="overflow: auto;height: 680px;">
+												<div class="col-xs-12 col-md-12 col-lg-12">
+													<abn-tree tree-data="treeData" tree-control="treeControl" terminology="currentTerminology" icon-expand="glyphicon glyphicon-chevron-right" icon-collapse="glyphicon glyphicon-chevron-down" icon-leaf="glyphicon glyphicon-th-large"></abn-tree>
+												</div>
+											</div>
+										</div>
 									</div>
+									<!-- Terminology -->
+									<div class="tab-pane" ng-class="{'active': selectedTab == 'Terminology'}" style="overflow: auto;height: 700px;">
+										<span ng-show="!xmlText"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+										<terminology-tab ng-show="xmlText" terminology="currentTerminology"></terminology-tab>
+									</div>
+									<!-- Xml -->
 									<div class="tab-pane" ng-class="{'active': selectedTab == 'Xml'}" style="overflow: auto;height: 700px;">
-										<span ng-show="!tab.xml"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-										<pre ng-show="tab.xml" ng-bind-html-unsafe="text|pretty">{{tab.xml}}</pre>
+										<span ng-show="!xmlText"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+										<pre ng-show="xmlText" ng-bind-html-unsafe="text|pretty">{{xmlText}}</pre>
 									</div>
+									<!-- Adl -->
 									<div class="tab-pane" ng-class="{'active': selectedTab == 'Adl'}" style="overflow: auto;height: 700px;">
-										<span ng-show="!tab.adl"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-										<pre ng-show="tab.adl" ng-bind-html-unsafe="text|pretty">{{tab.adl}}</pre>
+										<span ng-show="!adlText"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
+										<pre ng-show="adlText" ng-bind-html-unsafe="text|pretty">{{adlText}}</pre>
 									</div>
-								</div>						
+								</div>
 							</div>
 						</div>
 					</div>
