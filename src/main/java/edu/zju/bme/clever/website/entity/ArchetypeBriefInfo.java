@@ -7,6 +7,7 @@ public class ArchetypeBriefInfo {
 	private String purpose;
 	private String use;
 	private String keywords;
+	private String originalLanguage;
 
 	public Integer getId() {
 		return id;
@@ -46,6 +47,14 @@ public class ArchetypeBriefInfo {
 
 	public void setKeywords(String keywords) {
 		this.keywords = keywords;
+	}
+
+	public String getOriginalLanguage() {
+		return originalLanguage;
+	}
+
+	public void setOriginalLanguage(String originalLanguage) {
+		this.originalLanguage = originalLanguage;
 	}
 
 }

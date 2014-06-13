@@ -38,6 +38,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 			info.setPurpose(file.getPurpose());
 			info.setKeywords(file.getKeywords());
 			info.setUse(file.getUse());
+			info.setOriginalLanguage(file.getOriginalLanguage());
 			archetypeList.add(info);
 		}
 		return archetypeList;

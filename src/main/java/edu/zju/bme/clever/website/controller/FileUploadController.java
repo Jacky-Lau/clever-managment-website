@@ -65,30 +65,32 @@ public class FileUploadController {
 		String fileStatus = FileUploadStatusConstant.UPLOADED;
 		String archetypeId = "";
 		String archetypeContent = "";
-		String zhPurpose = "";
-		String zhKeywords = "";
-		String zhUse = "";
+		String purpose = "";
+		String keywords = "";
+		String use = "";
+		String originalLanguage = "";
 		// Parse the archetype
 		try {
 			ADLParser parser = new ADLParser(file.getInputStream(), "UTF-8");
 			Archetype archetype = parser.parse();
 			ArchetypeID archetypeIdNode = archetype.getArchetypeId();
 			archetypeId = archetypeIdNode.toString();
+			originalLanguage = archetype.getOriginalLanguage().getCodeString();
 			ResourceDescription resourceDescription = archetype
 					.getDescription();
 			List<ResourceDescriptionItem> resourceDescriptionItems = resourceDescription
 					.getDetails();
 			for (ResourceDescriptionItem resourceDescriptionItem : resourceDescriptionItems) {
 				if (resourceDescriptionItem.getLanguage().getCodeString()
-						.equals("zh")) {
+						.equals(originalLanguage)) {
 					if (resourceDescriptionItem.getPurpose() != null) {
-						zhPurpose = resourceDescriptionItem.getPurpose();
+						purpose = resourceDescriptionItem.getPurpose();
 					}
 					if (resourceDescriptionItem.getUse() != null) {
-						zhUse = resourceDescriptionItem.getUse();
+						use = resourceDescriptionItem.getUse();
 					}
 					if (resourceDescriptionItem.getKeywords() != null) {
-						zhKeywords = String.join("|",
+						keywords = String.join("|",
 								resourceDescriptionItem.getKeywords());
 					}
 				}
@@ -111,9 +113,10 @@ public class FileUploadController {
 			uploadedArchetypeFile.setModifyTime(Calendar.getInstance());
 			uploadedArchetypeFile.setContent(archetypeContent);
 			uploadedArchetypeFile.setName(archetypeId);
-			uploadedArchetypeFile.setKeywords(zhKeywords);
-			uploadedArchetypeFile.setPurpose(zhPurpose);
-			uploadedArchetypeFile.setUse(zhUse);
+			uploadedArchetypeFile.setKeywords(keywords);
+			uploadedArchetypeFile.setPurpose(purpose);
+			uploadedArchetypeFile.setUse(use);
+			uploadedArchetypeFile.setOriginalLanguage(originalLanguage);
 
 			if (archetypeFileFromDB != null) {
 				if (archetypeFileFromDB.getContent()

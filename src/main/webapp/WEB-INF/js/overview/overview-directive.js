@@ -89,48 +89,7 @@ function() {
 						});				
 					}
 					evt.consume();
-				});
-				
-				
-				// Overrides getLabel to return empty labels for edges and
-				// short markup for collapsed cells.
-				scope.graph.getLabel = function(cell) {
-					if (this.getModel().isVertex(cell)) {
-						
-						var archetypeName = cell.value.name;
-						var archetypeUse = cell.value.use;
-						var archetypePurpose = cell.value.purpose;
-						var archetypeKeywords = cell.value.keywords;
-						var geo = this.getCellGeometry(cell);
-					    if (geo != null)
-					    {
-					      var max = parseInt(geo.width / 8);			
-					      if (archetypeName.length > max)
-					      {
-					        archetypeName = archetypeName.substring(0, max - 8)+'...';
-					      }
-					    }
-					    
-						if (this.isCellCollapsed(cell)) {
-							return '<table style="color: black;" width="' + (geo.width - 8) + '" border="1" cellpadding="2" class="title">' + 
-										'<tr><th colspan="2" class="text-center" >' + archetypeName + '</th></tr>' + 
-									'</table>';
-						} else {
-							return '<table style="color: black;" width="' + (geo.width - 8) + '" border="1" cellpadding="2" class="title">' + 
-										'<tr><th colspan="2" class="text-center" >' + archetypeName + '</th></tr>' + 
-									'</table>' + 
-									'<div style="overflow:auto;cursor:default;">' + 
-										'<table width="' + (geo.width - 8) + '" height="100%" border="1" cellpadding="2" class="erd">' + 
-											'<tr><td style="width: ' + labelWidth + 'px;">Use: </td><td>' + archetypeUse + '</td></tr>' + 
-											'<tr><td style="width: ' + labelWidth + 'px;">Purpose: </td><td>' + archetypePurpose + '</td></tr>' +
-											'<tr><td style="width: ' + labelWidth + 'px;">Keywords: </td><td>' + archetypeKeywords + '</td></tr>' + 
-										'</table>' +
-									'</div>';
-						}
-					} else {
-						return '';
-					}
-				};			
+				});		
 
 				// Layouts
 				// Circle layout, too big
@@ -194,8 +153,8 @@ function() {
 				// var highlight = new mxCellTracker(graph, '#00FF00');
 
 				// Adds cells to the model in a single step
-				var cellWidth = 200;
-				var labelWidth = 75;
+				var cellWidth = 230;
+				var labelWidth = 110;
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
 				scope.$watch('archetypeList', function(archetypeList) {
@@ -219,6 +178,58 @@ function() {
 						applyLayout(scope.currentLayout);
 					}				
 				});
+				
+				function getFixedText(text, width) {
+					var max = parseInt(width / 8);
+					var fixedText = text;
+					if (text.length > max) {
+						fixedText = text.substring(0, max - 3) + '...';
+					}
+					return fixedText;
+				}
+				
+				// Overrides getLabel to return empty labels for edges and
+				// short markup for collapsed cells.
+				scope.graph.getLabel = function(cell) {
+					if (this.getModel().isVertex(cell)) {
+			
+						var archetypeUse = getFixedText(cell.value.use, cellWidth - labelWidth);
+						var archetypePurpose = getFixedText(cell.value.purpose, cellWidth - labelWidth);
+						var archetypeKeywords = getFixedText(cell.value.keywords, cellWidth - labelWidth);
+						var archetypeOriginalLanguage = getFixedText(cell.value.originalLanguage, cellWidth - labelWidth);
+						
+						var archetypeName = cell.value.name;
+						var geo = this.getCellGeometry(cell); 
+					    if (geo != null)
+					    {
+					      var max = parseInt(geo.width / 8);			
+					      if (archetypeName.length > max)
+					      {
+					        archetypeName = archetypeName.substring(0, max - 8)+'...';
+					      }
+					    }
+					    
+						if (this.isCellCollapsed(cell)) {
+							return '<table style="color: black;" width="' + (geo.width - 8) + '" border="1" cellpadding="2" class="title">' + 
+										'<tr><th colspan="2" class="text-center" >' + archetypeName + '</th></tr>' + 
+									'</table>';
+						} else {
+							return '<table style="color: black;" width="' + (geo.width - 8) + '" border="1" cellpadding="2" class="title">' + 
+										'<tr><th colspan="2" class="text-center" >' + archetypeName + '</th></tr>' + 
+									'</table>' + 
+									'<div style="overflow:auto;cursor:default;">' + 
+										'<table width="' + (geo.width - 8) + '" height="100%" border="1" cellpadding="2" class="erd">' + 
+											'<tr><td style="width: ' + labelWidth + 'px;">Use: </td><td>' + archetypeUse + '</td></tr>' + 
+											'<tr><td style="width: ' + labelWidth + 'px;">Purpose: </td><td>' + archetypePurpose + '</td></tr>' +
+											'<tr><td style="width: ' + labelWidth + 'px;">Keywords: </td><td>' + archetypeKeywords + '</td></tr>' + 
+											'<tr><td style="width: ' + labelWidth + 'px;">Original Language: </td><td>' + archetypeOriginalLanguage + '</td></tr>' + 
+										'</table>' +
+									'</div>';
+						}
+					} else {
+						return '';
+					}
+				};	
 			}
 		},
 	};

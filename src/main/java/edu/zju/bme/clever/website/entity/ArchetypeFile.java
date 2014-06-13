@@ -40,6 +40,8 @@ public class ArchetypeFile implements Serializable {
 	private String use;
 	@Column(name = "KEYWORDS")
 	private String keywords;
+	@Column(name = "ORIGINAL_LANGUAGE")
+	private String originalLanguage;
 	@Lob
 	@Column(name = "CONTENT")
 	private String content;
@@ -99,6 +101,14 @@ public class ArchetypeFile implements Serializable {
 
 	public void setKeywords(String keywords) {
 		this.keywords = keywords;
+	}
+
+	public String getOriginalLanguage() {
+		return originalLanguage;
+	}
+
+	public void setOriginalLanguage(String originalLanguage) {
+		this.originalLanguage = originalLanguage;
 	}
 
 	public Calendar getModifyTime() {
