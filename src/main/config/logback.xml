@@ -24,7 +24,7 @@
 		<level value="INFO"/>
 	</logger>
 	<root>
-		<appender-ref ref="STDOUT" level="DEBUG"/>
+		<appender-ref ref="STDOUT" level="TRACE"/>
 	</root>
 	<consolePlugin/>
 </configuration>

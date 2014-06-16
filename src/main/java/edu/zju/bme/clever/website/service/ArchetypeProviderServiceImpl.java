@@ -86,7 +86,9 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 		}
 		XMLSerializer xmlSerializer = new XMLSerializer();
 		try {
-			return xmlSerializer.output(archetype);
+			String output = xmlSerializer.output(archetype);
+			// this.logger.trace(output);
+			return output;
 		} catch (Exception ex) {
 			this.logger.info("Serialize archetype failed.", ex);
 		}

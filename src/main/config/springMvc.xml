@@ -12,7 +12,12 @@
 		http://www.springframework.org/schema/context 
 		http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager"/>
+	<mvc:annotation-driven
+		content-negotiation-manager="contentNegotiationManager">
+		<mvc:message-converters register-defaults="true">
+			<bean class="edu.zju.bme.clever.website.util.UTF8StringHttpMessageConverter" />
+		</mvc:message-converters>
+	</mvc:annotation-driven>
 
 	<mvc:resources location="/WEB-INF/"
 		mapping="/**" />
