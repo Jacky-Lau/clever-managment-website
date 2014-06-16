@@ -37,6 +37,8 @@ src="/clever-management-website/js/upload-modal/file-upload-service.js"></script
 <script
 src="/clever-management-website/js/archetype-retrieve-service.js"></script>
 <script
+src="/clever-management-website/js/archetype-parse-service.js"></script>
+<script
 src="/clever-management-website/js/archetype-display-controller.js"></script>
 <script
 src="/clever-management-website/js/app-config.js"></script>

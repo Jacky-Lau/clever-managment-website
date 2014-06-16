@@ -81,6 +81,7 @@ function() {
 				// that shows an alert box				
 				scope.graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
 					var cell = evt.getProperty('cell');
+					scope.graph.tooltipHandler.resetTimer();
 					if (cell != null) {
 						scope.$apply(function(){
 							scope.doubleClick({

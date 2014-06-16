@@ -59,6 +59,7 @@
 ul.abn-tree li.abn-tree-row {
 	padding: 0px;
 	margin: 0px;
+	width: 100%;
 }
 
 ul.abn-tree li.abn-tree-row a {
@@ -78,4 +79,8 @@ ul.nav.nav-list.abn-tree .label-type {
 }
 ul.nav.nav-list.abn-tree .label-attribute {
 	color: darkblue;
+}
+
+ul.nav.nav-list.abn-tree .label-code-phrase {
+	font-weight: bold;
 }

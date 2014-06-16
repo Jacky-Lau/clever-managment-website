@@ -12,31 +12,31 @@ function() {
 						'<tbody>' +
 							'<tr>' +
 								'<th><b>Archetype ID</b></th>' +
-								'<th>{{archetypeId}}</th>' +
+								'<th style="font-weight: normal">{{archetypeId}}</th>' +
 							'</tr>' +
 							'<tr>' +
 								'<th><b>Concept name</b></th>' +
-								'<th>{{getOntologyByCode(conceptCode).text}}</th>' +
+								'<th style="font-weight: normal">{{getOntologyByCode(conceptCode).text}}</th>' +
 							'</tr>' +
 							'<tr>' +
 								'<th><b>Concept description</b></th>' +
-								'<th>{{getOntologyByCode(conceptCode).description}}</th>' +
+								'<th style="font-weight: normal">{{getOntologyByCode(conceptCode).description}}</th>' +
 							'</tr>' +
 							'<tr>' +
 								'<th><b>Copyright</b></th>' +
-								'<th>{{description.copyright}}</th>' +
+								'<th style="font-weight: normal">{{description.copyright}}</th>' +
 							'</tr>' +
 							'<tr>' +
 								'<th><b>Purpose</b></th>' +
-								'<th>{{description.purpose}}</th>' +
+								'<th style="font-weight: normal">{{description.purpose}}</th>' +
 							'</tr>' +
 							'<tr>' +
 								'<th><b>Use</b></th>' +
-								'<th>{{description.use}}</th>' +
+								'<th style="font-weight: normal">{{description.use}}</th>' +
 							'</tr>' +
 							'<tr>' +
 								'<th><b>Misuse</b></th>' +
-								'<th>{{description.misuse}}</th>' +
+								'<th style="font-weight: normal">{{description.misuse}}</th>' +
 							'</tr>' +
 						'</tbody>' +
 					'</table>',
@@ -45,15 +45,23 @@ function() {
 			scope.getOntologyByCode = function(code) {
 				if (scope.terminology && code) {
 					var matchedOntology;
-					angular.forEach(scope.terminology.items, function(value) {
-						if (value.code == code) {
-							matchedOntology = value;
-						}
-					});
+					if (scope.terminology.term) {
+						angular.forEach(scope.terminology.term.items, function(value) {
+							if (value.code == code) {
+								matchedOntology = value;
+							}
+						});
+					}
+					if (scope.terminology.constraint) {
+						angular.forEach(scope.terminology.constraint.items, function(value) {
+							if (value.code == code) {
+								matchedOntology = value;
+							}
+						});
+					}
 					return matchedOntology;
 				}
-
-			};
+			}; 
 		}
 	};
 }]);

@@ -6,11 +6,11 @@ function($timeout) {
 							"<li ng-repeat=\"row in tree_rows | filter:{visible:true} track by row.branch.uid\" ng-animate=\"'abn-tree-animate'\" ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\" class=\"abn-tree-row\" ng-dblclick=\"row.branch.expanded = !row.branch.expanded\">\n" +
 								"<a style=\"-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;\" ng-click=\"user_clicks_branch(row.branch)\" style=\"position: relative;\" ng-style=\"{left: (row.level * 20 - 20) + 'px'}\">\n" +
 									"<span ng-class=\"row.tree_icon\" ng-click=\"row.branch.expanded = !row.branch.expanded\" class=\"tree-icon\"></span>\n" +  
-									"<span class=\"tree-label\" ng-class=\"{'label-type': row.label.type == 'type', 'label-attribute': row.label.type == 'attribute'}\">\n" +
+									"<span class=\"tree-label\" ng-class=\"{'label-type': row.label.type == 'type', 'label-attribute': row.label.type == 'attribute', 'label-code-phrase': row.label.type == 'codePhrase'}\">\n" +
 										"<img ng-if=\"row.label.type == 'type'\" src=\"/clever-management-website/img/Letter-T-icon.png\" height=\"19px\" style=\"margin-bottom: 2px;\"></img>\n" +     
 										"<img ng-if=\"row.label.type == 'attribute'\" src=\"/clever-management-website/img/Letter-A-icon.png\" height=\"19px\" style=\"margin-bottom: 2px;\"></img>\n" +     
 										"{{ row.label.text }}\n" +
-										"<span ng-if=\"row.label.code\"> [{{getOntologyByCode(row.label.code).text}}]</span>" +
+										"<span ng-if=\"row.label.code\" style=\"color: green;\"> [{{getOntologyByCode(row.label.code).text}}]</span>" +
 									"</span>\n" + 
 								"</a>\n" + 
 							"</li>\n" +
@@ -57,14 +57,25 @@ function($timeout) {
 			}
 
 			scope.getOntologyByCode = function(code) {
-				var matchedOntology;
-				angular.forEach(scope.terminology.items, function(value) {
-					if (value.code == code) {
-						matchedOntology = value;
+				if (scope.terminology && code) {
+					var matchedOntology;
+					if (scope.terminology.term) {
+						angular.forEach(scope.terminology.term.items, function(value) {
+							if (value.code == code) {
+								matchedOntology = value;
+							}
+						});
 					}
-				});
-				return matchedOntology;
-			};
+					if (scope.terminology.constraint) {
+						angular.forEach(scope.terminology.constraint.items, function(value) {
+							if (value.code == code) {
+								matchedOntology = value;
+							}
+						});
+					}
+					return matchedOntology;
+				}
+			}; 
 
 			for_each_branch = function(f) {
 				var do_f, root_branch, _i, _len, _ref, _results;

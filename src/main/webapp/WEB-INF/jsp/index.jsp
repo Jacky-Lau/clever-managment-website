@@ -73,11 +73,11 @@ pageEncoding="UTF-8"%>
 												<span class="input-group-addon" style="width: 100px;">Language:</span>
 												<div class="btn-group" dropdown is-open="isDropdownOpened">
 													<button type="button" class="btn btn-default dropdown-toggle" style="width: 160px;">
-														{{selectedLanguage}} <span class="glyphicon glyphicon-chevron-down pull-right" style="margin-top: 2px;"></span>
+														{{selectedLanguage.code}} <span class="glyphicon glyphicon-chevron-down pull-right" style="margin-top: 2px;"></span>
 													</button>
 													<ul class="dropdown-menu" role="menu">
 														<li ng-repeat="language in languages">
-															<a href class="text-center" ng-click="selectLanguage(language)">{{language}}</a>
+															<a href class="text-center" ng-click="selectLanguage(language)">{{language.code}}</a>
 														</li>
 													</ul>
 												</div>
@@ -123,8 +123,23 @@ pageEncoding="UTF-8"%>
 												</div>
 											</div>
 											<div class="row" style="overflow: auto;height: 680px;">
-												<div class="col-xs-12 col-md-12 col-lg-12">
-													<abn-tree tree-data="treeData" tree-control="treeControl" terminology="currentTerminology" icon-expand="glyphicon glyphicon-chevron-right" icon-collapse="glyphicon glyphicon-chevron-down" icon-leaf="glyphicon glyphicon-th-large"></abn-tree>
+												<div class="col-xs-8 col-md-8 col-lg-8">
+													<abn-tree tree-data="treeData" tree-control="treeControl" terminology="currentTerminology" on-select="selectDefinitionItem(branch)" icon-expand="glyphicon glyphicon-chevron-right" icon-collapse="glyphicon glyphicon-chevron-down" icon-leaf="glyphicon glyphicon-th-large"></abn-tree>
+												</div>
+												<div class="col-xs-4 col-md-4 col-lg-4">
+													<div ng-show="selectedDefinitionItem">
+														<h4>{{selectedDefinitionItem.text}}</h4>
+														<div ng-if="selectedDefinitionItem.code" class="panel panel-default">
+															<div class="panel-heading">
+																Terminology
+															</div>
+															<div class="panel-body">
+																<span>Code: {{selectedDefinitionItem.code}}</span>
+																<br>
+																<span>Text: {{}}</span>
+															</div>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
