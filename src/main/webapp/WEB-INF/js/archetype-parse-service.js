@@ -195,7 +195,7 @@ function() {
 	};
 
 	function extractNode(node) {
-		var type, attribute, code, occurrences, existence;
+		var type, attribute, code, occurrences, existence, cardinality;
 		type = node.rm_type_name;
 		attribute = node.rm_attribute_name;
 		if (node.node_id) {
@@ -204,12 +204,20 @@ function() {
 		var label, labelType;
 		if (type) {
 			labelType = 'type';
-			label = type;
-			occurrences = node.occurrences;
-		} else if (attribute) {
+			label = type;		
+		}
+		if (attribute) {
 			labelType = 'attribute';
-			label = attribute;
+			label = attribute;		
+		}
+		if(node.occurrences){
+			occurrences = node.occurrences;
+		}
+		if(node.existence){
 			existence = node.existence;
+		}
+		if(node.cardinality){
+			cardinality = node.cardinality;
 		}
 		return {
 			label : {
@@ -217,7 +225,8 @@ function() {
 				text : label,
 				code : code,
 				occurrences : occurrences,
-				existence : existence
+				existence : existence,
+				cardinality : cardinality
 			}
 		};
 	}

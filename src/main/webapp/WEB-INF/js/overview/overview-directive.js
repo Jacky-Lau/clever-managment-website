@@ -54,6 +54,8 @@ function() {
 					return this.getModel().isVertex(cell);
 				};
 				
+				scope.graph.graphHandler.scaleGrid = true;
+				
 				// Disables built-in context menu
 				//mxEvent.disableContextMenu(container);
 				
@@ -126,8 +128,6 @@ function() {
 
 				scope.layouts = [stackLayout, circleLayout, compactLayout, edgeLayout, organicLayout ]; 
 				
-				scope.currentLayout = stackLayout;
-				
 				function applyLayout(layout){
 					scope.graph.getModel().beginUpdate();
 					try {
@@ -147,7 +147,9 @@ function() {
 				}
 		
 				scope.$watch('currentLayout', function(newLayout) {
-					applyLayout(newLayout);
+					if(newLayout){
+						applyLayout(newLayout);
+					}			
 				});
 				
 				// Highlights the vertices when the mouse enters
@@ -156,12 +158,11 @@ function() {
 				// Adds cells to the model in a single step
 				var cellWidth = 230;
 				var labelWidth = 110;
-				// Gets the default parent for inserting new cells. This
-				// is normally the first child of the root (ie. layer 0).
-				scope.$watch('archetypeList', function(archetypeList) {
-					if (archetypeList.length > 0) {
-						scope.graph.getModel().beginUpdate();
+				
+				scope.reset = function(){
+					scope.graph.getModel().beginUpdate();
 						var parent = scope.graph.getDefaultParent();
+						scope.graph.view.scale = 1;
 						try {
 							scope.graph.removeCells(scope.graph.getChildVertices(parent));
 							angular.forEach(scope.archetypeList, function(value, index) {
@@ -176,15 +177,24 @@ function() {
 							// Updates the display
 							scope.graph.getModel().endUpdate();
 						}
-						applyLayout(scope.currentLayout);
+						scope.currentLayout = stackLayout;
+				};
+				
+				// Gets the default parent for inserting new cells. This
+				// is normally the first child of the root (ie. layer 0).
+				scope.$watch('archetypeList', function(archetypeList) {
+					if (archetypeList.length > 0) {
+						scope.reset();
 					}				
 				});
 				
-				function getFixedText(text, width) {
-					var max = parseInt(width / 8);
+				function getFixedText(text, width, wordWidth, trimWordCount) {
+					wordWidth = wordWidth || 7;
+					trimWordCount = trimWordCount || 3;	
+					var max = parseInt(width / wordWidth);
 					var fixedText = text;
-					if (text.length > max) {
-						fixedText = text.substring(0, max - 3) + '...';
+					if (text && text.length > max) {
+						fixedText = text.substring(0, max - trimWordCount) + '...';
 					}
 					return fixedText;
 				}
@@ -193,22 +203,16 @@ function() {
 				// short markup for collapsed cells.
 				scope.graph.getLabel = function(cell) {
 					if (this.getModel().isVertex(cell)) {
-			
-						var archetypeUse = getFixedText(cell.value.use, cellWidth - labelWidth);
-						var archetypePurpose = getFixedText(cell.value.purpose, cellWidth - labelWidth);
-						var archetypeKeywords = getFixedText(cell.value.keywords, cellWidth - labelWidth);
-						var archetypeOriginalLanguage = getFixedText(cell.value.originalLanguage, cellWidth - labelWidth);
-						
-						var archetypeName = cell.value.name;
-						var geo = this.getCellGeometry(cell); 
-					    if (geo != null)
-					    {
-					      var max = parseInt(geo.width / 8);			
-					      if (archetypeName.length > max)
-					      {
-					        archetypeName = archetypeName.substring(0, max - 8)+'...';
-					      }
-					    }
+
+						var archetypeName, archetypeUse, archetypePurpose, archetypeKeywords, archetypeOriginalLanguage;
+						var geo = this.getCellGeometry(cell);
+						if (geo != null) {
+							archetypeName = getFixedText(cell.value.name, geo.width - 8, 8, 8);
+							archetypeUse = getFixedText(cell.value.use, geo.width - labelWidth);
+							archetypePurpose = getFixedText(cell.value.purpose, geo.width - labelWidth);
+							archetypeKeywords = getFixedText(cell.value.keywords, geo.width - labelWidth);
+							archetypeOriginalLanguage = getFixedText(cell.value.originalLanguage, geo.width - labelWidth);
+						}
 					    
 						if (this.isCellCollapsed(cell)) {
 							return '<table style="color: black;" width="' + (geo.width - 8) + '" border="1" cellpadding="2" class="title">' + 

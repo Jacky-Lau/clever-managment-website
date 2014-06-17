@@ -41,8 +41,8 @@ pageEncoding="UTF-8"%>
 					</nav>
 					<!-- splitter -->
 					<splitter is-adjust-enabled="!isNavbarCollapsed" style="height: 800px;">
-						<i style="cursor: pointer" ng-click="expandNavbar()" ng-show="isNavbarCollapsed"><span class="glyphicon glyphicon-chevron-right" ></span></i>
-						<i style="cursor: pointer" ng-click="collapseNavbar()" ng-show="!isNavbarCollapsed"><span class="glyphicon glyphicon-chevron-left" ></span></i>
+						<i style="cursor: pointer" ng-click="expandNavbar()" ng-show="isNavbarCollapsed" tooltip-placement="right" tooltip="Expand" tooltip-popup-delay="500"><span class="glyphicon glyphicon-chevron-right" ></span></i>
+						<i style="cursor: pointer" ng-click="collapseNavbar()" ng-show="!isNavbarCollapsed" tooltip-placement="right" tooltip="Collapse" tooltip-popup-delay="500"><span class="glyphicon glyphicon-chevron-left" ></span></i>
 					</splitter>
 					<!-- content display -->
 					<div class="flexBox">
@@ -114,35 +114,7 @@ pageEncoding="UTF-8"%>
 									<!-- Definition -->
 									<div class="tab-pane" ng-class="{'active': selectedTab == 'Definition'}" style="height: 700px;">
 										<span ng-show="!xmlText"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-										<div ng-show="xmlText" class="container content-container">
-											<div class="row" style="padding: 5px 0px;">
-												<div class="col-xs-12 col-md-12 col-lg-12">
-													<span><b>Expand All:&nbsp;&nbsp;&nbsp;</b></span>
-													<toggle-switch model="isExpandedAll">
-														<toggle-switch>
-												</div>
-											</div>
-											<div class="row" style="overflow: auto;height: 680px;">
-												<div class="col-xs-8 col-md-8 col-lg-8">
-													<abn-tree tree-data="treeData" tree-control="treeControl" terminology="currentTerminology" on-select="selectDefinitionItem(branch)" icon-expand="glyphicon glyphicon-chevron-right" icon-collapse="glyphicon glyphicon-chevron-down" icon-leaf="glyphicon glyphicon-th-large"></abn-tree>
-												</div>
-												<div class="col-xs-4 col-md-4 col-lg-4">
-													<div ng-show="selectedDefinitionItem">
-														<h4>{{selectedDefinitionItem.text}}</h4>
-														<div ng-if="selectedDefinitionItem.code" class="panel panel-default">
-															<div class="panel-heading">
-																Terminology
-															</div>
-															<div class="panel-body">
-																<span>Code: {{selectedDefinitionItem.code}}</span>
-																<br>
-																<span>Text: {{}}</span>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
+										<definition-tab ng-show="xmlText" definition="definition" terminology="currentTerminology"></definition-tab>
 									</div>
 									<!-- Terminology -->
 									<div class="tab-pane" ng-class="{'active': selectedTab == 'Terminology'}" style="overflow: auto;height: 700px;">

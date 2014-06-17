@@ -19,11 +19,13 @@ src="/clever-management-website/js/pretty-filter.js"></script>
 <script
 src="/clever-management-website/js/toggle-switch/angular-toggle-switch.js"></script>
 <script
-src="/clever-management-website/js/archetype-treeview/abn-tree-directive.js"></script>
+src="/clever-management-website/js/definition-tab/abn-tree-directive.js"></script>
 <script
 src="/clever-management-website/js/splitter/splitter-directive.js"></script>
 <script
 src="/clever-management-website/js/terminology-tab/terminology-tab-directive.js"></script>
+<script
+src="/clever-management-website/js/definition-tab/definition-tab-directive.js"></script>
 <script
 src="/clever-management-website/js/header-tab/header-tab-directive.js"></script>
 <script

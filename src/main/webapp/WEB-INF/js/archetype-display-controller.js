@@ -6,23 +6,8 @@ function ArchetypeDisplayCtrl($scope, archetypeParseService) {
 		$scope.selectedTab = tab;
 	};
 
-	$scope.isExpandedAll = false;
-
-	$scope.$watch('isExpandedAll', function(newValue, oldValue) {
-		if (newValue) {
-			if ($scope.treeControl.expand_all) {
-				$scope.treeControl.expand_all();
-			}
-		} else {
-			if ($scope.treeControl.collapse_all) {
-				$scope.treeControl.collapse_all();
-			}
-		}
-	});
-
-	$scope.treeData = [];
 	$scope.languages = [];
-	$scope.treeControl = {};
+	$scope.definition = [];
 
 	$scope.init = function(tab) {
 		$scope.title = tab.title;
@@ -34,7 +19,7 @@ function ArchetypeDisplayCtrl($scope, archetypeParseService) {
 			var parsedResult = archetypeParseService.parseArchetype(archetype);
 			$scope.terminologies = parsedResult.terminologies;
 			$scope.originalLanguage = parsedResult.languages.originalLanguage;
-			$scope.treeData = parsedResult.definitions;
+			$scope.definition = parsedResult.definitions;
 			$scope.header = parsedResult.header;
 			$scope.languages = parsedResult.languages.languages;
 			$scope.selectedLanguage = $scope.originalLanguage;
@@ -80,9 +65,4 @@ function ArchetypeDisplayCtrl($scope, archetypeParseService) {
 		$scope.selectedLanguage = language;
 		$scope.isDropdownOpened = false;
 	};
-	
-	$scope.selectDefinitionItem = function(definitionItem){
-		$scope.selectedDefinitionItem = definitionItem.label;
-	};
-
 }
