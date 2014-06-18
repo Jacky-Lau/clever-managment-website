@@ -39,7 +39,7 @@ public class FileUploadController {
 	@Resource(name = "archetypeValidationService")
 	private ArchetypeValidationService archetypeValidationService;
 
-	@RequestMapping(value = "/archetypeFile", method = RequestMethod.POST)
+	@RequestMapping(value = "/archetype", method = RequestMethod.POST)
 	@ResponseBody
 	public FileUploadResult uploadSingleFile(
 			@RequestParam(value = "file", required = true) MultipartFile file,

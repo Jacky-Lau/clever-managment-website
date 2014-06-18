@@ -20,7 +20,7 @@ public class ArchetypeProviderController {
 	@Resource(name="archetypeProviderService")
 	private ArchetypeProviderService archetypeProviderService;
 	
-	@RequestMapping(value = "/archetypeList", method = RequestMethod.GET)
+	@RequestMapping(value = "/archetypes", method = RequestMethod.GET)
 	@ResponseBody
 	public List<ArchetypeBriefInfo> getArchetypeList(){
 		return this.archetypeProviderService.getArchetypeList();

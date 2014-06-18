@@ -159,26 +159,34 @@ function() {
 				var cellWidth = 230;
 				var labelWidth = 110;
 				
-				scope.reset = function(){
+
+				scope.reset = function() {
 					scope.graph.getModel().beginUpdate();
-						var parent = scope.graph.getDefaultParent();
-						scope.graph.view.scale = 1;
-						try {
-							scope.graph.removeCells(scope.graph.getChildVertices(parent));
-							angular.forEach(scope.archetypeList, function(value, index) {
-								var vertex = scope.graph.insertVertex(parent, null, value, 0, 0, cellWidth, 0);
-								// Updates the height of the cell (override width
-								// for table width is set to 100%)
-								scope.graph.updateCellSize(vertex);
-								vertex.geometry.width = cellWidth;
-								vertex.geometry.alternateBounds = new mxRectangle(0, 0, cellWidth, 27);
-							});
-						} finally {
-							// Updates the display
-							scope.graph.getModel().endUpdate();
-						}
+					var parent = scope.graph.getDefaultParent();
+					scope.graph.view.scale = 1;
+					try {
+						scope.graph.removeCells(scope.graph.getChildVertices(parent));
+						angular.forEach(scope.archetypeList, function(value, index) {
+							var vertex = scope.graph.insertVertex(parent, null, value, 0, 0, cellWidth, 0);
+							// Updates the height of the cell (override width
+							// for table width is set to 100%)
+							scope.graph.updateCellSize(vertex);
+							vertex.geometry.width = cellWidth;
+							vertex.geometry.alternateBounds = new mxRectangle(0, 0, cellWidth, 27);
+						});
+					} finally {
+						// Updates the display
+						scope.graph.getModel().endUpdate();
+					}
+
+					if (scope.currentLayout == stackLayout) {
+						applyLayout(stackLayout);
+					} else {
 						scope.currentLayout = stackLayout;
-				};
+					}
+
+				}; 
+
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
