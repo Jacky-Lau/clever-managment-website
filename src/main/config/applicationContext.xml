@@ -31,13 +31,13 @@
 	</context:component-scan>
     
     <jaxws:client 
-    	id="wsclient"
+    	id="cleverClient"
 		serviceClass="edu.zju.bme.clever.service.CleverService"
 		address="${service.url}?wsdl">
 	</jaxws:client>
       
     <jaxws:client 
-    	id="wsclientvalidation"
+    	id="cleverValidationClient"
 		serviceClass="edu.zju.bme.clever.service.CleverService"
 		address="${validation.url}?wsdl">
 	</jaxws:client>

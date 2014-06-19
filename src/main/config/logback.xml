@@ -23,6 +23,9 @@
 	<logger name="org.apache.cxf">
 		<level value="INFO"/>
 	</logger>
+	<logger name="edu.zju.bme.clever.website">
+		<level value="TRACE"/>
+	</logger>
 	<root>
 		<appender-ref ref="STDOUT" level="TRACE"/>
 	</root>
