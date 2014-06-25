@@ -1,15 +1,23 @@
 package edu.zju.bme.clever.website.controller;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
 import org.openehr.am.archetype.Archetype;
+import org.openehr.am.archetype.constraintmodel.CObject;
+import org.openehr.am.archetype.ontology.ArchetypeOntology;
+import org.openehr.am.archetype.ontology.OntologyDefinitions;
 import org.openehr.am.serialize.ADLSerializer;
 import org.openehr.rm.common.resource.ResourceDescription;
 import org.openehr.rm.common.resource.ResourceDescriptionItem;
 import org.openehr.rm.support.identification.ArchetypeID;
+import org.openehr.rm.datatypes.basic.ReferenceModelName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -23,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import se.acode.openehr.parser.ADLParser;
 import edu.zju.bme.clever.website.dao.CommitSequenceDao;
 import edu.zju.bme.clever.website.entity.ArchetypeFile;
+import edu.zju.bme.clever.website.entity.ArchetypeNode;
 import edu.zju.bme.clever.website.entity.CommitSequence;
 import edu.zju.bme.clever.website.service.ArchetypePersistanceService;
 import edu.zju.bme.clever.website.service.ArchetypeValidationService;
@@ -98,7 +107,7 @@ public class FileUploadController {
 			ADLSerializer adlSerilizer = new ADLSerializer();
 			archetypeContent = adlSerilizer.output(archetype);
 		} catch (Exception ex) {
-			this.logger.info("Persist file {} failed.", ex);
+			this.logger.info("Persist file {} failed.", fileName, ex);
 			fileStatus = FileUploadStatusConstant.INVALID;
 			result.setFileStatus(fileStatus);
 			return result;
@@ -143,6 +152,84 @@ public class FileUploadController {
 		}
 		result.setFileStatus(fileStatus);
 		return result;
+	}
+	
+	private ArchetypeFile processArchetype(Archetype archetype)
+			throws IOException {
+		final ArchetypeFile archetypeFile = new ArchetypeFile();
+		String purpose = "";
+		String keywords = "";
+		String use = "";
+		ArchetypeID archetypeIdNode = archetype.getArchetypeId();
+		final String archetypeId = archetypeIdNode.toString();
+		final String originalLanguage = archetype.getOriginalLanguage()
+				.getCodeString();
+		final String concept = archetype.getConcept();
+		final String conceptName = archetype.getConceptName(originalLanguage);
+		ResourceDescription resourceDescription = archetype.getDescription();
+		List<ResourceDescriptionItem> resourceDescriptionItems = resourceDescription
+				.getDetails();
+		for (ResourceDescriptionItem resourceDescriptionItem : resourceDescriptionItems) {
+			if (resourceDescriptionItem.getLanguage().getCodeString()
+					.equals(originalLanguage)) {
+				if (resourceDescriptionItem.getPurpose() != null) {
+					purpose = resourceDescriptionItem.getPurpose();
+				}
+				if (resourceDescriptionItem.getUse() != null) {
+					use = resourceDescriptionItem.getUse();
+				}
+				if (resourceDescriptionItem.getKeywords() != null) {
+					keywords = String.join("|",
+							resourceDescriptionItem.getKeywords());
+				}
+			}
+		}
+		ADLSerializer adlSerilizer = new ADLSerializer();
+		final String archetypeContent = adlSerilizer.output(archetype);
+		archetypeFile.setModifyTime(Calendar.getInstance());
+		archetypeFile.setContent(archetypeContent);
+		archetypeFile.setName(archetypeId);
+		archetypeFile.setKeywords(keywords);
+		archetypeFile.setPurpose(purpose);
+		archetypeFile.setUse(use);
+		archetypeFile.setOriginalLanguage(originalLanguage);
+		archetypeFile.setConcept(concept);
+		archetypeFile.setConceptName(conceptName);
+		
+		Map<String, CObject> pathNodeMap = archetype.getPathNodeMap();	
+		final ArchetypeOntology ontology = archetype.getOntology();
+		OntologyDefinitions termDefinitions = ontology
+				.getTermDefinitionsList()
+				.stream()
+				.filter(definitions -> definitions.getLanguage().equals(
+						originalLanguage)).findFirst().get();
+		pathNodeMap.forEach((path, node) -> {
+			if(node.getRmTypeName().equals(ReferenceModelName.DV_TEXT.getName())){
+				
+			}
+			ArchetypeNode archetypeNode = new ArchetypeNode();
+			archetypeNode.setNodePath(path);
+			archetypeNode.setRmType(node.getRmTypeName());
+			final String nodeId = this.getNodeIdFromNodePath(path);
+			if (nodeId != "") {
+				archetypeNode.setCode(node.getNodeId());
+				archetypeNode.setNodeName(ontology.termDefinition(
+						originalLanguage, nodeId).getText());
+			}
+			archetypeFile.addArchetypeNode(archetypeNode);
+		});
+		
+		return archetypeFile;
+	}
+
+	private String getNodeIdFromNodePath(String nodePath) {
+		Pattern pattern = Pattern.compile("\\[(\\w+)\\]");
+		Matcher matcher = pattern.matcher(nodePath);
+		String nodeId = "";
+		while (matcher.find()) {
+			nodeId = matcher.group(matcher.groupCount());
+		}
+		return nodeId;
 	}
 
 	@RequestMapping(value = "/commitSequence", method = RequestMethod.GET)

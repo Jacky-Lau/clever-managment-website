@@ -1,15 +1,19 @@
 package edu.zju.bme.clever.website.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -48,11 +52,21 @@ public class ArchetypeFile implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "MODIFY_TIME")
 	private Calendar modifyTime;
+	@Column(name = "RM_NAME")
+	private String rmName;
+	@Column(name = "RM_ENTITY")
+	private String rmEntity;
+	@Column(name = "CONCEPT")
+	private String concept;
+	@Column(name = "CONCEPT_NAME")
+	private String conceptName;
 	@ManyToOne
 	private CommitSequence commitSequence;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "archetypeFile")
+	private List<ArchetypeNode> archetypeNodes;
 
 	public ArchetypeFile() {
-
+		this.archetypeNodes = new ArrayList<ArchetypeNode>();
 	}
 
 	public Integer getId() {
@@ -126,4 +140,50 @@ public class ArchetypeFile implements Serializable {
 	public void setCommitSequence(CommitSequence commitSequence) {
 		this.commitSequence = commitSequence;
 	}
+
+	public List<ArchetypeNode> getArchetypeNodes() {
+		return archetypeNodes;
+	}
+
+	public void setArchetypeNodes(List<ArchetypeNode> archetypeNode) {
+		this.archetypeNodes = archetypeNode;
+	}
+
+	public void addArchetypeNode(ArchetypeNode archetypeNode) {
+		archetypeNode.setArchetypeFile(this);
+		this.archetypeNodes.add(archetypeNode);
+	}
+
+	public String getConcept() {
+		return concept;
+	}
+
+	public void setConcept(String concept) {
+		this.concept = concept;
+	}
+
+	public String getConceptName() {
+		return conceptName;
+	}
+
+	public void setConceptName(String conceptName) {
+		this.conceptName = conceptName;
+	}
+
+	public String getRmName() {
+		return rmName;
+	}
+
+	public void setRmName(String rmName) {
+		this.rmName = rmName;
+	}
+
+	public String getRmEntity() {
+		return rmEntity;
+	}
+
+	public void setRmEntity(String rmEntity) {
+		this.rmEntity = rmEntity;
+	}
+
 }
