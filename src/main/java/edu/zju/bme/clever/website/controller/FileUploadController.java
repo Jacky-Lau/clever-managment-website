@@ -1,7 +1,9 @@
 package edu.zju.bme.clever.website.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -33,6 +35,8 @@ import edu.zju.bme.clever.website.dao.CommitSequenceDao;
 import edu.zju.bme.clever.website.entity.ArchetypeFile;
 import edu.zju.bme.clever.website.entity.ArchetypeNode;
 import edu.zju.bme.clever.website.entity.CommitSequence;
+import edu.zju.bme.clever.website.entity.FileProcessResult;
+import edu.zju.bme.clever.website.service.ArchetypeExtractService;
 import edu.zju.bme.clever.website.service.ArchetypePersistanceService;
 import edu.zju.bme.clever.website.service.ArchetypeValidationService;
 import edu.zju.bme.clever.website.util.ArchetypeUtil;
@@ -47,6 +51,24 @@ public class FileUploadController {
 	private ArchetypePersistanceService archetypePersistanceService;
 	@Resource(name = "archetypeValidationService")
 	private ArchetypeValidationService archetypeValidationService;
+	@Resource(name = "archetypeExtractService")
+	private ArchetypeExtractService archetypeExtractService;
+
+	@RequestMapping(value = "/archetypes/validation", method = RequestMethod.POST)
+	@ResponseBody
+	public void validateFiles(
+			@RequestParam(value = "files", required = true) MultipartFile[] files) {
+		final Map<String, FileProcessResult> validateResults = new HashMap<String, FileProcessResult>();
+		Arrays.asList(files).stream().forEach(file -> {
+			String fileName = file.getOriginalFilename();
+			long fileSize = file.getSize();
+			this.logger.trace("Processing file: {}, size: {}.", fileName, fileSize);
+			FileProcessResult result = new FileProcessResult();
+			result.setFileName(fileName);
+			result.setFileStatus(FileStatusConstant.VALID);
+			validateResults.put(fileName, result);
+		});
+	}
 
 	@RequestMapping(value = "/archetype", method = RequestMethod.POST)
 	@ResponseBody
@@ -71,7 +93,7 @@ public class FileUploadController {
 		// Initialize file upload result
 		FileUploadResult result = new FileUploadResult();
 		result.setFileName(fileName);
-		String fileStatus = FileUploadStatusConstant.UPLOADED;
+		String fileStatus = FileStatusConstant.UPLOADED;
 		String archetypeId = "";
 		String archetypeContent = "";
 		String purpose = "";
@@ -108,7 +130,7 @@ public class FileUploadController {
 			archetypeContent = adlSerilizer.output(archetype);
 		} catch (Exception ex) {
 			this.logger.info("Parse file {} failed.", fileName, ex);
-			fileStatus = FileUploadStatusConstant.INVALID;
+			fileStatus = FileStatusConstant.INVALID;
 			result.setFileStatus(fileStatus);
 			return result;
 		}
@@ -131,7 +153,7 @@ public class FileUploadController {
 			if (archetypeFileFromDB != null) {
 				if (archetypeFileFromDB.getContent()
 						.compareTo(archetypeContent) == 0) {
-					fileStatus = FileUploadStatusConstant.EXISTED;
+					fileStatus = FileStatusConstant.EXISTED;
 				} else {
 					if (overwriteChange) {
 						// save the archetype
@@ -140,7 +162,7 @@ public class FileUploadController {
 						this.archetypePersistanceService
 								.updateArchetypeFile(uploadedArchetypeFile);
 					} else {
-						fileStatus = FileUploadStatusConstant.CHANGED;
+						fileStatus = FileStatusConstant.CHANGED;
 					}
 				}
 			} else {
@@ -149,89 +171,10 @@ public class FileUploadController {
 						.saveArchetypeFile(uploadedArchetypeFile);
 			}
 		} else {
-			fileStatus = FileUploadStatusConstant.INVALID;
+			fileStatus = FileStatusConstant.INVALID;
 		}
 		result.setFileStatus(fileStatus);
 		return result;
-	}
-
-	private ArchetypeFile processArchetype(Archetype archetype)
-			throws IOException {
-		final ArchetypeFile archetypeFile = new ArchetypeFile();
-		String purpose = "";
-		String keywords = "";
-		String use = "";
-		ArchetypeID archetypeIdNode = archetype.getArchetypeId();
-		final String archetypeId = archetypeIdNode.toString();
-		final String originalLanguage = archetype.getOriginalLanguage()
-				.getCodeString();
-		final String concept = archetype.getConcept();
-		final String conceptName = archetype.getConceptName(originalLanguage);
-		ResourceDescription resourceDescription = archetype.getDescription();
-		List<ResourceDescriptionItem> resourceDescriptionItems = resourceDescription
-				.getDetails();
-		for (ResourceDescriptionItem resourceDescriptionItem : resourceDescriptionItems) {
-			if (resourceDescriptionItem.getLanguage().getCodeString()
-					.equals(originalLanguage)) {
-				if (resourceDescriptionItem.getPurpose() != null) {
-					purpose = resourceDescriptionItem.getPurpose();
-				}
-				if (resourceDescriptionItem.getUse() != null) {
-					use = resourceDescriptionItem.getUse();
-				}
-				if (resourceDescriptionItem.getKeywords() != null) {
-					keywords = String.join("|",
-							resourceDescriptionItem.getKeywords());
-				}
-			}
-		}
-		ADLSerializer adlSerilizer = new ADLSerializer();
-		final String archetypeContent = adlSerilizer.output(archetype);
-		archetypeFile.setModifyTime(Calendar.getInstance());
-		archetypeFile.setContent(archetypeContent);
-		archetypeFile.setName(archetypeId);
-		archetypeFile.setKeywords(keywords);
-		archetypeFile.setPurpose(purpose);
-		archetypeFile.setUse(use);
-		archetypeFile.setOriginalLanguage(originalLanguage);
-		archetypeFile.setConcept(concept);
-		archetypeFile.setConceptName(conceptName);
-
-		Map<String, CObject> pathNodeMap = archetype.getPathNodeMap();
-		final ArchetypeOntology ontology = archetype.getOntology();
-		OntologyDefinitions termDefinitions = ontology
-				.getTermDefinitionsList()
-				.stream()
-				.filter(definitions -> definitions.getLanguage().equals(
-						originalLanguage)).findFirst().get();
-		pathNodeMap.forEach((path, node) -> {
-			if (node.getRmTypeName().equals(
-					ReferenceModelName.DV_TEXT.getName())) {
-
-			}
-			ArchetypeNode archetypeNode = new ArchetypeNode();
-			archetypeNode.setNodePath(path);
-			archetypeNode.setRmType(node.getRmTypeName());
-			final String nodeId = this.getNodeIdFromNodePath(path);
-			if (nodeId != "") {
-				archetypeNode.setCode(node.getNodeId());
-				archetypeNode.setNodeName(ontology.termDefinition(
-						originalLanguage, nodeId).getText());
-			}
-			archetypeFile.addArchetypeNode(archetypeNode);
-		});
-
-		return archetypeFile;
-	}
-
-	private String getNodeIdFromNodePath(String nodePath) {
-		Pattern pattern = Pattern.compile("\\[(\\w+)\\]");
-		Matcher matcher = pattern.matcher(nodePath);
-		String nodeId = "";
-		while (matcher.find()) {
-			nodeId = matcher.group(matcher.groupCount());
-		}
-		return nodeId;
 	}
 
 	@RequestMapping(value = "/commitSequence", method = RequestMethod.GET)
@@ -266,10 +209,11 @@ public class FileUploadController {
 
 	}
 
-	public class FileUploadStatusConstant {
+	public class FileStatusConstant {
 		public static final String UPLOADED = "UPLOADED";
 		public static final String EXISTED = "EXISTED";
 		public static final String CHANGED = "CHANGED";
 		public static final String INVALID = "INVALID";
+		public static final String VALID = "VALID";
 	}
 }

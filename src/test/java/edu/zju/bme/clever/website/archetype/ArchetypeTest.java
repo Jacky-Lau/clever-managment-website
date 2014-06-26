@@ -24,6 +24,7 @@ import org.openehr.rm.support.identification.ArchetypeID;
 import edu.zju.bme.clever.website.entity.ArchetypeFile;
 import edu.zju.bme.clever.website.entity.ArchetypeNode;
 import edu.zju.bme.clever.website.entity.ArchetypeRelation;
+import edu.zju.bme.clever.website.service.ArchetypeExtractService;
 import edu.zju.bme.clever.website.service.ArchetypeExtractServiceImpl;
 import se.acode.openehr.parser.ADLParser;
 import se.acode.openehr.parser.ParseException;
@@ -51,7 +52,7 @@ public class ArchetypeTest {
 		archetypes.put(visitArchetype.getArchetypeId().getValue(),
 				visitArchetype);
 
-		ArchetypeExtractServiceImpl srv = new ArchetypeExtractServiceImpl();
+		ArchetypeExtractService srv = new ArchetypeExtractServiceImpl();
 
 		Map<String, ArchetypeFile> archetypeFiles = new HashMap<String, ArchetypeFile>();
 		archetypeFiles.put(patientArchetype.getArchetypeId().getValue(),

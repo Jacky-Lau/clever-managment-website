@@ -25,12 +25,14 @@ import org.openehr.rm.datatypes.basic.ReferenceModelName;
 import org.openehr.rm.support.identification.ArchetypeID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import edu.zju.bme.clever.website.entity.ArchetypeFile;
 import edu.zju.bme.clever.website.entity.ArchetypeNode;
 import edu.zju.bme.clever.website.entity.ArchetypeRelation;
 
-public class ArchetypeExtractServiceImpl {
+@Service("archetypeExtractService")
+public class ArchetypeExtractServiceImpl implements ArchetypeExtractService {
 
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -49,6 +51,7 @@ public class ArchetypeExtractServiceImpl {
 				"items");
 	}
 
+	@Override
 	public ArchetypeFile extractArchetype(Archetype archetype) {
 		try {
 			final ArchetypeFile archetypeFile = new ArchetypeFile();
@@ -150,6 +153,7 @@ public class ArchetypeExtractServiceImpl {
 		return nodeId;
 	}
 
+	@Override
 	public List<ArchetypeRelation> extractArchetypeRelations(
 			final Map<String, Archetype> archetypes,
 			final Map<String, ArchetypeFile> archetypeFiles) {
@@ -203,9 +207,11 @@ public class ArchetypeExtractServiceImpl {
 								relations.add(relation);
 							}else{
 								this.logger.debug("OneToMany and ManyToOne relation does not match between {} and {}",archetypeName,inverseArchetypeName);
+								throw new Exception("OneToMany and ManyToOne relation does not match.");
 							}
 						}catch(Exception ex){
 							this.logger.debug("Parse archetype relation failed.", ex);
+							throw new RuntimeException(ex);
 						}
 					});
 			;
