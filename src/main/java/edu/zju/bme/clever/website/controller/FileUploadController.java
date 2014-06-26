@@ -107,14 +107,15 @@ public class FileUploadController {
 			ADLSerializer adlSerilizer = new ADLSerializer();
 			archetypeContent = adlSerilizer.output(archetype);
 		} catch (Exception ex) {
-			this.logger.info("Persist file {} failed.", fileName, ex);
+			this.logger.info("Parse file {} failed.", fileName, ex);
 			fileStatus = FileUploadStatusConstant.INVALID;
 			result.setFileStatus(fileStatus);
 			return result;
 		}
 
 		// Validate the archetype
-		if (this.archetypeValidationService.validate(archetypeContent)) {
+		// if (this.archetypeValidationService.validate(archetypeContent)) {
+		if (true) {
 			ArchetypeFile archetypeFileFromDB = this.archetypePersistanceService
 					.getArchetypeByName(archetypeId);
 			ArchetypeFile uploadedArchetypeFile = new ArchetypeFile();
@@ -153,7 +154,7 @@ public class FileUploadController {
 		result.setFileStatus(fileStatus);
 		return result;
 	}
-	
+
 	private ArchetypeFile processArchetype(Archetype archetype)
 			throws IOException {
 		final ArchetypeFile archetypeFile = new ArchetypeFile();
@@ -195,8 +196,8 @@ public class FileUploadController {
 		archetypeFile.setOriginalLanguage(originalLanguage);
 		archetypeFile.setConcept(concept);
 		archetypeFile.setConceptName(conceptName);
-		
-		Map<String, CObject> pathNodeMap = archetype.getPathNodeMap();	
+
+		Map<String, CObject> pathNodeMap = archetype.getPathNodeMap();
 		final ArchetypeOntology ontology = archetype.getOntology();
 		OntologyDefinitions termDefinitions = ontology
 				.getTermDefinitionsList()
@@ -204,8 +205,9 @@ public class FileUploadController {
 				.filter(definitions -> definitions.getLanguage().equals(
 						originalLanguage)).findFirst().get();
 		pathNodeMap.forEach((path, node) -> {
-			if(node.getRmTypeName().equals(ReferenceModelName.DV_TEXT.getName())){
-				
+			if (node.getRmTypeName().equals(
+					ReferenceModelName.DV_TEXT.getName())) {
+
 			}
 			ArchetypeNode archetypeNode = new ArchetypeNode();
 			archetypeNode.setNodePath(path);
@@ -218,7 +220,7 @@ public class FileUploadController {
 			}
 			archetypeFile.addArchetypeNode(archetypeNode);
 		});
-		
+
 		return archetypeFile;
 	}
 

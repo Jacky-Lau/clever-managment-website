@@ -135,5 +135,25 @@ public class ArchetypeRelation {
 	public void setDestinationArchtypeNodeId(Integer destinationArchtypeNodeId) {
 		this.destinationArchtypeNodeId = destinationArchtypeNodeId;
 	}
+	
+	public void setSourceArchetypeFile(ArchetypeFile sourceArchtype){
+		this.sourceArchtype = sourceArchtype.getName();
+		this.sourceArchtypeId = sourceArchtype.getId();
+	}
+	
+	public void setDestinationArchetypeFile(ArchetypeFile destinationArchtype){
+		this.destinationArchtype = destinationArchtype.getName();
+		this.destinationArchtypeId = destinationArchtype.getId();
+	}
+	
+	public void setSourceArchetypeNode(ArchetypeNode sourceNode){
+		this.sourceArchtypeNode = sourceNode.getNodeName();
+		this.sourceArchtypeNodeId = sourceNode.getId();
+	}
+	
+	public void setDestinationArchetypeNode(ArchetypeNode destinationNode){
+		this.destinationArchtypeNode = destinationNode.getNodeName();
+		this.destinationArchtypeNodeId = destinationNode.getId();
+	}
 
 }

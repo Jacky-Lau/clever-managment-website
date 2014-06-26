@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -184,6 +187,12 @@ public class ArchetypeFile implements Serializable {
 
 	public void setRmEntity(String rmEntity) {
 		this.rmEntity = rmEntity;
+	}
+
+	public Map<String, ArchetypeNode> getArchetypeNodeMap(
+			Function<ArchetypeNode, String> keyMapper) {
+		return this.archetypeNodes.stream().collect(
+				Collectors.toMap(keyMapper, node -> node));
 	}
 
 }
