@@ -1,6 +1,7 @@
 package edu.zju.bme.clever.website.service;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -21,6 +22,11 @@ public class ArchetypeValidationServiceImpl implements
 
 	@Override
 	public boolean validate(String archetype) {
+		return this.validate(Arrays.asList(archetype));
+	}
+
+	@Override
+	public boolean validate(List<String> archetypes) {
 		int stopResult = cleverValidationClient.stop();
 		if (stopResult != 0) {
 			this.logger.trace(
@@ -28,8 +34,8 @@ public class ArchetypeValidationServiceImpl implements
 					stopResult);
 			return false;
 		}
-		int reconfigureResult = cleverValidationClient.reconfigure(
-				Arrays.asList(archetype), null);
+		int reconfigureResult = cleverValidationClient.reconfigure(archetypes,
+				null);
 		if (reconfigureResult != 0) {
 			this.logger
 					.trace("Archetype validation client reconfigure failed, result: {}.",

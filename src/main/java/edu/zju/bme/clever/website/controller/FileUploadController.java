@@ -1,8 +1,10 @@
 package edu.zju.bme.clever.website.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,126 +58,181 @@ public class FileUploadController {
 
 	@RequestMapping(value = "/archetypes/validation", method = RequestMethod.POST)
 	@ResponseBody
-	public void validateFiles(
+	public List<FileProcessResult> validateFiles(
 			@RequestParam(value = "files", required = true) MultipartFile[] files) {
 		final Map<String, FileProcessResult> validateResults = new HashMap<String, FileProcessResult>();
-		Arrays.asList(files).stream().forEach(file -> {
-			String fileName = file.getOriginalFilename();
-			long fileSize = file.getSize();
-			this.logger.trace("Processing file: {}, size: {}.", fileName, fileSize);
-			FileProcessResult result = new FileProcessResult();
-			result.setFileName(fileName);
-			result.setFileStatus(FileStatusConstant.VALID);
-			validateResults.put(fileName, result);
-		});
+		final List<FileProcessResult> allResults = new ArrayList<FileProcessResult>();
+		final Map<String, ArchetypeFile> archetypeFiles = new HashMap<String, ArchetypeFile>();
+		final Map<String, Archetype> archetypes = new HashMap<String, Archetype>();
+		Arrays.asList(files)
+				.stream()
+				.forEach(
+						file -> {
+							String fileName = file.getOriginalFilename();
+							long fileSize = file.getSize();
+							this.logger.trace("Validating file: {}, size: {}.",
+									fileName, fileSize);
+							FileProcessResult result = new FileProcessResult();
+							result.setName(fileName);
+							result.setStatus(FileProcessResult.FileStatusConstant.DEFAULT);
+							allResults.add(result);
+							try {
+								ADLParser parser = new ADLParser(file
+										.getInputStream(), "UTF-8");
+								Archetype archetype = parser.parse();
+								archetypes.put(archetype.getArchetypeId()
+										.getValue(), archetype);
+								validateResults.put(archetype.getArchetypeId()
+										.getValue(), result);
+								ArchetypeFile archetypeFile = this.archetypeExtractService
+										.extractArchetype(archetype, result);
+								if (archetypeFile != null) {
+									archetypeFiles.put(archetypeFile.getName(),
+											archetypeFile);
+									ArchetypeFile archetypeFileFromDB = this.archetypePersistanceService
+											.getArchetypeByName(archetype
+													.getArchetypeId()
+													.getValue());
+									if (archetypeFileFromDB != null) {
+										if (archetypeFileFromDB.getContent()
+												.equals(archetypeFile
+														.getContent())) {
+											result.setStatus(FileProcessResult.FileStatusConstant.EXISTED);
+											result.setMessage("Archetype already exists.");
+										} else {
+											result.setStatus(FileProcessResult.FileStatusConstant.CHANGED);
+											result.setMessage("Archetype already exists but is modified.");
+										}
+									}
+								}
+							} catch (Exception ex) {
+								this.logger.debug("Parse file {} failed.",
+										file.getOriginalFilename(), ex);
+								result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
+								result.setMessage("Archetype parse failed, error: "
+										+ ex.getMessage());
+							}
+						});
+		this.archetypeExtractService.extractArchetypeRelations(archetypes,
+				archetypeFiles, validateResults);
+		validateResults
+				.values()
+				.stream()
+				.filter(result -> result.getStatus().equals(
+						FileProcessResult.FileStatusConstant.DEFAULT))
+				.forEach(
+						result -> result
+								.setStatus(FileProcessResult.FileStatusConstant.VALID));
+		return allResults;
 	}
 
-	@RequestMapping(value = "/archetype", method = RequestMethod.POST)
-	@ResponseBody
-	public FileUploadResult uploadSingleFile(
-			@RequestParam(value = "file", required = true) MultipartFile file,
-			@RequestParam(value = "commitSequenceId", required = true) Integer commitSequenceId,
-			@RequestParam(value = "overwriteChange", defaultValue = "false") boolean overwriteChange) {
 
-		// Get commit sequence
-		if (commitSequenceId == null) {
-			this.logger.info("Commit sequence ID is null.");
-			throw new IllegalArgumentException("Commit sequence ID is null.");
-		}
-		CommitSequence commitSequence = this.archetypePersistanceService
-				.getCommitSequenceById(commitSequenceId);
-		// Get uploaded archetype
-		String fileName = file.getOriginalFilename();
-		long fileSize = file.getSize();
-		this.logger.info(
-				"Recieves file: {}, size: {}, commit sequence ID: {}.",
-				fileName, fileSize, commitSequenceId);
-		// Initialize file upload result
-		FileUploadResult result = new FileUploadResult();
-		result.setFileName(fileName);
-		String fileStatus = FileStatusConstant.UPLOADED;
-		String archetypeId = "";
-		String archetypeContent = "";
-		String purpose = "";
-		String keywords = "";
-		String use = "";
-		String originalLanguage = "";
-		// Parse the archetype
-		try {
-			ADLParser parser = new ADLParser(file.getInputStream(), "UTF-8");
-			Archetype archetype = parser.parse();
-			ArchetypeID archetypeIdNode = archetype.getArchetypeId();
-			archetypeId = archetypeIdNode.toString();
-			originalLanguage = archetype.getOriginalLanguage().getCodeString();
-			ResourceDescription resourceDescription = archetype
-					.getDescription();
-			List<ResourceDescriptionItem> resourceDescriptionItems = resourceDescription
-					.getDetails();
-			for (ResourceDescriptionItem resourceDescriptionItem : resourceDescriptionItems) {
-				if (resourceDescriptionItem.getLanguage().getCodeString()
-						.equals(originalLanguage)) {
-					if (resourceDescriptionItem.getPurpose() != null) {
-						purpose = resourceDescriptionItem.getPurpose();
-					}
-					if (resourceDescriptionItem.getUse() != null) {
-						use = resourceDescriptionItem.getUse();
-					}
-					if (resourceDescriptionItem.getKeywords() != null) {
-						keywords = String.join("|",
-								resourceDescriptionItem.getKeywords());
-					}
-				}
-			}
-			ADLSerializer adlSerilizer = new ADLSerializer();
-			archetypeContent = adlSerilizer.output(archetype);
-		} catch (Exception ex) {
-			this.logger.info("Parse file {} failed.", fileName, ex);
-			fileStatus = FileStatusConstant.INVALID;
-			result.setFileStatus(fileStatus);
-			return result;
-		}
-
-		// Validate the archetype
-		// if (this.archetypeValidationService.validate(archetypeContent)) {
-		if (true) {
-			ArchetypeFile archetypeFileFromDB = this.archetypePersistanceService
-					.getArchetypeByName(archetypeId);
-			ArchetypeFile uploadedArchetypeFile = new ArchetypeFile();
-			uploadedArchetypeFile.setCommitSequence(commitSequence);
-			uploadedArchetypeFile.setModifyTime(Calendar.getInstance());
-			uploadedArchetypeFile.setContent(archetypeContent);
-			uploadedArchetypeFile.setName(archetypeId);
-			uploadedArchetypeFile.setKeywords(keywords);
-			uploadedArchetypeFile.setPurpose(purpose);
-			uploadedArchetypeFile.setUse(use);
-			uploadedArchetypeFile.setOriginalLanguage(originalLanguage);
-
-			if (archetypeFileFromDB != null) {
-				if (archetypeFileFromDB.getContent()
-						.compareTo(archetypeContent) == 0) {
-					fileStatus = FileStatusConstant.EXISTED;
-				} else {
-					if (overwriteChange) {
-						// save the archetype
-						uploadedArchetypeFile
-								.setId(archetypeFileFromDB.getId());
-						this.archetypePersistanceService
-								.updateArchetypeFile(uploadedArchetypeFile);
-					} else {
-						fileStatus = FileStatusConstant.CHANGED;
-					}
-				}
-			} else {
-				// save the archetype
-				this.archetypePersistanceService
-						.saveArchetypeFile(uploadedArchetypeFile);
-			}
-		} else {
-			fileStatus = FileStatusConstant.INVALID;
-		}
-		result.setFileStatus(fileStatus);
-		return result;
-	}
+//	@RequestMapping(value = "/archetypes", method = RequestMethod.POST)
+//	@ResponseBody
+//	public FileUploadResult uploadSingleFile(
+//			@RequestParam(value = "file", required = true) MultipartFile file,
+//			@RequestParam(value = "commitSequenceId", required = true) Integer commitSequenceId,
+//			@RequestParam(value = "overwriteChange", defaultValue = "false") boolean overwriteChange) {
+//
+//		// Get commit sequence
+//		if (commitSequenceId == null) {
+//			this.logger.info("Commit sequence ID is null.");
+//			throw new IllegalArgumentException("Commit sequence ID is null.");
+//		}
+//		CommitSequence commitSequence = this.archetypePersistanceService
+//				.getCommitSequenceById(commitSequenceId);
+//		// Get uploaded archetype
+//		String fileName = file.getOriginalFilename();
+//		long fileSize = file.getSize();
+//		this.logger.info(
+//				"Recieves file: {}, size: {}, commit sequence ID: {}.",
+//				fileName, fileSize, commitSequenceId);
+//		// Initialize file upload result
+//		FileUploadResult result = new FileUploadResult();
+//		result.setFileName(fileName);
+//		String fileStatus = FileProcessResult.FileStatusConstant.UPLOADED;
+//		String archetypeId = "";
+//		String archetypeContent = "";
+//		String purpose = "";
+//		String keywords = "";
+//		String use = "";
+//		String originalLanguage = "";
+//		// Parse the archetype
+//		try {
+//			ADLParser parser = new ADLParser(file.getInputStream(), "UTF-8");
+//			Archetype archetype = parser.parse();
+//			ArchetypeID archetypeIdNode = archetype.getArchetypeId();
+//			archetypeId = archetypeIdNode.toString();
+//			originalLanguage = archetype.getOriginalLanguage().getCodeString();
+//			ResourceDescription resourceDescription = archetype
+//					.getDescription();
+//			List<ResourceDescriptionItem> resourceDescriptionItems = resourceDescription
+//					.getDetails();
+//			for (ResourceDescriptionItem resourceDescriptionItem : resourceDescriptionItems) {
+//				if (resourceDescriptionItem.getLanguage().getCodeString()
+//						.equals(originalLanguage)) {
+//					if (resourceDescriptionItem.getPurpose() != null) {
+//						purpose = resourceDescriptionItem.getPurpose();
+//					}
+//					if (resourceDescriptionItem.getUse() != null) {
+//						use = resourceDescriptionItem.getUse();
+//					}
+//					if (resourceDescriptionItem.getKeywords() != null) {
+//						keywords = String.join("|",
+//								resourceDescriptionItem.getKeywords());
+//					}
+//				}
+//			}
+//			ADLSerializer adlSerilizer = new ADLSerializer();
+//			archetypeContent = adlSerilizer.output(archetype);
+//		} catch (Exception ex) {
+//			this.logger.info("Parse file {} failed.", fileName, ex);
+//			fileStatus = FileProcessResult.FileStatusConstant.INVALID;
+//			result.setFileStatus(fileStatus);
+//			return result;
+//		}
+//
+//		// Validate the archetype
+//		// if (this.archetypeValidationService.validate(archetypeContent)) {
+//		if (true) {
+//			ArchetypeFile archetypeFileFromDB = this.archetypePersistanceService
+//					.getArchetypeByName(archetypeId);
+//			ArchetypeFile uploadedArchetypeFile = new ArchetypeFile();
+//			uploadedArchetypeFile.setCommitSequence(commitSequence);
+//			uploadedArchetypeFile.setModifyTime(Calendar.getInstance());
+//			uploadedArchetypeFile.setContent(archetypeContent);
+//			uploadedArchetypeFile.setName(archetypeId);
+//			uploadedArchetypeFile.setKeywords(keywords);
+//			uploadedArchetypeFile.setPurpose(purpose);
+//			uploadedArchetypeFile.setUse(use);
+//			uploadedArchetypeFile.setOriginalLanguage(originalLanguage);
+//
+//			if (archetypeFileFromDB != null) {
+//				if (archetypeFileFromDB.getContent()
+//						.compareTo(archetypeContent) == 0) {
+//					fileStatus = FileProcessResult.FileStatusConstant.EXISTED;
+//				} else {
+//					if (overwriteChange) {
+//						// save the archetype
+//						uploadedArchetypeFile
+//								.setId(archetypeFileFromDB.getId());
+//						this.archetypePersistanceService
+//								.updateArchetypeFile(uploadedArchetypeFile);
+//					} else {
+//						fileStatus = FileProcessResult.FileStatusConstant.CHANGED;
+//					}
+//				}
+//			} else {
+//				// save the archetype
+//				this.archetypePersistanceService
+//						.saveArchetypeFile(uploadedArchetypeFile);
+//			}
+//		} else {
+//			fileStatus = FileProcessResult.FileStatusConstant.INVALID;
+//		}
+//		result.setFileStatus(fileStatus);
+//		return result;
+//	}
 
 	@RequestMapping(value = "/commitSequence", method = RequestMethod.GET)
 	@ResponseBody
@@ -209,11 +266,4 @@ public class FileUploadController {
 
 	}
 
-	public class FileStatusConstant {
-		public static final String UPLOADED = "UPLOADED";
-		public static final String EXISTED = "EXISTED";
-		public static final String CHANGED = "CHANGED";
-		public static final String INVALID = "INVALID";
-		public static final String VALID = "VALID";
-	}
 }

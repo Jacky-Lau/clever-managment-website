@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.openehr.am.archetype.ontology.ArchetypeTerm;
 
 @Entity
 @Table(name = "ARCHETYPE_NODE")
@@ -31,6 +32,7 @@ public class ArchetypeNode {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ARCHETYPE_FILE_ID")
 	private ArchetypeFile archetypeFile;
+	private ArchetypeTerm archetypeTerm;
 
 	public Integer getId() {
 		return id;
@@ -78,6 +80,14 @@ public class ArchetypeNode {
 
 	public void setArchetypeFile(ArchetypeFile archetypeFile) {
 		this.archetypeFile = archetypeFile;
+	}
+
+	public ArchetypeTerm getArchetypeTerm() {
+		return archetypeTerm;
+	}
+
+	public void setArchetypeTerm(ArchetypeTerm archetypeTerm) {
+		this.archetypeTerm = archetypeTerm;
 	}
 
 }

@@ -2,6 +2,9 @@ angular.module('clever.management.directives.filesModel', []).directive('filesMo
 function($parse) {
 	return {
 		restrict : 'A',
+		scope : {
+			fileList : '='
+		},
 		link : function(scope, element, attrs) {
 			element.on('change', function() {
 				var newFiles = this.files;
@@ -17,7 +20,8 @@ function($parse) {
 							name : newFiles[i].name,
 							size : newFiles[i].size,
 							file : newFiles[i],
-							status : 'TOUPLOAD'
+							status : 'TOUPLOAD',
+							message : '',
 						});
 					}
 				}

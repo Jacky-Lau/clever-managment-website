@@ -1,5 +1,5 @@
-angular.module('clever.management.services.fileUpload', []).service('fileUploadService', ['$http', 'COMMIT_SEQUENCE_URL', 'ARCHETYPE_UPLOAD_URL',
-function($http, COMMIT_SEQUENCE_URL, ARCHETYPE_UPLOAD_URL) {
+angular.module('clever.management.services.fileUpload', []).service('fileUploadService', ['$http', 'COMMIT_SEQUENCE_URL', 'ARCHETYPE_UPLOAD_URL', 'ARCHETYPE_VALIDATE_URL',
+function($http, COMMIT_SEQUENCE_URL, ARCHETYPE_UPLOAD_URL, ARCHETYPE_VALIDATE_URL) {
 	this.uploadSingleFileToUrl = function(file, commitSequence, overwriteChange) {
 		file.status = 'UPLOADING';
 		var formData = new FormData();
@@ -24,4 +24,21 @@ function($http, COMMIT_SEQUENCE_URL, ARCHETYPE_UPLOAD_URL) {
 			return response.data;
 		});
 	};
+
+	this.validateFiles = function(fileList) {
+		var formData = new FormData();
+		angular.forEach(fileList, function(file, index) {
+			formData.append('files', file.file);
+		});
+		return $http.post(ARCHETYPE_VALIDATE_URL, formData, {
+			transformRequest : angular.identity,
+			headers : {
+				'Content-Type' : undefined
+			}
+		}).then(function(response){
+			return response.data;
+		});
+	};
+	
+	
 }]);

@@ -58,6 +58,7 @@
 		<sec:intercept-url pattern="/archetypes" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetype/id/*" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetype/name/*" access="permitAll" method="GET"/>
+		<sec:intercept-url pattern="/archetypes/validation" access="isAuthenticated()" method="POST"/>
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
 
 		<!-- 登陆页面配置 -->

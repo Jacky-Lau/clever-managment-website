@@ -1,22 +1,43 @@
 package edu.zju.bme.clever.website.entity;
 
 public class FileProcessResult {
-	private String fileName;
-	private String fileStatus;
+	
+	private String name;
+	private String status;
+	private String message;
 
-	public String getFileName() {
-		return fileName;
+	public String getName() {
+		return name;
 	}
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getFileStatus() {
-		return fileStatus;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setFileStatus(String fileStatus) {
-		this.fileStatus = fileStatus;
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+
+
+	public class FileStatusConstant {
+		public static final String UPLOADED = "UPLOADED";
+		public static final String EXISTED = "EXISTED";
+		public static final String CHANGED = "CHANGED";
+		public static final String INVALID = "INVALID";
+		public static final String VALID = "VALID";
+		public static final String DEFAULT = "DEFAULT";
 	}
 }

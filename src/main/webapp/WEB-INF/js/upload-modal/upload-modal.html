@@ -8,11 +8,15 @@
 	<div class="content-container">
 		<div class="row">
 			<div class="col-xs-12 col-md-12 col-lg-12">
-				<button class="btn btn-success fileinput-button" ng-show="commitSequence == null">
+				<button class="btn btn-success fileinput-button" ng-show="status == 'AddingFile'">
 					<span class="glyphicon glyphicon-plus"></span> Add files...
-					<input id="inputFiles" type="file" files-model multiple>
+					<input id="inputFiles" type="file" files-model multiple file-list="fileList">
 				</button>
-				<h4 ng-show="commitSequence != null">Commite sequence ID: {{commitSequence.id}}</h4>
+				<h4 ng-show="status == 'Validating'">Validating...</h4>
+				<h4 ng-show="status == 'ValidationFailed'" style="color: red">Validation failed.</h4>
+				<h4 ng-show="status == 'ValidationPast'" style="color: green">Validation past. Please press the upload button to upload.</h4>
+				<h4 ng-show="status == 'ExistChangedFile'" style="color: GoldenRod">Validation past but some files have already existed, upload these files will overwrite the original files.</h4>
+				
 			</div>
 		</div>
 		<br/>
@@ -21,25 +25,13 @@
 				<table role="presentation" class="table table-striped table-hover" ng-show="fileList.length">
 					<tbody>
 						<tr ng-repeat="file in fileList | orderBy:file.name" ng-class="{TOUPLOAD: '', UPLOADED: 'success', EXISTED: 'info', CHANGED: 'warning', INVALID: 'danger', FAILED: 'danger'}[file.status]">
-							<td style="vertical-align: middle;">
-								<span ng-show="file.status=='TOUPLOAD'"><span class="glyphicon glyphicon-plus-sign"></span> To upload</span>
-								<span ng-show="file.status=='UPLOADED'"><span class="glyphicon glyphicon-ok-sign"></span> Uploaded</span>
-								<span ng-show="file.status=='EXISTED'"><span class="glyphicon glyphicon-info-sign"></span> Existed</span>
-								<span ng-show="file.status=='CHANGED'"><span class="glyphicon glyphicon-question-sign"></span> Changed</span>
-								<span ng-show="file.status=='INVALID'"><span class="glyphicon glyphicon-minus-sign"></span> Invalid</span>
-								<span ng-show="file.status=='FAILED'"><span class="glyphicon glyphicon-remove-sign"></span> Failed</span>
-								<span ng-show="file.status=='UPLOADING'"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Uploading</span>
-							</td>
+							<td style="vertical-align: middle;"><span ng-show="file.status=='TOUPLOAD'"><span class="glyphicon glyphicon-plus-sign"></span> To upload</span><span ng-show="file.status=='UPLOADED'"><span class="glyphicon glyphicon-ok-sign"></span> Uploaded</span><span ng-show="file.status=='EXISTED'"><span class="glyphicon glyphicon-info-sign"></span> Existed</span><span ng-show="file.status=='CHANGED'"><span class="glyphicon glyphicon-question-sign"></span> Changed</span><span ng-show="file.status=='INVALID'"><span class="glyphicon glyphicon-minus-sign"></span> Invalid</span><span ng-show="file.status=='FAILED'"><span class="glyphicon glyphicon-remove-sign"></span> Failed</span><span ng-show="file.status=='UPLOADING'"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Uploading</span></td>
 							<td style="vertical-align: middle;">{{file.name}}</td>
 							<td style="vertical-align: middle;">{{file.size/1024 | number:0}}KB</td>
 							<td style="vertical-align: middle;">
-								<button ng-show="file.status=='TOUPLOAD'" type="button" class="btn btn-warning" ng-click="deleteFile(file.name)">
-									Delete
-								</button>
-								<button ng-show="file.status=='CHANGED'" type="button" class="btn btn-warning" ng-click="overwriteFile(file.name)">
-									Overwrite
-								</button>
-							</td>
+							<button ng-show="file.status== 'TOUPLOAD' || file.status == 'INVALID'" type="button" class="btn btn-warning" ng-click="deleteFile(file.name)">
+								Delete
+							</button>
 						</tr>
 					</tbody>
 				</table>
@@ -49,8 +41,14 @@
 	</div>
 </div>
 <div class="modal-footer">
-	<button ng-show="commitSequence == null" class="btn btn-primary" ng-click="uploadFiles()" ng-disabled="!isUploadEnabled()">
-		Start upload
+	<button ng-show="status == 'AddingFile'" class="btn btn-primary" ng-click="validateFiles()" ng-disabled="fileList.length == 0">
+		Validate
+	</button>
+	<button ng-show="status == 'ValidationFailed'" class="btn btn-primary" ng-click="validateFiles()" ng-disabled="fileList.length == 0">
+		Retry
+	</button>
+	<button ng-show="status == 'ValidationPast' || status == 'ExistChangedFile'" class="btn btn-primary" ng-click="uploadFiles()" ng-disabled="fileList.length == 0">
+		Upload
 	</button>
 	<button ng-show="commitSequence != null" class="btn btn-success" ng-click="ok()">
 		Ok
