@@ -55,76 +55,8 @@ public class FileUploadController {
 	private ArchetypeValidationService archetypeValidationService;
 	@Resource(name = "archetypeExtractService")
 	private ArchetypeExtractService archetypeExtractService;
-
-	@RequestMapping(value = "/archetypes/validation", method = RequestMethod.POST)
-	@ResponseBody
-	public List<FileProcessResult> validateFiles(
-			@RequestParam(value = "files", required = true) MultipartFile[] files) {
-		final Map<String, FileProcessResult> validateResults = new HashMap<String, FileProcessResult>();
-		final List<FileProcessResult> allResults = new ArrayList<FileProcessResult>();
-		final Map<String, ArchetypeFile> archetypeFiles = new HashMap<String, ArchetypeFile>();
-		final Map<String, Archetype> archetypes = new HashMap<String, Archetype>();
-		Arrays.asList(files)
-				.stream()
-				.forEach(
-						file -> {
-							String fileName = file.getOriginalFilename();
-							long fileSize = file.getSize();
-							this.logger.trace("Validating file: {}, size: {}.",
-									fileName, fileSize);
-							FileProcessResult result = new FileProcessResult();
-							result.setName(fileName);
-							result.setStatus(FileProcessResult.FileStatusConstant.DEFAULT);
-							allResults.add(result);
-							try {
-								ADLParser parser = new ADLParser(file
-										.getInputStream(), "UTF-8");
-								Archetype archetype = parser.parse();
-								archetypes.put(archetype.getArchetypeId()
-										.getValue(), archetype);
-								validateResults.put(archetype.getArchetypeId()
-										.getValue(), result);
-								ArchetypeFile archetypeFile = this.archetypeExtractService
-										.extractArchetype(archetype, result);
-								if (archetypeFile != null) {
-									archetypeFiles.put(archetypeFile.getName(),
-											archetypeFile);
-									ArchetypeFile archetypeFileFromDB = this.archetypePersistanceService
-											.getArchetypeByName(archetype
-													.getArchetypeId()
-													.getValue());
-									if (archetypeFileFromDB != null) {
-										if (archetypeFileFromDB.getContent()
-												.equals(archetypeFile
-														.getContent())) {
-											result.setStatus(FileProcessResult.FileStatusConstant.EXISTED);
-											result.setMessage("Archetype already exists.");
-										} else {
-											result.setStatus(FileProcessResult.FileStatusConstant.CHANGED);
-											result.setMessage("Archetype already exists but is modified.");
-										}
-									}
-								}
-							} catch (Exception ex) {
-								this.logger.debug("Parse file {} failed.",
-										file.getOriginalFilename(), ex);
-								result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
-								result.setMessage("Archetype parse failed, error: "
-										+ ex.getMessage());
-							}
-						});
-		this.archetypeExtractService.extractArchetypeRelations(archetypes,
-				archetypeFiles, validateResults);
-		validateResults
-				.values()
-				.stream()
-				.filter(result -> result.getStatus().equals(
-						FileProcessResult.FileStatusConstant.DEFAULT))
-				.forEach(
-						result -> result
-								.setStatus(FileProcessResult.FileStatusConstant.VALID));
-		return allResults;
-	}
+	
+	
 
 
 //	@RequestMapping(value = "/archetypes", method = RequestMethod.POST)

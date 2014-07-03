@@ -25,14 +25,19 @@ public class ArchetypeNode {
 	private String nodePath;
 	@Column(name = "CODE")
 	private String code;
-	@Column(name = "NODE_NAME")
-	private String nodeName;
+	@Column(name = "ORIGINAL_NODE_NAME")
+	private String originalNodeName;
+	@Column(name = "CURRENT_NODE_NAME")
+	private String currentNodeName;
+	@Column(name = "ORIGINAL_VERSION")
+	private String originalVersion;
+	@Column(name = "CURRENT_VERSION")
+	private String currentVersion;
 	@Column(name = "RM_TYPE")
 	private String rmType;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ARCHETYPE_FILE_ID")
-	private ArchetypeFile archetypeFile;
-	private ArchetypeTerm archetypeTerm;
+	@JoinColumn(name = "ARCHETYPE_HOST_ID")
+	private ArchetypeHost archetypeHost;
 
 	public Integer getId() {
 		return id;
@@ -58,12 +63,20 @@ public class ArchetypeNode {
 		this.code = code;
 	}
 
-	public String getNodeName() {
-		return nodeName;
+	public String getOriginalNodeName() {
+		return originalNodeName;
 	}
 
-	public void setNodeName(String nodeName) {
-		this.nodeName = nodeName;
+	public void setOriginalNodeName(String originalNodeName) {
+		this.originalNodeName = originalNodeName;
+	}
+
+	public String getCurrentNodeName() {
+		return currentNodeName;
+	}
+
+	public void setCurrentNodeName(String currentNodeName) {
+		this.currentNodeName = currentNodeName;
 	}
 
 	public String getRmType() {
@@ -74,20 +87,28 @@ public class ArchetypeNode {
 		this.rmType = rmType;
 	}
 
-	public ArchetypeFile getArchetypeFile() {
-		return archetypeFile;
+	public ArchetypeHost getArchetypeHost() {
+		return archetypeHost;
 	}
 
-	public void setArchetypeFile(ArchetypeFile archetypeFile) {
-		this.archetypeFile = archetypeFile;
+	public void setArchetypeHost(ArchetypeHost archetypeHost) {
+		this.archetypeHost = archetypeHost;
 	}
 
-	public ArchetypeTerm getArchetypeTerm() {
-		return archetypeTerm;
+	public String getOriginalVersion() {
+		return originalVersion;
 	}
 
-	public void setArchetypeTerm(ArchetypeTerm archetypeTerm) {
-		this.archetypeTerm = archetypeTerm;
+	public void setOriginalVersion(String originalVersion) {
+		this.originalVersion = originalVersion;
+	}
+
+	public String getCurrentVersion() {
+		return currentVersion;
+	}
+
+	public void setCurrentVersion(String currentVersion) {
+		this.currentVersion = currentVersion;
 	}
 
 }

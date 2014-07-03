@@ -38,8 +38,6 @@ public class HistoriedArchetypeFile implements Serializable {
 	@Column(name = "CONTENT")
 	private String content;
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "HISTORIED_TIME")
-	private Calendar historiedTime;
 	@ManyToOne
 	private CommitSequence commitSequence;
 
@@ -65,14 +63,6 @@ public class HistoriedArchetypeFile implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-
-	public Calendar getHistoriedTime() {
-		return historiedTime;
-	}
-
-	public void setHistoriedTime(Calendar historiedTime) {
-		this.historiedTime = historiedTime;
 	}
 
 	public CommitSequence getCommitSequence() {

@@ -8,8 +8,6 @@ public interface ArchetypePersistanceService {
 	public ArchetypeFile getArchetypeByName(String name);
 	
 	public void saveArchetypeFile(ArchetypeFile archetypeFile);
-	
-	public void updateArchetypeFile(ArchetypeFile archetypeFile);
 
 	public CommitSequence getNewCommitSequence();
 

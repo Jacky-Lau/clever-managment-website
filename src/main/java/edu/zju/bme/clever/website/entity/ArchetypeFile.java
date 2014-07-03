@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -22,6 +23,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "ARCHETYPE_FILE")
@@ -52,25 +54,22 @@ public class ArchetypeFile implements Serializable {
 	@Lob
 	@Column(name = "CONTENT")
 	private String content;
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "MODIFY_TIME")
-	private Calendar modifyTime;
+	@Column(name = "RM_ORINGATOR")
+	private String rmOriginator;
 	@Column(name = "RM_NAME")
 	private String rmName;
 	@Column(name = "RM_ENTITY")
 	private String rmEntity;
-	@Column(name = "CONCEPT")
-	private String concept;
 	@Column(name = "CONCEPT_NAME")
 	private String conceptName;
-	@ManyToOne
+	@Column(name = "VERSION")
+	private String version;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "COMMIT_SEQUENCE_ID")
 	private CommitSequence commitSequence;
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "archetypeFile")
-	private List<ArchetypeNode> archetypeNodes;
-
-	public ArchetypeFile() {
-		this.archetypeNodes = new ArrayList<ArchetypeNode>();
-	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ARCHETYPE_HOST_ID")
+	private ArchetypeHost archetypeHost;
 
 	public Integer getId() {
 		return id;
@@ -86,14 +85,6 @@ public class ArchetypeFile implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
 	}
 
 	public String getPurpose() {
@@ -128,49 +119,20 @@ public class ArchetypeFile implements Serializable {
 		this.originalLanguage = originalLanguage;
 	}
 
-	public Calendar getModifyTime() {
-		return modifyTime;
+	public String getContent() {
+		return content;
 	}
 
-	public void setModifyTime(Calendar modifyTime) {
-		this.modifyTime = modifyTime;
+	public void setContent(String content) {
+		this.content = content;
 	}
 
-	public CommitSequence getCommitSequence() {
-		return commitSequence;
+	public String getRmOriginator() {
+		return rmOriginator;
 	}
 
-	public void setCommitSequence(CommitSequence commitSequence) {
-		this.commitSequence = commitSequence;
-	}
-
-	public List<ArchetypeNode> getArchetypeNodes() {
-		return archetypeNodes;
-	}
-
-	public void setArchetypeNodes(List<ArchetypeNode> archetypeNode) {
-		this.archetypeNodes = archetypeNode;
-	}
-
-	public void addArchetypeNode(ArchetypeNode archetypeNode) {
-		archetypeNode.setArchetypeFile(this);
-		this.archetypeNodes.add(archetypeNode);
-	}
-
-	public String getConcept() {
-		return concept;
-	}
-
-	public void setConcept(String concept) {
-		this.concept = concept;
-	}
-
-	public String getConceptName() {
-		return conceptName;
-	}
-
-	public void setConceptName(String conceptName) {
-		this.conceptName = conceptName;
+	public void setRmOriginator(String rmOriginator) {
+		this.rmOriginator = rmOriginator;
 	}
 
 	public String getRmName() {
@@ -189,10 +151,36 @@ public class ArchetypeFile implements Serializable {
 		this.rmEntity = rmEntity;
 	}
 
-	public Map<String, ArchetypeNode> getArchetypeNodeMap(
-			Function<ArchetypeNode, String> keyMapper) {
-		return this.archetypeNodes.stream().collect(
-				Collectors.toMap(keyMapper, node -> node));
+	public String getConceptName() {
+		return conceptName;
+	}
+
+	public void setConceptName(String conceptName) {
+		this.conceptName = conceptName;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public CommitSequence getCommitSequence() {
+		return commitSequence;
+	}
+
+	public void setCommitSequence(CommitSequence commitSequence) {
+		this.commitSequence = commitSequence;
+	}
+
+	public ArchetypeHost getArchetypeHost() {
+		return archetypeHost;
+	}
+
+	public void setArchetypeHost(ArchetypeHost archetypeHost) {
+		this.archetypeHost = archetypeHost;
 	}
 
 }

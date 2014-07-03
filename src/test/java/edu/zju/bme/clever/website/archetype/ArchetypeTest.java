@@ -23,7 +23,8 @@ import org.openehr.rm.support.identification.ArchetypeID;
 
 import edu.zju.bme.clever.website.entity.ArchetypeFile;
 import edu.zju.bme.clever.website.entity.ArchetypeNode;
-import edu.zju.bme.clever.website.entity.ArchetypeRelation;
+import edu.zju.bme.clever.website.entity.ArchetypeRelationship;
+import edu.zju.bme.clever.website.entity.FileProcessResult;
 import edu.zju.bme.clever.website.service.ArchetypeExtractService;
 import edu.zju.bme.clever.website.service.ArchetypeExtractServiceImpl;
 import se.acode.openehr.parser.ADLParser;
@@ -60,9 +61,27 @@ public class ArchetypeTest {
 		archetypeFiles.put(visitArchetype.getArchetypeId().getValue(),
 				srv.extractArchetype(visitArchetype));
 
-		List<ArchetypeRelation> relations = srv.extractArchetypeRelations(
+		List<ArchetypeRelationship> relations = srv.extractArchetypeRelations(
 				archetypes, archetypeFiles);
 		// ArchetypeFile file = srv.extractArchetype(archetype);
+	}
+	
+	public void testArchetypeValidate() throws ParseException, Exception{
+		InputStream patientIs = this
+				.getClass()
+				.getClassLoader()
+				.getResourceAsStream(
+						"edu/zju/bme/clever/website/adl/openEHR-DEMOGRAPHIC-PERSON.patient.v1.adl");
+		Archetype patientArchetype = new ADLParser(patientIs, "UTF-8").parse();
+		InputStream visitIs = this
+				.getClass()
+				.getClassLoader()
+				.getResourceAsStream(
+						"edu/zju/bme/clever/website/adl/openEHR-EHR-COMPOSITION.visit.v3.adl");
+		Archetype visitArchetype = new ADLParser(visitIs, "UTF-8").parse();
+		
+		Map<Archetype,FileProcessResult> archetypes = new HashMap<Archetype,FileProcessResult>();
+		
 	}
 
 }

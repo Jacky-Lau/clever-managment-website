@@ -18,31 +18,44 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "COMMIT_SEQUENCE")
 @DynamicUpdate(true)
 public class CommitSequence implements Serializable {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4405523932507069688L;
-	
+
 	@Id
 	@GeneratedValue
-	@Column(name="ID")
+	@Column(name = "ID")
 	private Integer id;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "COMMIT_TIME")
 	private Calendar commitTime;
-	
+	@Column(name = "SUBMITTER")
+	private String submitter;
+
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public Calendar getCommitTime() {
 		return commitTime;
 	}
+
 	public void setCommitTime(Calendar commitTime) {
 		this.commitTime = commitTime;
+	}
+
+	public String getSubmitter() {
+		return submitter;
+	}
+
+	public void setSubmitter(String submitter) {
+		this.submitter = submitter;
 	}
 
 }

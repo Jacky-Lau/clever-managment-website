@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import edu.zju.bme.clever.website.dao.ArchetypeFileDao;
 import edu.zju.bme.clever.website.dao.ArchetypeNodeDao;
-import edu.zju.bme.clever.website.dao.ArchetypeRelationDao;
+import edu.zju.bme.clever.website.dao.ArchetypeRelationshipDao;
 import edu.zju.bme.clever.website.dao.CommitSequenceDao;
 import edu.zju.bme.clever.website.dao.HistoriedArchetypeFileDao;
 import edu.zju.bme.clever.website.entity.ArchetypeFile;
@@ -31,7 +31,7 @@ public class ArchetypePersistanceServiceImpl implements
 	@Resource(name = "archetypeNodeDao")
 	private ArchetypeNodeDao archetypeNodeDao;
 	@Resource(name = "archetypeRelationDao")
-	private ArchetypeRelationDao archetypeRelationDao;
+	private ArchetypeRelationshipDao archetypeRelationDao;
 
 	@Override
 	public CommitSequence getNewCommitSequence() {
@@ -58,54 +58,7 @@ public class ArchetypePersistanceServiceImpl implements
 		historiedArchetypeFile.setContent(archetypeFile.getContent());
 		historiedArchetypeFile.setCommitSequence(archetypeFile
 				.getCommitSequence());
-		historiedArchetypeFile.setHistoriedTime(Calendar.getInstance());
 		this.archetypeFileDao.save(archetypeFile);
 		this.historiedArchetypeFileDao.save(historiedArchetypeFile);
-	}
-
-	public void saveArchetypeFileCascade(ArchetypeFile archetypeFile) {
-		HistoriedArchetypeFile historiedArchetypeFile = new HistoriedArchetypeFile();
-		historiedArchetypeFile.setName(archetypeFile.getName());
-		historiedArchetypeFile.setContent(archetypeFile.getContent());
-		historiedArchetypeFile.setCommitSequence(archetypeFile
-				.getCommitSequence());
-		historiedArchetypeFile.setHistoriedTime(Calendar.getInstance());
-		this.archetypeFileDao.save(archetypeFile);
-		this.historiedArchetypeFileDao.save(historiedArchetypeFile);
-		archetypeFile.getArchetypeNodes().forEach(
-				node -> this.archetypeNodeDao.save(node));
-	}
-
-	@Override
-	public void updateArchetypeFile(ArchetypeFile archetypeFile) {
-		archetypeFile.setModifyTime(Calendar.getInstance());
-		HistoriedArchetypeFile historiedArchetypeFile = new HistoriedArchetypeFile();
-		historiedArchetypeFile.setName(archetypeFile.getName());
-		historiedArchetypeFile.setContent(archetypeFile.getContent());
-		historiedArchetypeFile.setCommitSequence(archetypeFile
-				.getCommitSequence());
-		historiedArchetypeFile.setHistoriedTime(Calendar.getInstance());
-		this.archetypeFileDao.update(archetypeFile);
-		this.historiedArchetypeFileDao.save(historiedArchetypeFile);
-	}
-
-	public void updateArchetypeFileCascade(ArchetypeFile archetypeFile) {
-		archetypeFile.setModifyTime(Calendar.getInstance());
-		HistoriedArchetypeFile historiedArchetypeFile = new HistoriedArchetypeFile();
-		historiedArchetypeFile.setName(archetypeFile.getName());
-		historiedArchetypeFile.setContent(archetypeFile.getContent());
-		historiedArchetypeFile.setCommitSequence(archetypeFile
-				.getCommitSequence());
-		historiedArchetypeFile.setHistoriedTime(Calendar.getInstance());
-		// Delete the original archetype nodes
-		ArchetypeFile originalFile = this.archetypeFileDao
-				.findById(archetypeFile.getId());
-		originalFile.getArchetypeNodes().forEach(
-				node -> this.archetypeNodeDao.delete(node));
-		
-		this.archetypeFileDao.update(archetypeFile);
-		this.historiedArchetypeFileDao.save(historiedArchetypeFile);
-		archetypeFile.getArchetypeNodes().forEach(
-				node -> this.archetypeNodeDao.saveOrUpdate(node));
 	}
 }

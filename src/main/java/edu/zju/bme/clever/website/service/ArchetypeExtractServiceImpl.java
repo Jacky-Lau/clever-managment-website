@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 
 import edu.zju.bme.clever.website.entity.ArchetypeFile;
 import edu.zju.bme.clever.website.entity.ArchetypeNode;
-import edu.zju.bme.clever.website.entity.ArchetypeRelation;
+import edu.zju.bme.clever.website.entity.ArchetypeRelationship;
 import edu.zju.bme.clever.website.entity.FileProcessResult;
 import edu.zju.bme.clever.website.exception.ArchetypeRelationExtractException;
 
@@ -73,9 +73,8 @@ public class ArchetypeExtractServiceImpl implements ArchetypeExtractService {
 			archetypeAttributes.put("originalLanguage", archetype
 					.getOriginalLanguage().getCodeString());
 			archetypeAttributes.put("concept", archetype.getConcept());
-			archetypeAttributes.put("conceptName",
-					archetype.getConceptName(archetypeAttributes
-							.get("originalLanguage")));
+			archetypeAttributes.put("conceptName", archetype.getArchetypeId()
+					.conceptName());
 			archetype
 					.getDescription()
 					.getDetails()
@@ -104,7 +103,6 @@ public class ArchetypeExtractServiceImpl implements ArchetypeExtractService {
 			ADLSerializer adlSerilizer = new ADLSerializer();
 			archetypeAttributes.put("archetypeContent",
 					adlSerilizer.output(archetype));
-			archetypeFile.setModifyTime(Calendar.getInstance());
 			archetypeFile.setContent(archetypeAttributes
 					.get("archetypeContent"));
 			archetypeFile.setName(archetypeAttributes.get("archetypeId"));
@@ -113,7 +111,6 @@ public class ArchetypeExtractServiceImpl implements ArchetypeExtractService {
 			archetypeFile.setUse(archetypeAttributes.get("use"));
 			archetypeFile.setOriginalLanguage(archetypeAttributes
 					.get("originalLanguage"));
-			archetypeFile.setConcept(archetypeAttributes.get("concept"));
 			archetypeFile
 					.setConceptName(archetypeAttributes.get("conceptName"));
 			archetypeFile.setRmName(archetypeAttributes.get("rmName"));
@@ -131,19 +128,19 @@ public class ArchetypeExtractServiceImpl implements ArchetypeExtractService {
 						archetypeNode.setRmType(node.getRmTypeName());
 						String nodeId = this.getNodeIdFromNodePath(path);
 						if (nodeId != "") {
-							archetypeNode.setCode(nodeId);
-							archetypeNode.setNodeName(ontology
-									.termDefinition(
-											archetypeAttributes
-													.get("originalLanguage"),
-											nodeId).getText());
-							archetypeNode.setArchetypeTerm(ontology
-									.termDefinition(nodeId));
+//							archetypeNode.setCode(nodeId);
+//							archetypeNode.setNodeName(ontology
+//									.termDefinition(
+//											archetypeAttributes
+//													.get("originalLanguage"),
+//											nodeId).getText());
+//							archetypeNode.setArchetypeTerm(ontology
+//									.termDefinition(nodeId));
 						} else {
 							throw new RuntimeException("Extract node path "
 									+ path + " failed.");
 						}
-						archetypeFile.addArchetypeNode(archetypeNode);
+//						archetypeFile.addArchetypeNode(archetypeNode);
 					}
 				}
 			});
@@ -172,18 +169,18 @@ public class ArchetypeExtractServiceImpl implements ArchetypeExtractService {
 	}
 
 	@Override
-	public List<ArchetypeRelation> extractArchetypeRelations(
+	public List<ArchetypeRelationship> extractArchetypeRelations(
 			final Map<String, Archetype> archetypes,
 			final Map<String, ArchetypeFile> archetypeFiles) {
 		return this.extractArchetypeRelations(archetypes, archetypeFiles, null);
 	}
 
 	@Override
-	public List<ArchetypeRelation> extractArchetypeRelations(
+	public List<ArchetypeRelationship> extractArchetypeRelations(
 			final Map<String, Archetype> archetypes,
 			final Map<String, ArchetypeFile> archetypeFiles,
 			final Map<String, FileProcessResult> results) {
-		List<ArchetypeRelation> relations = new ArrayList<ArchetypeRelation>();
+		List<ArchetypeRelationship> relations = new ArrayList<ArchetypeRelationship>();
 		final Map<String, OntologyDefinitions> termDefinitionMap = archetypes
 				.entrySet()
 				.stream()
@@ -210,16 +207,17 @@ public class ArchetypeExtractServiceImpl implements ArchetypeExtractService {
 							.getDefinitions()
 							.stream()
 							.filter(item -> item
-									.getItem(ArchetypeRelation.RelationType.OneToMany
+									.getItem(ArchetypeRelationship.RelationType.OneToMany
 											.toString()) != null)
 							.forEach(
 									item -> {
 										try {
 											String targetArchetypeName = item
-													.getItem(ArchetypeRelation.RelationType.OneToMany
+													.getItem(ArchetypeRelationship.RelationType.OneToMany
 															.toString());
 											String mappedNodePath = item
-													.getItem("mappedBy").replace("\"", "");
+													.getItem("mappedBy")
+													.replace("\"", "");
 											if (mappedNodePath == null) {
 												throw new ArchetypeRelationExtractException(
 														"Missing 'mappedBy' annotation.");
@@ -246,7 +244,7 @@ public class ArchetypeExtractServiceImpl implements ArchetypeExtractService {
 														"'mappedBy' node path is wrong.");
 											}
 											String inverseArchetypeName = targetTerm
-													.getItem(ArchetypeRelation.RelationType.ManyToOne
+													.getItem(ArchetypeRelationship.RelationType.ManyToOne
 															.toString());
 											if (inverseArchetypeName == null) {
 												throw new ArchetypeRelationExtractException(
@@ -259,23 +257,23 @@ public class ArchetypeExtractServiceImpl implements ArchetypeExtractService {
 											}
 											if (inverseArchetypeName
 													.equals(archetypeName)) {
-												ArchetypeRelation relation = new ArchetypeRelation();
-												ArchetypeFile sourceArchetypeFile = archetypeFiles
-														.get(archetypeName);
-												ArchetypeFile definitionArchetypeFile = archetypeFiles
-														.get(targetArchetypeName);
-												relation.setSourceArchetypeFile(sourceArchetypeFile);
-												relation.setDestinationArchetypeFile(definitionArchetypeFile);
-												relation.setSourceArchetypeNode(sourceArchetypeFile
-														.getArchetypeNodeMap(
-																ArchetypeNode::getCode)
-														.get(item.getCode()));
-												relation.setDestinationArchetypeNode(definitionArchetypeFile
-														.getArchetypeNodeMap(
-																ArchetypeNode::getCode)
-														.get(targetTerm
-																.getCode()));
-												relations.add(relation);
+//												ArchetypeRelationship relation = new ArchetypeRelationship();
+//												ArchetypeFile sourceArchetypeFile = archetypeFiles
+//														.get(archetypeName);
+//												ArchetypeFile definitionArchetypeFile = archetypeFiles
+//														.get(targetArchetypeName);
+//												relation.setSourceArchetypeFile(sourceArchetypeFile);
+//												relation.setDestinationArchetypeFile(definitionArchetypeFile);
+//												relation.setSourceArchetypeNode(sourceArchetypeFile
+//														.getArchetypeNodeMap(
+//																ArchetypeNode::getCode)
+//														.get(item.getCode()));
+//												relation.setDestinationArchetypeNode(definitionArchetypeFile
+//														.getArchetypeNodeMap(
+//																ArchetypeNode::getCode)
+//														.get(targetTerm
+//																.getCode()));
+//												relations.add(relation);
 											} else {
 												this.logger
 														.debug("OneToMany and ManyToOne relation does not match between {} and {}.",
