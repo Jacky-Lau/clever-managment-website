@@ -12,6 +12,7 @@ import org.openehr.am.archetype.ontology.OntologyDefinitions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.zju.bme.clever.service.CleverService;
 import edu.zju.bme.clever.website.dao.ArchetypeFileDao;
@@ -22,6 +23,7 @@ import edu.zju.bme.clever.website.entity.ArchetypeRelationship;
 import edu.zju.bme.clever.website.entity.FileProcessResult;
 
 @Service("archetypeValidationService")
+@Transactional
 public class ArchetypeValidationServiceImpl implements
 		ArchetypeValidationService {
 
@@ -35,12 +37,7 @@ public class ArchetypeValidationServiceImpl implements
 	private ArchetypeFileDao archetypeFileDao;
 
 	@Override
-	public boolean validate(String archetype) {
-		return this.validate(Arrays.asList(archetype));
-	}
-
-	@Override
-	public boolean validate(List<String> archetypes) {
+	public boolean validateFeasibility(List<String> archetypes) {
 		int stopResult = cleverValidationClient.stop();
 		if (stopResult != 0) {
 			this.logger.trace(
@@ -67,7 +64,7 @@ public class ArchetypeValidationServiceImpl implements
 	}
 
 	@Override
-	public void validateArchetypes(Map<Archetype, FileProcessResult> archetypes) {
+	public void validateConsistency(Map<Archetype, FileProcessResult> archetypes) {
 		Map<String, Archetype> archetypeMap = archetypes
 				.keySet()
 				.stream()

@@ -39,7 +39,6 @@ public class FileValidateController {
 		final Map<Archetype, FileProcessResult> validateResults = new HashMap<Archetype, FileProcessResult>();
 		final List<FileProcessResult> allResults = new ArrayList<FileProcessResult>();
 		Arrays.asList(files)
-				.stream()
 				.forEach(
 						file -> {
 							String fileName = file.getOriginalFilename();
@@ -63,7 +62,7 @@ public class FileValidateController {
 										+ ex.getMessage());
 							}
 						});
-		this.archetypeValidationService.validateArchetypes(validateResults);
+		this.archetypeValidationService.validateConsistency(validateResults);
 		validateResults.values().forEach(result -> {
 			if (result.getStatus().compareTo(FileStatusConstant.DEFAULT) == 0) {
 				result.setStatus(FileProcessResult.FileStatusConstant.VALID);

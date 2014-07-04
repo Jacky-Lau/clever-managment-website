@@ -6,8 +6,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,8 +34,9 @@ public class CommitSequence implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "COMMIT_TIME")
 	private Calendar commitTime;
-	@Column(name = "SUBMITTER")
-	private String submitter;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "SUBMITTER_ID")
+	private User submitter;
 
 	public Integer getId() {
 		return id;
@@ -50,11 +54,11 @@ public class CommitSequence implements Serializable {
 		this.commitTime = commitTime;
 	}
 
-	public String getSubmitter() {
+	public User getSubmitter() {
 		return submitter;
 	}
 
-	public void setSubmitter(String submitter) {
+	public void setSubmitter(User submitter) {
 		this.submitter = submitter;
 	}
 

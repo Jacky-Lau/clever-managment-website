@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -40,8 +41,10 @@ public class ArchetypeRelationship {
 	@Column(name = "RELATION_TYPE")
 	private RelationType relationType;
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "SOURCE_ARCHETYPE_HOST_ID")
 	private ArchetypeHost sourceArchetypeHost;
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DESTINATION_ARCHETYPE_HOST_ID")
 	private ArchetypeHost destinationArchetypeHost;
 
 	public Integer getId() {

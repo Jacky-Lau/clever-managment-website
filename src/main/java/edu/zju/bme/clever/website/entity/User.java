@@ -39,7 +39,7 @@ public class User implements Serializable {
 	private boolean isEnabled;
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
 	@JoinTable(name = "USER_ROLES", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = { @JoinColumn(name = "ROLE_ID") })
-	private Set<Role> roles = new HashSet<Role>();
+	private Set<Role> roles;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "UPDATE_TIME")
 	private Calendar updateTime;

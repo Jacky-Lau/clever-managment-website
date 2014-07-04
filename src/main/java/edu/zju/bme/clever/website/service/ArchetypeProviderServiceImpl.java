@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -56,7 +57,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 		ArchetypeFile file = this.archetypeFileDao.findById(id);
 		return this.serializeArchetype(this.parseArchetype(file.getContent()));
 	}
-	
+
 	@Override
 	public String getArchetypeAdlByName(String name) {
 		ArchetypeFile file = this.archetypeFileDao.findUniqueByProperty("name",
@@ -106,5 +107,12 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 	public Archetype getArchetypeById(Integer id) {
 		ArchetypeFile file = this.archetypeFileDao.findById(id);
 		return this.parseArchetype(file.getContent());
+	}
+
+	@Override
+	public List<String> getAllArchetypeAdls() {
+		return this.archetypeFileDao.selectAll().stream().map(file -> {
+			return file.getContent();
+		}).collect(Collectors.toList());
 	}
 }

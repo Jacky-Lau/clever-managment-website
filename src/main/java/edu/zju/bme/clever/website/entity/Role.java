@@ -26,7 +26,7 @@ public class Role implements Serializable{
 	@Column(name = "ROLE_NAME")
 	private String roleName;
 	@ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY, mappedBy="roles")
-	private Set<User> users = new HashSet<User>();
+	private Set<User> users;
 
 	public Role() {
 

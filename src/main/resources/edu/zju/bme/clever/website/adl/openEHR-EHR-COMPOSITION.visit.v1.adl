@@ -1,5 +1,5 @@
 archetype (adl_version=1.4)
-	openEHR-EHR-COMPOSITION.visit.v3
+	openEHR-EHR-COMPOSITION.visit.v1
 
 concept
 	[at0000]	-- Visit

@@ -1,5 +1,6 @@
 package edu.zju.bme.clever.website.entity;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -43,11 +44,11 @@ public class ArchetypeHost {
 	@Column(name = "MODIFY_TIME")
 	private Calendar modifyTime;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "archetypeHost")
-	private List<ArchetypeFile> archetypeFiles;
+	private List<ArchetypeFile> archetypeFiles = new ArrayList<ArchetypeFile>();
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "archetypeHost")
-	private List<ArchetypeNode> archetypeNodes;
+	private List<ArchetypeNode> archetypeNodes = new ArrayList<ArchetypeNode>();
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "archetypeHost")
-	private List<ArchetypeNodeChangeLog> archetypeNodeChangeLogs;
+	private List<ArchetypeNodeChangeLog> archetypeNodeChangeLogs = new ArrayList<ArchetypeNodeChangeLog>();
 
 	public Integer getId() {
 		return id;

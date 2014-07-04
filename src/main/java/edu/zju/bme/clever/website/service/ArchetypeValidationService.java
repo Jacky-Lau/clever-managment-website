@@ -8,10 +8,8 @@ import org.openehr.am.archetype.Archetype;
 import edu.zju.bme.clever.website.entity.FileProcessResult;
 
 public interface ArchetypeValidationService {
-	
-	public boolean validate(String archetype);
 
-	public boolean validate(List<String> archetype);
+	public boolean validateFeasibility(List<String> archetypes);
 
-	public void validateArchetypes(Map<Archetype, FileProcessResult> archetypes);
+	public void validateConsistency(Map<Archetype, FileProcessResult> archetypes);
 }

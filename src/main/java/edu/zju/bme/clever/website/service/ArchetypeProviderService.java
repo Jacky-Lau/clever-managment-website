@@ -22,4 +22,6 @@ public interface ArchetypeProviderService {
 	public String getArchetypeAdlByName(String name);
 
 	public String getArchetypeAdlById(Integer id);
+	
+	public List<String> getAllArchetypeAdls();
 }
