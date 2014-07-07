@@ -95,7 +95,7 @@ function AppCtrl($scope, $modal, archetypeRetrieveService) {
 					$scope.ok = function() {
 						$modalInstance.close();
 					};
-					if (result.succeeded == 'true') {
+					if (result.succeeded) {
 						$scope.title = "Succeeded";
 						$scope.content = "Upload archetypes succeeded.";
 					} else {
