@@ -231,6 +231,7 @@ public class ArchetypePersistanceServiceImpl implements
 									.getCurrentVersion());
 							log.setCurrentNodeName(nodeName);
 							log.setCurrentVersion(version);
+							log.setNodePath(node.path());
 							this.archetypeNodeChangeLogDao.save(log);
 							// Update archetype node
 							existedNode.setCurrentNodeName(nodeName);

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.zju.bme.clever.website.model.entity.ArchetypeBriefInfo;
 import edu.zju.bme.clever.website.service.ArchetypeProviderService;
 
 @Controller
@@ -20,11 +19,11 @@ public class ArchetypeProviderController {
 	@Resource(name="archetypeProviderService")
 	private ArchetypeProviderService archetypeProviderService;
 	
-	@RequestMapping(value = "/archetypes", method = RequestMethod.GET)
-	@ResponseBody
-	public List<ArchetypeBriefInfo> getArchetypeList(){
-		return this.archetypeProviderService.getArchetypeList();
-	}
+//	@RequestMapping(value = "/archetypes", method = RequestMethod.GET)
+//	@ResponseBody
+//	public List<ArchetypeBriefInfo> getArchetypeList(){
+//		return this.archetypeProviderService.getArchetypeList();
+//	}
 	
 	@RequestMapping(value = "/archetype/id/{id}.xml", method = RequestMethod.GET)
 	@ResponseBody

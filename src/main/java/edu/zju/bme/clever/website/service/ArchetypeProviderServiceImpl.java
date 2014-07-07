@@ -1,8 +1,10 @@
 package edu.zju.bme.clever.website.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,8 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import se.acode.openehr.parser.ADLParser;
 import edu.zju.bme.clever.website.dao.ArchetypeFileDao;
-import edu.zju.bme.clever.website.model.entity.ArchetypeBriefInfo;
+import edu.zju.bme.clever.website.dao.ArchetypeHostDao;
+import edu.zju.bme.clever.website.dao.ArchetypeNodeChangeLogDao;
+import edu.zju.bme.clever.website.dao.ArchetypeNodeDao;
+import edu.zju.bme.clever.website.dao.ArchetypeRelationshipDao;
+import edu.zju.bme.clever.website.dao.HistoriedArchetypeFileDao;
 import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
+import edu.zju.bme.clever.website.model.entity.ArchetypeNode;
+import edu.zju.bme.clever.website.model.entity.ArchetypeNodeChangeLog;
+import edu.zju.bme.clever.website.view.entity.*;
 
 @Service("archetypeProviderService")
 @Transactional
@@ -28,21 +37,107 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 
 	@Resource(name = "archetypeFileDao")
 	private ArchetypeFileDao archetypeFileDao;
+	@Resource(name = "archetypeRelationshipDao")
+	private ArchetypeRelationshipDao archetypeRelationshipDao;
+	@Resource(name = "archetypeHostDao")
+	private ArchetypeHostDao archetypeHostDao;
 
 	@Override
-	public List<ArchetypeBriefInfo> getArchetypeList() {
-		List<ArchetypeBriefInfo> archetypeList = new ArrayList<ArchetypeBriefInfo>();
-		for (ArchetypeFile file : this.archetypeFileDao.selectAll()) {
-			ArchetypeBriefInfo info = new ArchetypeBriefInfo();
-			info.setId(file.getId());
-			info.setName(file.getName());
-			info.setPurpose(file.getPurpose());
-			info.setKeywords(file.getKeywords());
-			info.setUse(file.getUse());
-			info.setOriginalLanguage(file.getOriginalLanguage());
-			archetypeList.add(info);
-		}
-		return archetypeList;
+	public ArchetypeBriefInfo getArchetypeBriefInfo() {
+		final ArchetypeBriefInfo archetypeBriefInfo = new ArchetypeBriefInfo();
+		// get all relationships
+		this.archetypeRelationshipDao
+				.selectAll()
+				.forEach(
+						relationship -> {
+							ArchetypeRelationshipInfo relationshipInfo = new ArchetypeRelationshipInfo();
+							relationshipInfo.setRelationType(relationship
+									.getRelationType());
+							relationshipInfo
+									.setSourceArchetypeHostId(relationship
+											.getSourceArchetypeHost().getId());
+							relationshipInfo
+									.setDestinationArchetypeHostId(relationship
+											.getDestinationArchetypeHost()
+											.getId());
+							archetypeBriefInfo.getArchetypeRelationshipInfos()
+									.add(relationshipInfo);
+						});
+		// get all archetype hosts
+		this.archetypeHostDao
+				.selectAll()
+				.forEach(
+						host -> {
+							final ArchetypeHostInfo hostInfo = new ArchetypeHostInfo();
+							final Map<String, ArchetypeInfo> archetypeInfoIndexByVersion = new HashMap<String, ArchetypeInfo>();
+							hostInfo.setConceptName(host.getConceptName());
+							hostInfo.setName(host.getName());
+							hostInfo.setRmEntity(host.getRmEntity());
+							hostInfo.setRmName(host.getRmName());
+							hostInfo.setRmOriginator(host.getRmOriginator());
+							hostInfo.setId(host.getId());
+							host.getArchetypeFiles()
+									.forEach(
+											file -> {
+												ArchetypeInfo info = new ArchetypeInfo();
+												info.setId(file.getId());
+												info.setName(file.getName());
+												info.setVersion(file
+														.getVersion());
+												archetypeInfoIndexByVersion
+														.put(file.getVersion(),
+																info);
+											});
+							host.getArchetypeNodes()
+									.stream()
+									.collect(
+											Collectors
+													.groupingBy(ArchetypeNode::getOriginalVersion))
+									.forEach(
+											(version, nodes) -> {
+												final ArchetypeInfo info = archetypeInfoIndexByVersion
+														.get(version);
+												nodes.forEach(node -> {
+													ArchetypeNodeInfo nodeInfo = new ArchetypeNodeInfo();
+													nodeInfo.setType(ArchetypeNodeInfo.Type.Add);
+													nodeInfo.setPreviousName(node
+															.getOriginalNodeName());
+													nodeInfo.setCurrentName(node
+															.getOriginalNodeName());
+													nodeInfo.setRmType(node
+															.getRmType());
+													nodeInfo.setNodePath(node
+															.getNodePath());
+													info.getArchetypeNodeInfos()
+															.add(nodeInfo);
+												});
+											});
+							host.getArchetypeNodeChangeLogs()
+									.stream()
+									.collect(
+											Collectors
+													.groupingBy(ArchetypeNodeChangeLog::getCurrentVersion))
+									.forEach(
+											(version, logs) -> {
+												final ArchetypeInfo info = archetypeInfoIndexByVersion
+														.get(version);
+												logs.forEach(log -> {
+													ArchetypeNodeInfo nodeInfo = new ArchetypeNodeInfo();
+													nodeInfo.setType(ArchetypeNodeInfo.Type.Modify);
+													nodeInfo.setCurrentName(log
+															.getCurrentNodeName());
+													nodeInfo.setPreviousName(log
+															.getPreviousNodeName());
+													nodeInfo.setRmType(log
+															.getRmType());
+													nodeInfo.setNodePath(log
+															.getNodePath());
+													info.getArchetypeNodeInfos()
+															.add(nodeInfo);
+												});
+											});
+						});
+		return archetypeBriefInfo;
 	}
 
 	@Override

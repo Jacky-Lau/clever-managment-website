@@ -30,6 +30,8 @@ public class ArchetypeNodeChangeLog {
 	private String currentVersion;
 	@Column(name = "RM_TYPE")
 	private String rmType;
+	@Column(name = "NODE_PATH")
+	private String nodePath;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ARCHETYPE_HOST_ID")
 	private ArchetypeHost archetypeHost;
@@ -88,6 +90,14 @@ public class ArchetypeNodeChangeLog {
 
 	public void setArchetypeHost(ArchetypeHost archetypeHost) {
 		this.archetypeHost = archetypeHost;
+	}
+
+	public String getNodePath() {
+		return nodePath;
+	}
+
+	public void setNodePath(String nodePath) {
+		this.nodePath = nodePath;
 	}
 
 }
