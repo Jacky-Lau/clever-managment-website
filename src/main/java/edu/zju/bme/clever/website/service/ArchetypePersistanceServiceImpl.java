@@ -262,14 +262,14 @@ public class ArchetypePersistanceServiceImpl implements
 		// Persist archetype relationships after all archetypes have saved into
 		// database
 		for (Archetype archetype : archetypes) {
-			OntologyDefinitions terms = archetype
+			OntologyDefinitions annotations = archetype
 					.getOntology()
 					.getTermDefinitionsList()
 					.stream()
 					.filter(definition -> definition.getLanguage().equals(
-							archetype.getOriginalLanguage().getCodeString()))
+							"annotation"))
 					.findFirst().get();
-			for (ArchetypeTerm item : terms.getDefinitions()) {
+			for (ArchetypeTerm item : annotations.getDefinitions()) {
 				ArchetypeFile sourceArchetypeFile = null, destinationArchetypeFile = null;
 				if (item.getItem(ArchetypeRelationship.RelationType.OneToMany
 						.toString()) != null) {

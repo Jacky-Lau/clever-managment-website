@@ -114,6 +114,7 @@ public class FileUploadController {
 			result.setSucceeded(false);
 			result.setMessage("Persist archetypes failed, error: "
 					+ ex.getMessage());
+			return result;
 		}
 		return result;
 	}
@@ -237,15 +238,15 @@ public class FileUploadController {
 
 	public class FileUploadResult {
 
-		private boolean isSucceeded;
+		private boolean succeeded;
 		private String message;
 
 		public boolean isSucceeded() {
-			return isSucceeded;
+			return succeeded;
 		}
 
 		public void setSucceeded(boolean isSucceeded) {
-			this.isSucceeded = isSucceeded;
+			this.succeeded = isSucceeded;
 		}
 
 		public String getMessage() {
