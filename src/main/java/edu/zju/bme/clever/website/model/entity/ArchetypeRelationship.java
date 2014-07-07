@@ -1,7 +1,9 @@
-package edu.zju.bme.clever.website.entity;
+package edu.zju.bme.clever.website.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -39,6 +41,7 @@ public class ArchetypeRelationship {
 	@Column(name = "ID")
 	private Integer id;
 	@Column(name = "RELATION_TYPE")
+	@Enumerated(EnumType.STRING)
 	private RelationType relationType;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "SOURCE_ARCHETYPE_HOST_ID")

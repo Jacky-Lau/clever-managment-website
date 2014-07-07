@@ -37,11 +37,12 @@ import org.springframework.web.multipart.MultipartFile;
 import se.acode.openehr.parser.ADLParser;
 import edu.zju.bme.clever.website.dao.CommitSequenceDao;
 import edu.zju.bme.clever.website.dao.UserDao;
-import edu.zju.bme.clever.website.entity.ArchetypeFile;
-import edu.zju.bme.clever.website.entity.ArchetypeNode;
-import edu.zju.bme.clever.website.entity.CommitSequence;
-import edu.zju.bme.clever.website.entity.FileProcessResult;
-import edu.zju.bme.clever.website.entity.User;
+import edu.zju.bme.clever.website.exception.ArchetypePersistenceException;
+import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
+import edu.zju.bme.clever.website.model.entity.ArchetypeNode;
+import edu.zju.bme.clever.website.model.entity.CommitSequence;
+import edu.zju.bme.clever.website.model.entity.FileProcessResult;
+import edu.zju.bme.clever.website.model.entity.User;
 import edu.zju.bme.clever.website.service.ArchetypeExtractService;
 import edu.zju.bme.clever.website.service.ArchetypePersistanceService;
 import edu.zju.bme.clever.website.service.ArchetypeProviderService;
@@ -104,6 +105,15 @@ public class FileUploadController {
 			result.setSucceeded(false);
 			result.setMessage("Update schema on CLEVER failed");
 			return result;
+		}
+		try {
+			this.archetypePersistanceService.saveArchetypes(
+					new ArrayList<Archetype>(archetypes.values()), userName);
+		} catch (ArchetypePersistenceException ex) {
+			this.logger.debug("Persist archetypes failed.", ex);
+			result.setSucceeded(false);
+			result.setMessage("Persist archetypes failed, error: "
+					+ ex.getMessage());
 		}
 		return result;
 	}
@@ -218,12 +228,12 @@ public class FileUploadController {
 	// result.setFileStatus(fileStatus);
 	// return result;
 	// }
-//
-//	@RequestMapping(value = "/commitSequence", method = RequestMethod.GET)
-//	@ResponseBody
-//	public CommitSequence getCommitSequence() {
-//		return this.archetypePersistanceService.getNewCommitSequence();
-//	}
+	//
+	// @RequestMapping(value = "/commitSequence", method = RequestMethod.GET)
+	// @ResponseBody
+	// public CommitSequence getCommitSequence() {
+	// return this.archetypePersistanceService.getNewCommitSequence();
+	// }
 
 	public class FileUploadResult {
 

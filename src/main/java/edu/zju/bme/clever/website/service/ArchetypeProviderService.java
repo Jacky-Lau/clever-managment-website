@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.openehr.am.archetype.Archetype;
 
-import edu.zju.bme.clever.website.entity.ArchetypeBriefInfo;
+import edu.zju.bme.clever.website.model.entity.ArchetypeBriefInfo;
 
 public interface ArchetypeProviderService {
 

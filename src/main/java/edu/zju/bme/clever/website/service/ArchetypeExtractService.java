@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.openehr.am.archetype.Archetype;
 
-import edu.zju.bme.clever.website.entity.ArchetypeFile;
-import edu.zju.bme.clever.website.entity.ArchetypeRelationship;
-import edu.zju.bme.clever.website.entity.FileProcessResult;
+import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
+import edu.zju.bme.clever.website.model.entity.ArchetypeRelationship;
+import edu.zju.bme.clever.website.model.entity.FileProcessResult;
 
 public interface ArchetypeExtractService {
 

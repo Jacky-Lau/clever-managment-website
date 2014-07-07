@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.zju.bme.clever.service.CleverService;
 import edu.zju.bme.clever.website.dao.ArchetypeFileDao;
 import edu.zju.bme.clever.website.dao.ArchetypeHostDao;
-import edu.zju.bme.clever.website.entity.ArchetypeFile;
-import edu.zju.bme.clever.website.entity.ArchetypeHost;
-import edu.zju.bme.clever.website.entity.ArchetypeRelationship;
-import edu.zju.bme.clever.website.entity.FileProcessResult;
+import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
+import edu.zju.bme.clever.website.model.entity.ArchetypeHost;
+import edu.zju.bme.clever.website.model.entity.ArchetypeRelationship;
+import edu.zju.bme.clever.website.model.entity.FileProcessResult;
 
 @Service("archetypeValidationService")
 @Transactional
@@ -64,19 +64,17 @@ public class ArchetypeValidationServiceImpl implements
 	}
 
 	@Override
-	public void validateConsistency(Map<Archetype, FileProcessResult> archetypes) {
-		Map<String, Archetype> archetypeMap = archetypes
-				.keySet()
-				.stream()
-				.collect(
-						Collectors.toMap(archetype -> archetype
-								.getArchetypeId().getValue(),
-								archetype -> archetype));
+	public void validateConsistency(Map<String, Archetype> archetypes,
+			Map<String, FileProcessResult> results) {
+
 		archetypes
-				.forEach((archetype, result) -> {
-					ArchetypeFile archetypeFile = this.archetypeFileDao.findUniqueByProperty("name", archetype.getArchetypeId().getValue());
-					if(archetypeFile!=null){
-						result.setStatus(FileProcessResult.FileStatusConstant.EXISTED);
+				.forEach((archetypeId, archetype) -> {
+					ArchetypeFile archetypeFile = this.archetypeFileDao
+							.findUniqueByProperty("name", archetype
+									.getArchetypeId().getValue());
+					FileProcessResult result = results.get(archetypeId);
+					if (archetypeFile != null) {
+						result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
 						result.setMessage("Archetype already exists.");
 						return;
 					}
@@ -122,7 +120,7 @@ public class ArchetypeValidationServiceImpl implements
 												.getItem(ArchetypeRelationship.RelationType.OneToMany
 														.toString());
 										if (oneToMany != null) {
-											if (!archetypeMap
+											if (!archetypes
 													.containsKey(oneToMany)
 													&& this.archetypeFileDao
 															.findUniqueByProperty(
@@ -140,7 +138,7 @@ public class ArchetypeValidationServiceImpl implements
 												.getItem(ArchetypeRelationship.RelationType.ManyToOne
 														.toString());
 										if (manyToOne != null) {
-											if (!archetypeMap
+											if (!archetypes
 													.containsKey(manyToOne)
 													&& this.archetypeFileDao
 															.findUniqueByProperty(

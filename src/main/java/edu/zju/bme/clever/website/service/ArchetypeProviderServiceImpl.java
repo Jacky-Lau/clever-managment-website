@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import se.acode.openehr.parser.ADLParser;
 import edu.zju.bme.clever.website.dao.ArchetypeFileDao;
-import edu.zju.bme.clever.website.entity.ArchetypeBriefInfo;
-import edu.zju.bme.clever.website.entity.ArchetypeFile;
+import edu.zju.bme.clever.website.model.entity.ArchetypeBriefInfo;
+import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
 
 @Service("archetypeProviderService")
 @Transactional

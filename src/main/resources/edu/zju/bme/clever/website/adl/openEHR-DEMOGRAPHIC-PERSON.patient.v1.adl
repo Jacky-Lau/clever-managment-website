@@ -303,8 +303,8 @@ ontology
 				>
 				["at0032"] = <
 					text = <"Visits">
-					description = <"openEHR-EHR-COMPOSITION.visit.v3">
-					OneToMany = <"openEHR-EHR-COMPOSITION.visit.v3">
+					description = <"openEHR-EHR-COMPOSITION.visit.v1">
+					OneToMany = <"openEHR-EHR-COMPOSITION.visit.v1">
 					mappedBy = <"\"/context/other_context[at0001]/items[at0015]/value/value\"">
 				>
 			>

@@ -1,6 +1,6 @@
 package edu.zju.bme.clever.website.dao;
 
-import edu.zju.bme.clever.website.entity.ArchetypeNodeChangeLog;
+import edu.zju.bme.clever.website.model.entity.ArchetypeNodeChangeLog;
 
 public interface ArchetypeNodeChangeLogDao extends
 		GenericDao<ArchetypeNodeChangeLog, Integer> {

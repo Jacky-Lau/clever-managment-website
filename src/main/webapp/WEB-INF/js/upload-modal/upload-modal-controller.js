@@ -4,16 +4,6 @@ function UploadModalCtrl($scope, $modalInstance, fileUploadService) {
 	$scope.fileList = [];
 	$scope.status = "AddingFile";
 
-	$scope.ok = function() {
-		var uploadedFileCount = 0;
-		angular.forEach($scope.fileList, function(file, index) {
-			if (file.status == 'UPLOADED') {
-				uploadedFileCount++;
-			}
-		});
-		$modalInstance.close(uploadedFileCount);
-	};
-
 	$scope.validateFiles = function() {
 		$scope.status = "Validating";
 		fileUploadService.validateFiles($scope.fileList).then(function(results) {
@@ -23,9 +13,6 @@ function UploadModalCtrl($scope, $modalInstance, fileUploadService) {
 				if (result.status == 'INVALID') {
 					isValidationPast = false;
 				}
-				if (result.status != 'VALID') {
-					isAllValid = false;
-				}
 				angular.forEach($scope.fileList, function(file) {
 					if (file.name == result.name) {
 						file.status = result.status;
@@ -34,11 +21,7 @@ function UploadModalCtrl($scope, $modalInstance, fileUploadService) {
 				});
 			});
 			if (isValidationPast) {
-				if (isAllValid) {
-					$scope.status = "ValidationPast";
-				} else {
-					$scope.status = "ExistChangedFile";
-				}
+				$scope.status = "ValidationPast";
 			} else {
 				$scope.status = "ValidationFailed";
 			}
@@ -46,14 +29,9 @@ function UploadModalCtrl($scope, $modalInstance, fileUploadService) {
 	};
 
 	$scope.uploadFiles = function() {
-		if (!$scope.commitSequence) {
-			fileUploadService.getCommitSequence().then(function(commitSequence) {
-				$scope.commitSequence = commitSequence;
-				uploadFiles();
-			});
-		} else {
-			uploadFiles();
-		}
+		fileUploadService.uploadFiles($scope.fileList).then(function(result) {
+			$modalInstance.close(result);
+		});
 	};
 
 	$scope.cancel = function() {
@@ -67,11 +45,5 @@ function UploadModalCtrl($scope, $modalInstance, fileUploadService) {
 			}
 		}
 	};
-
-	function uploadFiles() {
-		for ( i = 0; i < $scope.fileList.length; i++) {
-			fileUploadService.uploadSingleFileToUrl($scope.fileList[i], $scope.commitSequence, false);
-		}
-	}
 
 }

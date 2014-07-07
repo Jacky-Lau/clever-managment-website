@@ -27,11 +27,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import edu.zju.bme.clever.website.entity.ArchetypeFile;
-import edu.zju.bme.clever.website.entity.ArchetypeNode;
-import edu.zju.bme.clever.website.entity.ArchetypeRelationship;
-import edu.zju.bme.clever.website.entity.FileProcessResult;
 import edu.zju.bme.clever.website.exception.ArchetypeRelationExtractException;
+import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
+import edu.zju.bme.clever.website.model.entity.ArchetypeNode;
+import edu.zju.bme.clever.website.model.entity.ArchetypeRelationship;
+import edu.zju.bme.clever.website.model.entity.FileProcessResult;
 
 @Service("archetypeExtractService")
 public class ArchetypeExtractServiceImpl implements ArchetypeExtractService {

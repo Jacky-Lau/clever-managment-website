@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
-import edu.zju.bme.clever.website.entity.ArchetypeFile;
+import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
 import se.acode.openehr.parser.ADLParser;
 
 public class ArchetypeUtil {

@@ -35,10 +35,24 @@ function($http, COMMIT_SEQUENCE_URL, ARCHETYPE_UPLOAD_URL, ARCHETYPE_VALIDATE_UR
 			headers : {
 				'Content-Type' : undefined
 			}
-		}).then(function(response){
+		}).then(function(response) {
 			return response.data;
 		});
 	};
-	
-	
+
+	this.uploadFiles = function(fileList) {
+		var formData = new FormData();
+		angular.forEach(fileList, function(file, index) {
+			formData.append('files', file.file);
+		});
+		return $http.post(ARCHETYPE_UPLOAD_URL, formData, {
+			transformRequest : angular.identity,
+			headers : {
+				'Content-Type' : undefined
+			}
+		}).then(function(response) {
+			return response.data;
+		});
+	};
+
 }]);

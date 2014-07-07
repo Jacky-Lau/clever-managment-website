@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import se.acode.openehr.parser.ADLParser;
-import edu.zju.bme.clever.website.entity.ArchetypeFile;
-import edu.zju.bme.clever.website.entity.FileProcessResult;
-import edu.zju.bme.clever.website.entity.FileProcessResult.FileStatusConstant;
+import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
+import edu.zju.bme.clever.website.model.entity.FileProcessResult;
+import edu.zju.bme.clever.website.model.entity.FileProcessResult.FileStatusConstant;
 import edu.zju.bme.clever.website.service.ArchetypeValidationService;
 
 @Controller
@@ -36,7 +36,8 @@ public class FileValidateController {
 	@ResponseBody
 	public List<FileProcessResult> validateFiles(
 			@RequestParam(value = "files", required = true) MultipartFile[] files) {
-		final Map<Archetype, FileProcessResult> validateResults = new HashMap<Archetype, FileProcessResult>();
+		final Map<String, Archetype> archetypes = new HashMap<String, Archetype>();
+		final Map<String, FileProcessResult> results = new HashMap<String, FileProcessResult>();
 		final List<FileProcessResult> allResults = new ArrayList<FileProcessResult>();
 		Arrays.asList(files)
 				.forEach(
@@ -53,7 +54,10 @@ public class FileValidateController {
 								ADLParser parser = new ADLParser(file
 										.getInputStream(), "UTF-8");
 								Archetype archetype = parser.parse();
-								validateResults.put(archetype, result);
+								archetypes.put(archetype.getArchetypeId()
+										.getValue(), archetype);
+								results.put(archetype.getArchetypeId()
+										.getValue(), result);
 							} catch (Exception ex) {
 								this.logger.debug("Parse file {} failed.",
 										file.getOriginalFilename(), ex);
@@ -62,12 +66,16 @@ public class FileValidateController {
 										+ ex.getMessage());
 							}
 						});
-		this.archetypeValidationService.validateConsistency(validateResults);
-		validateResults.values().forEach(result -> {
-			if (result.getStatus().compareTo(FileStatusConstant.DEFAULT) == 0) {
-				result.setStatus(FileProcessResult.FileStatusConstant.VALID);
-			}
-		});
+		this.archetypeValidationService
+				.validateConsistency(archetypes, results);
+		results.values()
+				.stream()
+				.filter(result -> result.getStatus().compareTo(
+						FileStatusConstant.DEFAULT) == 0)
+				.forEach(
+						result -> {
+							result.setStatus(FileProcessResult.FileStatusConstant.VALID);
+						});
 		return allResults;
 	}
 }

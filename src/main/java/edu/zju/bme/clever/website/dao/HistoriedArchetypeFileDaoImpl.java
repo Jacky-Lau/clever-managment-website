@@ -2,7 +2,7 @@ package edu.zju.bme.clever.website.dao;
 
 import org.springframework.stereotype.Repository;
 
-import edu.zju.bme.clever.website.entity.HistoriedArchetypeFile;
+import edu.zju.bme.clever.website.model.entity.HistoriedArchetypeFile;
 
 @Repository("historiedArchetypeFileDao")
 public class HistoriedArchetypeFileDaoImpl extends GenericDaoImpl<HistoriedArchetypeFile,Integer> implements HistoriedArchetypeFileDao{

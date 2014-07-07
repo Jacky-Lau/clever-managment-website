@@ -1,4 +1,4 @@
-package edu.zju.bme.clever.website.entity;
+package edu.zju.bme.clever.website.model.entity;
 
 public class ArchetypeBriefInfo {
 

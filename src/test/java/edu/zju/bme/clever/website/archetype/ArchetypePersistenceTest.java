@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import se.acode.openehr.parser.ADLParser;
 import se.acode.openehr.parser.ParseException;
-import edu.zju.bme.clever.website.entity.FileProcessResult;
+import edu.zju.bme.clever.website.model.entity.FileProcessResult;
 import edu.zju.bme.clever.website.service.ArchetypePersistanceService;
 
 @RunWith(SpringJUnit4ClassRunner.class)

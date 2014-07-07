@@ -21,10 +21,10 @@ import org.openehr.rm.common.resource.ResourceDescription;
 import org.openehr.rm.common.resource.ResourceDescriptionItem;
 import org.openehr.rm.support.identification.ArchetypeID;
 
-import edu.zju.bme.clever.website.entity.ArchetypeFile;
-import edu.zju.bme.clever.website.entity.ArchetypeNode;
-import edu.zju.bme.clever.website.entity.ArchetypeRelationship;
-import edu.zju.bme.clever.website.entity.FileProcessResult;
+import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
+import edu.zju.bme.clever.website.model.entity.ArchetypeNode;
+import edu.zju.bme.clever.website.model.entity.ArchetypeRelationship;
+import edu.zju.bme.clever.website.model.entity.FileProcessResult;
 import edu.zju.bme.clever.website.service.ArchetypeExtractService;
 import edu.zju.bme.clever.website.service.ArchetypeExtractServiceImpl;
 import se.acode.openehr.parser.ADLParser;

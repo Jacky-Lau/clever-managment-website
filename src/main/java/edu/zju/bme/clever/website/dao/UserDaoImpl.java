@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 import org.springframework.stereotype.Repository;
 
-import edu.zju.bme.clever.website.entity.User;
+import edu.zju.bme.clever.website.model.entity.User;
 
 @Repository(value = "userDao")
 public class UserDaoImpl extends GenericDaoImpl<User,Integer> implements UserDao{

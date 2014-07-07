@@ -29,16 +29,16 @@ import edu.zju.bme.clever.website.dao.ArchetypeRelationshipDao;
 import edu.zju.bme.clever.website.dao.CommitSequenceDao;
 import edu.zju.bme.clever.website.dao.HistoriedArchetypeFileDao;
 import edu.zju.bme.clever.website.dao.UserDao;
-import edu.zju.bme.clever.website.entity.ArchetypeFile;
-import edu.zju.bme.clever.website.entity.ArchetypeHost;
-import edu.zju.bme.clever.website.entity.ArchetypeNode;
-import edu.zju.bme.clever.website.entity.ArchetypeNodeChangeLog;
-import edu.zju.bme.clever.website.entity.ArchetypeRelationship;
-import edu.zju.bme.clever.website.entity.CommitSequence;
-import edu.zju.bme.clever.website.entity.FileProcessResult;
-import edu.zju.bme.clever.website.entity.HistoriedArchetypeFile;
-import edu.zju.bme.clever.website.entity.User;
 import edu.zju.bme.clever.website.exception.ArchetypePersistenceException;
+import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
+import edu.zju.bme.clever.website.model.entity.ArchetypeHost;
+import edu.zju.bme.clever.website.model.entity.ArchetypeNode;
+import edu.zju.bme.clever.website.model.entity.ArchetypeNodeChangeLog;
+import edu.zju.bme.clever.website.model.entity.ArchetypeRelationship;
+import edu.zju.bme.clever.website.model.entity.CommitSequence;
+import edu.zju.bme.clever.website.model.entity.FileProcessResult;
+import edu.zju.bme.clever.website.model.entity.HistoriedArchetypeFile;
+import edu.zju.bme.clever.website.model.entity.User;
 
 @Service("archetypePersistanceService")
 @Transactional
@@ -54,7 +54,7 @@ public class ArchetypePersistanceServiceImpl implements
 	@Resource(name = "archetypeNodeDao")
 	private ArchetypeNodeDao archetypeNodeDao;
 	@Resource(name = "archetypeRelationshipDao")
-	private ArchetypeRelationshipDao archetypeRelationshiDao;
+	private ArchetypeRelationshipDao archetypeRelationshipDao;
 	@Resource(name = "archetypeHostDao")
 	private ArchetypeHostDao archetypeHostDao;
 	@Resource(name = "archetypeNodeChangeLogDao")
@@ -208,8 +208,10 @@ public class ArchetypePersistanceServiceImpl implements
 			Map<String, ArchetypeNode> existedNodes = archetypeHost
 					.getArchetypeNodeMap(ArchetypeNode::getNodePath);
 			for (CObject node : archetype.getPathNodeMap().values()) {
-				if (this.isLeafNode(node.getRmTypeName(), node.getParent()
-						.getRmAttributeName())) {
+				if (node.getRmTypeName() != null
+						&& node.getParent() != null
+						&& this.isLeafNode(node.getRmTypeName(), node
+								.getParent().getRmAttributeName())) {
 					if (existedNodes.containsKey(node.path())) {
 						ArchetypeNode existedNode = existedNodes.get(node
 								.path());
@@ -275,7 +277,8 @@ public class ArchetypePersistanceServiceImpl implements
 					String archetypeName = item
 							.getItem(ArchetypeRelationship.RelationType.OneToMany
 									.toString());
-					destinationArchetypeFile = archetypeFiles.get(archetypeName);
+					destinationArchetypeFile = archetypeFiles
+							.get(archetypeName);
 					if (destinationArchetypeFile == null) {
 						destinationArchetypeFile = this.archetypeFileDao
 								.findUniqueByProperty("name", archetypeName);
@@ -302,8 +305,33 @@ public class ArchetypePersistanceServiceImpl implements
 								"Miss archetype " + archetypeName + ".");
 					}
 				}
-				if (sourceArchetypeFile != null && destinationArchetypeFile != null) {
-					
+				if (sourceArchetypeFile != null
+						&& destinationArchetypeFile != null) {
+					String hql = "from ArchetypeRelationship as r where r.sourceArchetypeHost.id = :sourceId and r.destinationArchetypeHost.id = :destinationId and r.relationType = :relationType";
+					Map<String, Object> variables = new HashMap<String, Object>();
+					variables.put("sourceId", sourceArchetypeFile
+							.getArchetypeHost().getId());
+					variables.put("destinationId", destinationArchetypeFile
+							.getArchetypeHost().getId());
+					variables.put("relationType",
+							ArchetypeRelationship.RelationType.OneToMany);
+					List result = this.archetypeRelationshipDao.findByHQL(hql,
+							variables);
+					if (result.size() == 0) {
+						// Add new relationship
+						ArchetypeRelationship relationship = new ArchetypeRelationship();
+						relationship
+								.setRelationType(ArchetypeRelationship.RelationType.OneToMany);
+						relationship.setSourceArchetypeHost(sourceArchetypeFile
+								.getArchetypeHost());
+						relationship
+								.setDestinationArchetypeHost(destinationArchetypeFile
+										.getArchetypeHost());
+						this.archetypeRelationshipDao.save(relationship);
+					} else if (result.size() > 1) {
+						throw new ArchetypePersistenceException(
+								"More than one relationships were found.");
+					}
 				}
 			}
 		}

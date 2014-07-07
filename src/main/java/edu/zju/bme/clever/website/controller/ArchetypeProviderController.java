@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import edu.zju.bme.clever.website.entity.ArchetypeBriefInfo;
+import edu.zju.bme.clever.website.model.entity.ArchetypeBriefInfo;
 import edu.zju.bme.clever.website.service.ArchetypeProviderService;
 
 @Controller

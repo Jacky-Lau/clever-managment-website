@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 import org.springframework.stereotype.Repository;
 
-import edu.zju.bme.clever.website.entity.CommitSequence;
+import edu.zju.bme.clever.website.model.entity.CommitSequence;
 
 @Repository("commitSequenceDao")
 public class CommitSequenceDaoImpl extends

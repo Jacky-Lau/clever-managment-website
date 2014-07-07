@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.zju.bme.clever.website.dao.UserDao;
-import edu.zju.bme.clever.website.entity.Role;
-import edu.zju.bme.clever.website.entity.User;
+import edu.zju.bme.clever.website.model.entity.Role;
+import edu.zju.bme.clever.website.model.entity.User;
 
 @Service("userDetailsService")
 @Transactional
