@@ -7,6 +7,8 @@ function DeployCtrl($scope, $http, $timeout, archetypeRetrieveService, ARCHETYPE
 	refreshData();
 
 	function refreshData() {
+		$scope.allArchetypeIds = [];
+		$scope.deployedArchetypeIds = [];
 		archetypeRetrieveService.getDeployedArchetypeIds().then(function(result) {
 			$scope.deployedArchetypeIds = result;
 			archetypeRetrieveService.getAllArchetypeIds().then(function(result) {
@@ -33,7 +35,7 @@ function DeployCtrl($scope, $http, $timeout, archetypeRetrieveService, ARCHETYPE
 		$http.get(ARCHETYPE_DEPLOY_URL).then(function(response) {
 			if (response.data == 'true') {
 				$scope.alerts.push({
-					type : 'danger',
+					type : 'success',
 					msg : 'Deploy archetypes succeeded.'
 				});
 				$timeout(function() {
