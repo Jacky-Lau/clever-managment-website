@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.zju.bme.clever.website.service.ArchetypeProviderService;
+import edu.zju.bme.clever.website.view.entity.ArchetypeBriefInfo;
 
 @Controller
 public class ArchetypeProviderController {
@@ -72,6 +73,12 @@ public class ArchetypeProviderController {
 	@ResponseBody
 	public List<String> getAllArchetypeIds(){
 		return this.archetypeProviderService.getAllArchetypeIds();	
+	}
+	
+	@RequestMapping(value = "/archetypes/briefInfo", method = RequestMethod.GET)
+	@ResponseBody
+	public ArchetypeBriefInfo getAllArchetypesBriefInfo(){
+		return this.archetypeProviderService.getArchetypeBriefInfo();
 	}
 	
 }

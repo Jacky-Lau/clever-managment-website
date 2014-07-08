@@ -46,7 +46,7 @@ uri="http://www.springframework.org/security/tags"%>
 								<a href="/clever-management-website/#/home"><span class="glyphicon glyphicon-home"></span> Home</a>
 							</li>
 							<li>
-								<a href ng-click="openUploadModal('lg')"><span class="glyphicon glyphicon-upload"></span> Upload Archetypes</a>
+								<a href="/clever-management-website/#/upload"><span class="glyphicon glyphicon-upload"></span> Upload Archetypes</a>
 							</li>
 							<li>
 								<a href="/clever-management-website/#/deploy"><span class="glyphicon glyphicon-cog"></span> Deploy</a>

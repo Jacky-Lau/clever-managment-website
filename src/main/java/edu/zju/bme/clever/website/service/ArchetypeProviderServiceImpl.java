@@ -87,6 +87,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 												info.setName(file.getName());
 												info.setVersion(file
 														.getVersion());
+												hostInfo.getArchetypeInfos().add(info);
 												archetypeInfoIndexByVersion
 														.put(file.getVersion(),
 																info);
@@ -139,6 +140,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 															.add(nodeInfo);
 												});
 											});
+							archetypeBriefInfo.getArchetypeHostInfos().add(hostInfo);
 						});
 		return archetypeBriefInfo;
 	}

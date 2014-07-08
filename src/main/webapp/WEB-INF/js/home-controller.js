@@ -67,8 +67,8 @@ function HomeCtrl($scope, $modal, archetypeRetrieveService) {
 	};
 
 	function retrieveArchetypeFileList() {
-		archetypeRetrieveService.getArchetypeList().then(function(archetypeList) {
-			$scope.archetypeList = archetypeList;
+		archetypeRetrieveService.getArchetypesBriefInfo().then(function(info) {
+			//$scope.archetypeList = info;
 		});
 	}
 
