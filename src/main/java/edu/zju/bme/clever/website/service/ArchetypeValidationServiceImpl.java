@@ -104,15 +104,13 @@ public class ArchetypeValidationServiceImpl implements
 							return;
 						}
 					}
-					OntologyDefinitions termDefinitions = archetype
+					OntologyDefinitions annotations = archetype
 							.getOntology()
 							.getTermDefinitionsList()
 							.stream()
 							.filter(definition -> definition.getLanguage()
-									.equals(archetype.getOriginalLanguage()
-											.getCodeString())).findFirst()
-							.get();
-					termDefinitions
+									.equals("annotation")).findFirst().get();
+					annotations
 							.getDefinitions()
 							.forEach(
 									term -> {

@@ -25,7 +25,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
 				.getUsername();
 		this.logger.trace("User {} with session {} authenticates.", userName,
 				httpSessionId);
-		response.sendRedirect("/clever-management-website/");
+		response.sendRedirect("/clever-management-website");
 	}
 
 }

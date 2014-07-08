@@ -9,6 +9,8 @@ src="/clever-management-website/js/lib/angular.js"></script>
 <script
 src="/clever-management-website/js/lib/angular-animate.js"></script>
 <script
+src="/clever-management-website/js/lib/angular-route.js"></script>
+<script
 src="/clever-management-website/js/lib/mxClient-src.js"></script>
 <script
 src="/clever-management-website/js/lib/ui-bootstrap-tpls-0.11.0.js"></script>
@@ -46,5 +48,9 @@ src="/clever-management-website/js/archetype-display-controller.js"></script>
 src="/clever-management-website/js/app-config.js"></script>
 <script
 src="/clever-management-website/js/app.js"></script>
+<script
+src="/clever-management-website/js/home-controller.js"></script>
+<script
+src="/clever-management-website/js/deploy-controller.js"></script>
 <script
 src="/clever-management-website/js/app-controller.js"></script>

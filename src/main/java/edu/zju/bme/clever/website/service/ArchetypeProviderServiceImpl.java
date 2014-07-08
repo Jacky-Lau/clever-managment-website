@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import se.acode.openehr.parser.ADLParser;
+import edu.zju.bme.clever.service.CleverService;
 import edu.zju.bme.clever.website.dao.ArchetypeFileDao;
 import edu.zju.bme.clever.website.dao.ArchetypeHostDao;
 import edu.zju.bme.clever.website.dao.ArchetypeNodeChangeLogDao;
@@ -41,6 +42,8 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 	private ArchetypeRelationshipDao archetypeRelationshipDao;
 	@Resource(name = "archetypeHostDao")
 	private ArchetypeHostDao archetypeHostDao;
+	@Resource(name = "cleverClient")
+	private CleverService cleverClient;
 
 	@Override
 	public ArchetypeBriefInfo getArchetypeBriefInfo() {
@@ -209,5 +212,17 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 		return this.archetypeFileDao.selectAll().stream().map(file -> {
 			return file.getContent();
 		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<String> getAllArchetypeIds() {
+		return this.archetypeFileDao.selectAll().stream().map(file -> {
+			return file.getName();
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<String> getDeployedArchetypeIds() {
+		return this.cleverClient.getArchetypeIds();
 	}
 }

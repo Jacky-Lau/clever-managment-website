@@ -1,5 +1,6 @@
 package edu.zju.bme.clever.website.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -59,6 +60,18 @@ public class ArchetypeProviderController {
 	@ResponseBody
 	public Archetype getArchetypeByName(@PathVariable String name){
 		return this.archetypeProviderService.getArchetypeByName(name);
+	}
+	
+	@RequestMapping(value = "/archetypes/deployed", method = RequestMethod.GET)
+	@ResponseBody
+	public List<String> getDeployedArchetypeIds(){
+		return this.archetypeProviderService.getDeployedArchetypeIds();
+	}
+	
+	@RequestMapping(value = "/archetypes/all", method = RequestMethod.GET)
+	@ResponseBody
+	public List<String> getAllArchetypeIds(){
+		return this.archetypeProviderService.getAllArchetypeIds();	
 	}
 	
 }

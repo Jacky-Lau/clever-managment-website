@@ -8,7 +8,7 @@ uri="http://www.springframework.org/security/tags"%>
 	<div class="container-fluid">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#">CLEVER Management</a>
+			<a class="navbar-brand" href="/clever-management-website">CLEVER Management</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
@@ -39,11 +39,17 @@ uri="http://www.springframework.org/security/tags"%>
 						</p>
 					</li>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle"
+						<a href class="dropdown-toggle"
 						data-toggle="dropdown">${userName}<b class="caret"></b> </a>
 						<ul class="dropdown-menu">
 							<li>
-								<a href="#" ng-click="openUploadModal('lg')"><span class="glyphicon glyphicon-upload"></span> Upload Archetypes</a>
+								<a href="/clever-management-website/#/home"><span class="glyphicon glyphicon-home"></span> Home</a>
+							</li>
+							<li>
+								<a href ng-click="openUploadModal('lg')"><span class="glyphicon glyphicon-upload"></span> Upload Archetypes</a>
+							</li>
+							<li>
+								<a href="/clever-management-website/#/deploy"><span class="glyphicon glyphicon-cog"></span> Deploy</a>
 							</li>
 							<li>
 								<a href="/clever-management-website/logout"><span class="glyphicon glyphicon-off"></span> Log out</a>

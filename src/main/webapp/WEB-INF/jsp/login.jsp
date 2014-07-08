@@ -20,8 +20,7 @@ pageEncoding="UTF-8"%>
 
 					<!-- Collect the nav links, forms, and other content for toggling -->
 					<div class="collapse navbar-collapse" id="clever-navbar-collapse-1">
-						<ul class="nav navbar-nav navbar-right">
-						</ul>
+						<ul class="nav navbar-nav navbar-right"></ul>
 					</div><!-- /.navbar-collapse -->
 				</div><!-- /.container-fluid -->
 			</nav>
@@ -60,8 +59,5 @@ pageEncoding="UTF-8"%>
 				<%@ include file="jspf/footer.jspf"%>
 			</div>
 			<!-- /container -->
-
-			<!-- js init -->
-			<%@ include file="jspf/js-init.jspf"%>
 		</body>
 </html>

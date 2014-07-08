@@ -1,0 +1,22 @@
+<div class="row">
+	<alert ng-repeat="alert in alerts" type="{{alert.type}}">{{alert.msg}}</alert>
+</div>
+<div class="row" style="height: 800px;">
+	<div class="col-xs-5 col-md-5 col-lg-5" style="height: 100%;padding: 0% 5%;overflow: auto;">
+		<h5 class="text-center">All Archetypes</h5>
+		<ul class="list-group">
+			<li class="list-group-item" ng-repeat="id in allArchetypeIds | orderBy: deployed" ng-class="{true: 'list-group-item-success', false: 'list-group-item-warning'}[id.deployed]">{{id.name}}</li>
+		</ul>
+	</div>
+	<div class="col-xs-2 col-md-2 col-lg-2" style="height: 100%;">
+		<button style="margin-left: 20%;margin-right: 20%;width: 60%;margin-top: 50%;" class="btn btn-success text-center" ng-disabled="buttonTitle == 'Deploying...'" ng-click="deploy()">
+			{{buttonTitle}}
+		</button>
+	</div>
+	<div class="col-xs-5 col-md-5 col-lg-5" style="height: 100%;padding: 0% 5%;overflow: auto;">
+		<h5 class="text-center">Deployed Archetypes</h5>
+		<ul class="list-group">
+			<li class="list-group-item list-group-item-success" ng-repeat="id in deployedArchetypeIds">{{id}}</li>
+		</ul>
+	</div>
+</div>
