@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 
 import org.openehr.am.archetype.Archetype;
+import org.openehr.am.archetype.constraintmodel.CObject;
 import org.openehr.am.archetype.ontology.OntologyDefinitions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +20,11 @@ import edu.zju.bme.clever.website.dao.ArchetypeFileDao;
 import edu.zju.bme.clever.website.dao.ArchetypeHostDao;
 import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
 import edu.zju.bme.clever.website.model.entity.ArchetypeHost;
+import edu.zju.bme.clever.website.model.entity.ArchetypeNode;
+import edu.zju.bme.clever.website.model.entity.ArchetypeNodeChangeLog;
 import edu.zju.bme.clever.website.model.entity.ArchetypeRelationship;
 import edu.zju.bme.clever.website.model.entity.FileProcessResult;
+import edu.zju.bme.clever.website.util.ArchetypeLeafNodeRmTypeAttributeMap;
 
 @Service("archetypeValidationService")
 @Transactional
@@ -78,6 +82,7 @@ public class ArchetypeValidationServiceImpl implements
 						result.setMessage("Archetype already exists.");
 						return;
 					}
+					String originalLanguage = archetype.getOriginalLanguage().getCodeString();
 					String archetypeHostName = archetype.getArchetypeId()
 							.qualifiedRmEntity()
 							+ "."
@@ -96,6 +101,32 @@ public class ArchetypeValidationServiceImpl implements
 									+ nextVersion + ".");
 							return;
 						}
+						// Validate node
+//						Map<String, ArchetypeNode> existedNodes = archetypeHost
+//								.getArchetypeNodeMap(ArchetypeNode::getNodePath);
+//						for (CObject node : archetype.getPathNodeMap().values()) {
+//							if (node.getRmTypeName() != null
+//									&& node.getParent() != null
+//									&& ArchetypeLeafNodeRmTypeAttributeMap.isLeafNode(node.getRmTypeName(), node
+//											.getParent().getRmAttributeName())) {
+//								if (existedNodes.containsKey(node.path())) {
+//									ArchetypeNode existedNode = existedNodes.get(node
+//											.path());
+//									String code = existedNode.getCode();
+//									String nodeName = archetype.getOntology()
+//											.termDefinition(originalLanguage, code)
+//											.getText();
+//									if (nodeName
+//											.compareTo(existedNode.getCurrentNodeName()) != 0) {
+//										
+//										
+//									}
+//								} else {
+//									
+//									
+//								}
+//							}
+//						}
 					} else {
 						if (archetype.getArchetypeId().versionID()
 								.compareTo("v1") != 0) {
@@ -154,4 +185,6 @@ public class ArchetypeValidationServiceImpl implements
 					result.setStatus(FileProcessResult.FileStatusConstant.VALID);
 				});
 	}
+	
+	
 }

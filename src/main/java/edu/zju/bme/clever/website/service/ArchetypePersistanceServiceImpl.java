@@ -39,6 +39,7 @@ import edu.zju.bme.clever.website.model.entity.CommitSequence;
 import edu.zju.bme.clever.website.model.entity.FileProcessResult;
 import edu.zju.bme.clever.website.model.entity.HistoriedArchetypeFile;
 import edu.zju.bme.clever.website.model.entity.User;
+import edu.zju.bme.clever.website.util.ArchetypeLeafNodeRmTypeAttributeMap;
 
 @Service("archetypePersistanceService")
 @Transactional
@@ -61,30 +62,6 @@ public class ArchetypePersistanceServiceImpl implements
 	private ArchetypeNodeChangeLogDao archetypeNodeChangeLogDao;
 	@Resource(name = "userDao")
 	private UserDao userDao;
-
-	private final Map<String, String> filterRmTypeNames = new HashMap<String, String>();
-
-	public ArchetypePersistanceServiceImpl() {
-		this.filterRmTypeNames.put(ReferenceModelName.DV_TEXT.getName(),
-				"value");
-		this.filterRmTypeNames.put(ReferenceModelName.DV_COUNT.getName(),
-				"magnitude");
-		this.filterRmTypeNames.put(ReferenceModelName.DV_QUANTITY.getName(),
-				"magnitude");
-		this.filterRmTypeNames.put(ReferenceModelName.DV_DATE_TIME.getName(),
-				"value");
-		this.filterRmTypeNames.put(ReferenceModelName.CLUSTER.getName(),
-				"items");
-	}
-
-	private boolean isLeafNode(String rmType, String rmAttribute) {
-		if (this.filterRmTypeNames.containsKey(rmType)) {
-			if (this.filterRmTypeNames.get(rmType).equals(rmAttribute)) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	@Override
 	@Transactional(rollbackFor = { ArchetypePersistenceException.class })
@@ -210,7 +187,7 @@ public class ArchetypePersistanceServiceImpl implements
 			for (CObject node : archetype.getPathNodeMap().values()) {
 				if (node.getRmTypeName() != null
 						&& node.getParent() != null
-						&& this.isLeafNode(node.getRmTypeName(), node
+						&& ArchetypeLeafNodeRmTypeAttributeMap.isLeafNode(node.getRmTypeName(), node
 								.getParent().getRmAttributeName())) {
 					if (existedNodes.containsKey(node.path())) {
 						ArchetypeNode existedNode = existedNodes.get(node
