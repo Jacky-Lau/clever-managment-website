@@ -67,8 +67,14 @@ function HomeCtrl($scope, $modal, archetypeRetrieveService) {
 	};
 
 	function retrieveArchetypeFileList() {
+		$scope.archetypeList = [];
 		archetypeRetrieveService.getArchetypesBriefInfo().then(function(info) {
-			//$scope.archetypeList = info;
+			angular.forEach(info.archetypeHostInfos, function(host) {
+				angular.forEach(host.archetypeInfos, function(archetype) {
+					$scope.archetypeList.push(archetype);
+				});
+			});
+			$scope.archetypesBriefInfo = info;
 		});
 	}
 

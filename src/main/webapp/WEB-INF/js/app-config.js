@@ -9,6 +9,7 @@ var config = {
 	'DEPLOYED_ARCHETYPE_LIST_URL' : '/clever-management-website/archetypes/deployed',
 	'ARCHETYPE_DEPLOY_URL' : '/clever-management-website/archetypes/actions/deploy',
 	'ARCHETYPE_BRIEF_INFO_URL' : '/clever-management-website/archetypes/briefInfo',
+	'AUTHENTICATION_URL' : '/clever-management-website/authentication',
 };
 var configModel = angular.module('clever.management.config', []);
 angular.forEach(config, function(value, key) {

@@ -72,15 +72,12 @@ table.title th {
 	background: lightgray;
 	font-weight: bold;
 }
-table.erd {
-	font-size: 10pt;
-	border-color: black;
-	border-collapse: collapse;
-	overflow: auto;
-	cursor: move;
-	white-space: nowrap;
-	background: #C3D9FF;
+.overview-person {
+	background: LightBlue;
 }
-table.erd td {
-	border-color: black;
+.overview-composition {
+	background: LightGreen;
+}
+.overview-observation {
+	background: LightSalmon;
 }

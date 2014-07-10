@@ -3,7 +3,7 @@ function() {
 	return {
 		restrict : 'EA',
 		scope : {
-			archetypeList : '=',
+			archetypesBriefInfo : '=',
 			doubleClick : '&',
 			animation : '@'
 		},
@@ -56,16 +56,21 @@ function() {
 				
 				scope.graph.graphHandler.scaleGrid = true;
 				
+				// Changes the default vertex style in-place
+				var style = scope.graph.getStylesheet().getDefaultVertexStyle();
+				style[mxConstants.STYLE_FILLCOLOR] = 'transparent';
+				style[mxConstants.STYLE_STROKECOLOR] = 'transparent';
+				
 				// Disables built-in context menu
 				//mxEvent.disableContextMenu(container);
 				
-				// Enables tooltips
+				/*// Enables tooltips
 				scope.graph.setTooltips(true);
 				
 				// Installs a custom tooltip for cells
 				scope.graph.getTooltipForCell = function(cell){
 					return cell.value.name;
-				};
+				};*/
 				
 				// Overrides method to disallow edge label editing
 				scope.graph.isCellEditable = function(cell)
@@ -160,19 +165,39 @@ function() {
 				var labelWidth = 110;
 				
 
+				function getCellById(id, cells) {
+					var selectedCell;
+					angular.forEach(cells,function(cell){
+						if(cell.value.id == id){
+							selectedCell = cell;
+							return false;
+						}
+					});
+					return selectedCell;
+				}
+				
 				scope.reset = function() {
 					scope.graph.getModel().beginUpdate();
 					var parent = scope.graph.getDefaultParent();
 					scope.graph.view.scale = 1;
 					try {
 						scope.graph.removeCells(scope.graph.getChildVertices(parent));
-						angular.forEach(scope.archetypeList, function(value, index) {
+						var cells = [];
+						angular.forEach(scope.archetypesBriefInfo.archetypeHostInfos, function(value, index) {
 							var vertex = scope.graph.insertVertex(parent, null, value, 0, 0, cellWidth, 0);
 							// Updates the height of the cell (override width
 							// for table width is set to 100%)
 							scope.graph.updateCellSize(vertex);
 							vertex.geometry.width = cellWidth;
 							vertex.geometry.alternateBounds = new mxRectangle(0, 0, cellWidth, 27);
+							cells.push(vertex);
+						});
+						angular.forEach(scope.archetypesBriefInfo.archetypeRelationshipInfos, function(relationship) {
+							if (relationship.relationType == 'OneToMany') {
+								var sourceCell = getCellById(relationship.sourceArchetypeHostId, cells);
+								var destinationCell = getCellById(relationship.destinationArchetypeHostId, cells);
+								var edge = scope.graph.insertEdge(parent, null, '', sourceCell, destinationCell);
+							}
 						});
 					} finally {
 						// Updates the display
@@ -190,8 +215,8 @@ function() {
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
-				scope.$watch('archetypeList', function(archetypeList) {
-					if (archetypeList.length > 0) {
+				scope.$watch('archetypesBriefInfo', function(archetypesBriefInfo) {
+					if (archetypesBriefInfo) {
 						scope.reset();
 					}				
 				});
@@ -207,38 +232,74 @@ function() {
 					return fixedText;
 				}
 				
+				function getArchetypeInfoByVersion(version, archetypeInfos) {
+					var archetypeInfo;
+					angular.forEach(archetypeInfos, function(info) {
+						if (info.version == version) {
+							archetypeInfo = info;
+							return false;
+						}
+					});
+					return archetypeInfo;
+				}
+
+				function getVersionSubTable(archetypeInfos, geo) {
+					var length = archetypeInfos.length;
+					var subTable = "";
+					for ( i = 1; i <= length; i++) {
+						var version = "v" + i;
+						var archetypeInfo = getArchetypeInfoByVersion(version, archetypeInfos);
+						subTable += '<table style="color: black;border:1px solid black;" width="' + geo.width + '" cellpadding="2">' + 
+										'<tr><th colspan="2" class="text-center" >' + version + '</th></tr>' + 
+									'</table>';
+						subTable += '<table style="color: black;border:1px solid black;table-layout: fixed;word-wrap: break-word;word-break: break-all;white-space: pre-wrap;text-align: left;" width="' + (geo.width - 9) + '" cellpadding="2">';
+						var maxRows = 10;
+						angular.forEach(archetypeInfo.archetypeNodeInfos, function(nodeInfo, index) {
+							if(index < maxRows){
+								if (nodeInfo.type == 'Add') {
+									subTable += '<tr>' +
+													'<td width="' + (geo.width - 1) + '"><sapn style="padding-left: 2px;padding-right: 2px;"><sapn style="color: Navy;">' + nodeInfo.currentName + '</span><span style="font-weight: bold;"> : </span><span style="color: SaddleBrown;">' + nodeInfo.rmType + '</span></sapn></td>' + 
+												'</tr>';
+								} else if (nodeInfo.type == 'Modify') {
+									subTable += '<tr>' +
+													'<td width="' + (geo.width - 1) + '"><sapn style="padding-left: 2px;padding-right: 2px;"><span style="color: MediumVioletRed;">' + nodeInfo.previousName + ' → ' + nodeInfo.currentName + '</span><span style="font-weight: bold;"> : </span><span style="color: SaddleBrown;">' + nodeInfo.rmType + '</span></sapn></td>' + 
+												'</tr>';
+								}
+							} else if (index == maxRows) {
+								subTable += '<tr>' +
+												'<td width="' + (geo.width - 1) + '"><sapn style="padding-left: 2px;padding-right: 2px;">......</sapn></td>' + 
+											'</tr>';
+							} else {
+							
+							}
+						});
+						subTable += '</table>';
+					}
+					return subTable;
+				}
+
+		
 				// Overrides getLabel to return empty labels for edges and
 				// short markup for collapsed cells.
 				scope.graph.getLabel = function(cell) {
 					if (this.getModel().isVertex(cell)) {
-
-						var archetypeName, archetypeUse, archetypePurpose, archetypeKeywords, archetypeOriginalLanguage;
+						var archetypeName;
 						var geo = this.getCellGeometry(cell);
-						if (geo != null) {
-							archetypeName = getFixedText(cell.value.name, geo.width - 8, 8, 8);
-							archetypeUse = getFixedText(cell.value.use, geo.width - labelWidth);
-							archetypePurpose = getFixedText(cell.value.purpose, geo.width - labelWidth);
-							archetypeKeywords = getFixedText(cell.value.keywords, geo.width - labelWidth);
-							archetypeOriginalLanguage = getFixedText(cell.value.originalLanguage, geo.width - labelWidth);
-						}
-					    
-						if (this.isCellCollapsed(cell)) {
-							return '<table style="color: black;" width="' + (geo.width - 8) + '" border="1" cellpadding="2" class="title">' + 
+						if (geo) {
+							archetypeName = getFixedText(cell.value.conceptName, geo.width - 8, 8, 8);
+							var title = '<table style="color: black;border:1px solid black;" width="' + geo.width + '" cellpadding="2" class="title">' + 
 										'<tr><th colspan="2" class="text-center" >' + archetypeName + '</th></tr>' + 
 									'</table>';
-						} else {
-							return '<table style="color: black;" width="' + (geo.width - 8) + '" border="1" cellpadding="2" class="title">' + 
-										'<tr><th colspan="2" class="text-center" >' + archetypeName + '</th></tr>' + 
-									'</table>' + 
-									'<div style="overflow:auto;cursor:default;">' + 
-										'<table width="' + (geo.width - 8) + '" height="100%" border="1" cellpadding="2" class="erd">' + 
-											'<tr><td style="width: ' + labelWidth + 'px;">Use: </td><td>' + archetypeUse + '</td></tr>' + 
-											'<tr><td style="width: ' + labelWidth + 'px;">Purpose: </td><td>' + archetypePurpose + '</td></tr>' +
-											'<tr><td style="width: ' + labelWidth + 'px;">Keywords: </td><td>' + archetypeKeywords + '</td></tr>' + 
-											'<tr><td style="width: ' + labelWidth + 'px;">Original Language: </td><td>' + archetypeOriginalLanguage + '</td></tr>' + 
-										'</table>' +
-									'</div>';
+							if (this.isCellCollapsed(cell)) {
+								return title;
+							} else {
+								return title + 
+										'<div style="overflow:auto;cursor:default;" class="overview-' + cell.value.rmEntity.toLowerCase() + '">' + 
+											getVersionSubTable(cell.value.archetypeInfos, geo) +
+										'</div>';
+							}
 						}
+					    
 					} else {
 						return '';
 					}
