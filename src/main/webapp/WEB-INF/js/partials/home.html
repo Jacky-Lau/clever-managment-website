@@ -38,7 +38,7 @@
 					<a ng-click="selectOverview()" style="cursor: pointer;"><b>&nbsp;Overview&nbsp;</b></a>
 				</li>
 				<li ng-repeat="tab in tabs" ng-class="{'active': tab.id == selectedArchetypeId}">
-					<a ng-click="selectTab(tab)" style="cursor: pointer;" tooltip-placement="bottom" tooltip-popup-delay='500' tooltip='{{tab.title}}'>{{getTabTitle(tab)}}&nbsp;<span class="close" ng-click="closeTab(tab)"> &times; </span></a>
+					<a style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;" ng-click="selectTab(tab)" style="cursor: pointer;" tooltip-placement="bottom" tooltip-popup-delay='500' tooltip='{{tab.title}}'>{{getTabTitle(tab)}}&nbsp;<span class="close" ng-click="closeTab(tab)"> &times; </span></a>
 				</li>
 			</ul>
 

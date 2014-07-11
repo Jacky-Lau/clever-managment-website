@@ -294,7 +294,7 @@ function() {
 								return title;
 							} else {
 								return title + 
-										'<div style="overflow:auto;cursor:default;" class="overview-' + cell.value.rmEntity.toLowerCase() + '">' + 
+										'<div style="overflow:auto;" class="overview-' + cell.value.rmEntity.toLowerCase() + '">' + 
 											getVersionSubTable(cell.value.archetypeInfos, geo) +
 										'</div>';
 							}

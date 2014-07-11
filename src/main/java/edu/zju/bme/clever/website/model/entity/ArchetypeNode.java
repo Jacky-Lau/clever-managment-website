@@ -35,6 +35,8 @@ public class ArchetypeNode {
 	private String currentVersion;
 	@Column(name = "RM_TYPE")
 	private String rmType;
+	@Column(name = "ALIAS_NAME")
+	private String aliasName;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ARCHETYPE_HOST_ID")
 	private ArchetypeHost archetypeHost;
@@ -109,6 +111,14 @@ public class ArchetypeNode {
 
 	public void setCurrentVersion(String currentVersion) {
 		this.currentVersion = currentVersion;
+	}
+
+	public String getAliasName() {
+		return aliasName;
+	}
+
+	public void setAliasName(String aliasName) {
+		this.aliasName = aliasName;
 	}
 
 }

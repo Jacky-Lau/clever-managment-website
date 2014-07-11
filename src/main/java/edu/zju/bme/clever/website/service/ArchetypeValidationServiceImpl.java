@@ -1,8 +1,13 @@
 package edu.zju.bme.clever.website.service;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -70,78 +75,110 @@ public class ArchetypeValidationServiceImpl implements
 	@Override
 	public void validateConsistency(Map<String, Archetype> archetypes,
 			Map<String, FileProcessResult> results) {
-
 		archetypes
 				.forEach((archetypeId, archetype) -> {
-					ArchetypeFile archetypeFile = this.archetypeFileDao
-							.findUniqueByProperty("name", archetype
-									.getArchetypeId().getValue());
+					Optional<ArchetypeFile> archetypeFile = Optional
+							.ofNullable(this.archetypeFileDao
+									.findUniqueByProperty("name", archetype
+											.getArchetypeId().getValue()));
 					FileProcessResult result = results.get(archetypeId);
-					if (archetypeFile != null) {
+					archetypeFile.ifPresent(file -> {
 						result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
-						result.setMessage("Archetype already exists.");
-						return;
-					}
-					String originalLanguage = archetype.getOriginalLanguage().getCodeString();
+						result.setMessage(result.getMessage()
+								+ "Archetype already exists. ");
+					});
+					String originalLanguage = archetype.getOriginalLanguage()
+							.getCodeString();
 					String archetypeHostName = archetype.getArchetypeId()
 							.qualifiedRmEntity()
 							+ "."
 							+ archetype.getArchetypeId().conceptName();
-					ArchetypeHost archetypeHost = this.archetypeHostDao
-							.findUniqueByProperty("name", archetypeHostName);
-					if (archetypeHost != null) {
-						String latestVersion = archetypeHost.getLatestVersion();
+					Optional<ArchetypeHost> archetypeHost = Optional
+							.ofNullable(this.archetypeHostDao
+									.findUniqueByProperty("name",
+											archetypeHostName));
+					if (archetypeHost.isPresent()) {
+						String latestVersion = archetypeHost.get()
+								.getLatestVersion();
 						String nextVersion = "v"
 								+ (Integer.valueOf(latestVersion.replace("v",
 										"")) + 1);
 						if (archetype.getArchetypeId().versionID()
 								.compareTo(nextVersion) != 0) {
 							result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
-							result.setMessage("Archetype version should be "
-									+ nextVersion + ".");
-							return;
+							result.setMessage(result.getMessage()
+									+ "Archetype version should be "
+									+ nextVersion + ". ");
 						}
-						// Validate node
-//						Map<String, ArchetypeNode> existedNodes = archetypeHost
-//								.getArchetypeNodeMap(ArchetypeNode::getNodePath);
-//						for (CObject node : archetype.getPathNodeMap().values()) {
-//							if (node.getRmTypeName() != null
-//									&& node.getParent() != null
-//									&& ArchetypeLeafNodeRmTypeAttributeMap.isLeafNode(node.getRmTypeName(), node
-//											.getParent().getRmAttributeName())) {
-//								if (existedNodes.containsKey(node.path())) {
-//									ArchetypeNode existedNode = existedNodes.get(node
-//											.path());
-//									String code = existedNode.getCode();
-//									String nodeName = archetype.getOntology()
-//											.termDefinition(originalLanguage, code)
-//											.getText();
-//									if (nodeName
-//											.compareTo(existedNode.getCurrentNodeName()) != 0) {
-//										
-//										
-//									}
-//								} else {
-//									
-//									
-//								}
-//							}
-//						}
 					} else {
 						if (archetype.getArchetypeId().versionID()
 								.compareTo("v1") != 0) {
 							result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
-							result.setMessage("Archetype version should be v1.");
-							return;
+							result.setMessage(result.getMessage()
+									+ "Archetype version should be v1. ");
 						}
 					}
-					OntologyDefinitions annotations = archetype
+					// Validate node
+					Map<String, ArchetypeNode> existedNodes = archetypeHost
+							.map(host -> host
+									.getArchetypeNodeMap(ArchetypeNode::getNodePath))
+							.orElse(new HashMap<String, ArchetypeNode>());
+					for (CObject node : archetype.getPathNodeMap().values()) {
+						if (node.getRmTypeName() != null
+								&& node.getParent() != null
+								&& ArchetypeLeafNodeRmTypeAttributeMap
+										.isLeafNode(node.getRmTypeName(), node
+												.getParent()
+												.getRmAttributeName())) {
+							String code = this.getNodeIdFromNodePath(node
+									.path());
+							String aliasName = Optional
+									.ofNullable(
+											archetype.getOntology()
+													.termDefinition(
+															"annotation", code))
+									.map(term -> term.getItem("Column_name"))
+									.orElse(null);
+							if (aliasName == null) {
+								result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
+								result.setMessage(result.getMessage()
+										+ "Column name for " + node.path()
+										+ " is empty. ");
+							}
+							if (existedNodes.containsKey(node.path())) {
+								// Node already exists
+								ArchetypeNode existedNode = existedNodes
+										.get(node.path());
+								if (aliasName.compareTo(existedNode
+										.getAliasName()) != 0) {
+									result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
+									result.setMessage(result.getMessage()
+											+ "Column name for "
+											+ node.path()
+											+ " is not allowed for change. The original column name is "
+											+ existedNode.getAliasName() + ". ");
+								}
+							}
+						}
+					}
+					Set<String> nodePathes = archetype.getPathNodeMap()
+							.values().stream().map(node -> node.path())
+							.collect(Collectors.toSet());
+					for (String nodePath : existedNodes.keySet()) {
+						if (!nodePathes.contains(nodePath)) {
+							result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
+							result.setMessage(result.getMessage()
+									+ "Missing node " + nodePath + ". ");
+						}
+					}
+					// Validate annotation
+					OntologyDefinitions annotation = archetype
 							.getOntology()
 							.getTermDefinitionsList()
 							.stream()
 							.filter(definition -> definition.getLanguage()
 									.equals("annotation")).findFirst().get();
-					annotations
+					annotation
 							.getDefinitions()
 							.forEach(
 									term -> {
@@ -156,11 +193,12 @@ public class ArchetypeValidationServiceImpl implements
 																	"name",
 																	oneToMany) == null) {
 												result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
-												result.setMessage("Missing archetype "
+												result.setMessage(result
+														.getMessage()
+														+ "Missing archetype "
 														+ oneToMany
 														+ " refered in term "
-														+ term.getCode() + ".");
-												return;
+														+ term.getCode() + ". ");
 											}
 										}
 										String manyToOne = term
@@ -174,17 +212,26 @@ public class ArchetypeValidationServiceImpl implements
 																	"name",
 																	manyToOne) == null) {
 												result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
-												result.setMessage("Missing archetype "
+												result.setMessage(result
+														.getMessage()
+														+ "Missing archetype "
 														+ manyToOne
 														+ " refered in term "
-														+ term.getCode() + ".");
-												return;
+														+ term.getCode() + ". ");
 											}
 										}
 									});
-					result.setStatus(FileProcessResult.FileStatusConstant.VALID);
 				});
 	}
-	
-	
+
+	private String getNodeIdFromNodePath(String nodePath) {
+		Pattern pattern = Pattern.compile("\\[(\\w+)\\]");
+		Matcher matcher = pattern.matcher(nodePath);
+		String nodeId = "";
+		while (matcher.find()) {
+			nodeId = matcher.group(matcher.groupCount());
+		}
+		return nodeId;
+	}
+
 }

@@ -4,7 +4,7 @@ public class FileProcessResult {
 	
 	private String name;
 	private String status;
-	private String message;
+	private String message = "";
 
 	public String getName() {
 		return name;

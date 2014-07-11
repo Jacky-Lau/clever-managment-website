@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -187,8 +188,9 @@ public class ArchetypePersistanceServiceImpl implements
 			for (CObject node : archetype.getPathNodeMap().values()) {
 				if (node.getRmTypeName() != null
 						&& node.getParent() != null
-						&& ArchetypeLeafNodeRmTypeAttributeMap.isLeafNode(node.getRmTypeName(), node
-								.getParent().getRmAttributeName())) {
+						&& ArchetypeLeafNodeRmTypeAttributeMap.isLeafNode(node
+								.getRmTypeName(), node.getParent()
+								.getRmAttributeName())) {
 					if (existedNodes.containsKey(node.path())) {
 						ArchetypeNode existedNode = existedNodes.get(node
 								.path());
@@ -230,6 +232,7 @@ public class ArchetypePersistanceServiceImpl implements
 						newNode.setOriginalVersion(version);
 						newNode.setNodePath(node.path());
 						newNode.setRmType(node.getRmTypeName());
+						newNode.setAliasName(archetype.getOntology().termDefinition("annotation", code).getItem("Column_name"));
 						this.archetypeNodeDao.save(newNode);
 					}
 				}
@@ -239,13 +242,17 @@ public class ArchetypePersistanceServiceImpl implements
 		// Persist archetype relationships after all archetypes have saved into
 		// database
 		for (Archetype archetype : archetypes) {
-			OntologyDefinitions annotations = archetype
-					.getOntology()
-					.getTermDefinitionsList()
-					.stream()
-					.filter(definition -> definition.getLanguage().equals(
-							"annotation"))
-					.findFirst().get();
+			OntologyDefinitions annotations = null;
+			try {
+				annotations = archetype
+						.getOntology()
+						.getTermDefinitionsList()
+						.stream()
+						.filter(definition -> definition.getLanguage().equals(
+								"annotation")).findFirst().get();
+			} catch (NoSuchElementException ex) {
+				throw new ArchetypePersistenceException("Missing annotation part.");
+			}
 			for (ArchetypeTerm item : annotations.getDefinitions()) {
 				ArchetypeFile sourceArchetypeFile = null, destinationArchetypeFile = null;
 				if (item.getItem(ArchetypeRelationship.RelationType.OneToMany
@@ -263,7 +270,7 @@ public class ArchetypePersistanceServiceImpl implements
 					}
 					if (destinationArchetypeFile == null) {
 						throw new ArchetypePersistenceException(
-								"Miss archetype " + archetypeName + ".");
+								"Missing archetype " + archetypeName + ".");
 					}
 				}
 				if (item.getItem(ArchetypeRelationship.RelationType.ManyToOne
