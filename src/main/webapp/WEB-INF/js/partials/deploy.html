@@ -11,7 +11,7 @@
 				<h5 class="text-center">All Archetypes</h5>
 				<ul class="list-group">
 					<li class="list-group-item" ng-repeat="id in allArchetypeIds | orderBy: deployed" ng-class="{true: 'list-group-item-success', false: 'list-group-item-warning'}[id.deployed]">
-						<span style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;">{{id.name}}</span>
+						<span style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;cursor: default;">{{id.name}}</span>
 					</li>
 				</ul>
 			</div>
@@ -24,7 +24,7 @@
 				<h5 class="text-center">Deployed Archetypes</h5>
 				<ul class="list-group">
 					<li class="list-group-item list-group-item-success" ng-repeat="id in deployedArchetypeIds">
-						<span style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;">{{id}}</span>
+						<span style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;cursor: default;">{{id}}</span>
 					</li>
 				</ul>
 			</div>

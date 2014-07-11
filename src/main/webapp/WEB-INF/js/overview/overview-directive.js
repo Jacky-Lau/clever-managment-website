@@ -4,7 +4,7 @@ function() {
 		restrict : 'EA',
 		scope : {
 			archetypesBriefInfo : '=',
-			doubleClick : '&',
+			selectArchetype : '&',
 			animation : '@'
 		},
 		templateUrl : 'js/overview/overview.html',
@@ -58,8 +58,8 @@ function() {
 				
 				// Changes the default vertex style in-place
 				var style = scope.graph.getStylesheet().getDefaultVertexStyle();
-				style[mxConstants.STYLE_FILLCOLOR] = 'transparent';
-				style[mxConstants.STYLE_STROKECOLOR] = 'transparent';
+				style[mxConstants.STYLE_FILLCOLOR] = 'white';
+				style[mxConstants.STYLE_STROKECOLOR] = 'white';
 				
 				// Disables built-in context menu
 				//mxEvent.disableContextMenu(container);
@@ -83,6 +83,29 @@ function() {
 				{
 					return cell.value.name;
 				};
+				
+				// Enables panning
+				scope.graph.setPanning(true);
+				// Disables built-in context menu
+				mxEvent.disableContextMenu(container);
+				// Configures automatic expand on mouseover
+				scope.graph.panningHandler.autoExpand = true;
+
+				scope.graph.panningHandler.factoryMethod = function(menu, cell, evt) {
+					if (cell != null) {
+						var submenu = menu.addItem('Browse version', null, null);
+						angular.forEach(cell.value.archetypeInfos, function(info) {
+							menu.addItem(info.version, null, function() {
+								scope.selectArchetype({
+									selectedArchetype : {
+										id : info.id,
+										name : info.name,
+									}
+								});
+							}, submenu);
+						});
+					}
+				}; 
 				
 				// Installs a handler for double click events in the graph
 				// that shows an alert box				
