@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 
 import org.openehr.am.archetype.Archetype;
 import org.openehr.am.archetype.constraintmodel.CObject;
+import org.openehr.am.archetype.ontology.ArchetypeTerm;
 import org.openehr.am.archetype.ontology.OntologyDefinitions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,24 +131,42 @@ public class ArchetypeValidationServiceImpl implements
 												.getRmAttributeName())) {
 							String code = this.getNodeIdFromNodePath(node
 									.path());
-							String aliasName = Optional
-									.ofNullable(
-											archetype.getOntology()
-													.termDefinition(
-															"annotation", code))
-									.map(term -> term.getItem("Column_name"))
+							Optional<ArchetypeTerm> annotationTerm = Optional
+									.ofNullable(archetype.getOntology()
+											.termDefinition("annotation", code));
+							String columnName = annotationTerm.map(
+									term -> term.getItem("Column_name"))
 									.orElse(null);
-							if (aliasName == null) {
-								result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
-								result.setMessage(result.getMessage()
-										+ "Column name for " + node.path()
-										+ " is empty. ");
+							String joinColumnName = annotationTerm.map(
+									term -> term.getItem("JoinColumn_name"))
+									.orElse(null);
+							String oneToMany = annotationTerm
+									.map(term -> term
+											.getItem(ArchetypeRelationship.RelationType.OneToMany
+													.toString())).orElse(null);
+							String manyToOne = annotationTerm
+									.map(term -> term
+											.getItem(ArchetypeRelationship.RelationType.ManyToOne
+													.toString())).orElse(null);
+							if (oneToMany == null) {
+								if (columnName == null && manyToOne == null) {
+									result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
+									result.setMessage(result.getMessage()
+											+ "Column name for " + node.path()
+											+ " is empty. ");
+								}
+								if (joinColumnName == null && manyToOne != null) {
+									result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
+									result.setMessage(result.getMessage()
+											+ "Join column name for "
+											+ node.path() + " is empty. ");
+								}
 							}
 							if (existedNodes.containsKey(node.path())) {
 								// Node already exists
 								ArchetypeNode existedNode = existedNodes
 										.get(node.path());
-								if (aliasName.compareTo(existedNode
+								if (columnName.compareTo(existedNode
 										.getAliasName()) != 0) {
 									result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
 									result.setMessage(result.getMessage()
