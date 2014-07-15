@@ -89,7 +89,8 @@ public class ArchetypeValidationServiceImpl implements
 					});
 					String originalLanguage = archetype.getOriginalLanguage()
 							.getCodeString();
-					String archetypeHostName = archetype.getArchetypeId().base();
+					String archetypeHostName = archetype.getArchetypeId()
+							.base();
 					Optional<ArchetypeHost> archetypeHost = Optional
 							.ofNullable(this.archetypeHostDao
 									.findUniqueByProperty("name",
@@ -183,9 +184,16 @@ public class ArchetypeValidationServiceImpl implements
 												.getItem(ArchetypeRelationship.RelationType.OneToMany
 														.toString());
 										if (oneToMany != null) {
-											if (!archetypes
-													.containsKey(oneToMany)
-													&& this.archetypeFileDao
+											boolean contained = false;
+											for (String key : archetypes
+													.keySet()) {
+												if (key.contains(oneToMany)) {
+													contained = true;
+													break;
+												}
+											}
+											if (!contained
+													&& this.archetypeHostDao
 															.findUniqueByProperty(
 																	"name",
 																	oneToMany) == null) {
@@ -202,9 +210,16 @@ public class ArchetypeValidationServiceImpl implements
 												.getItem(ArchetypeRelationship.RelationType.ManyToOne
 														.toString());
 										if (manyToOne != null) {
-											if (!archetypes
-													.containsKey(manyToOne)
-													&& this.archetypeFileDao
+											boolean contained = false;
+											for (String key : archetypes
+													.keySet()) {
+												if (key.contains(manyToOne)) {
+													contained = true;
+													break;
+												}
+											}
+											if (!contained
+													&& this.archetypeHostDao
 															.findUniqueByProperty(
 																	"name",
 																	manyToOne) == null) {
