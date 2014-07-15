@@ -81,3 +81,12 @@ table.title th {
 .overview-observation {
 	background: LightSalmon;
 }
+.overview-action {
+	background: LightPink;
+}
+.overview-instruction {
+	background: MediumSeaGreen;
+}
+.overview-admin_entry {
+	background: Khaki;
+}
