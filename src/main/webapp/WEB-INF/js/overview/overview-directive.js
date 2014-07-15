@@ -151,10 +151,12 @@ function() {
 					name : 'Organic',
 					layout : new mxFastOrganicLayout(scope.graph)
 				};
+				//organicLayout.layout.minDistanceLimit = 20;
+				//organicLayout.layout.allowedToRun = 20;
 				
 				stackLayout.layout.wrap = stackLayout.layout.getParentSize(scope.graph.getDefaultParent()).width;
 
-				scope.layouts = [stackLayout, circleLayout, compactLayout, edgeLayout, organicLayout ]; 
+				scope.layouts = [stackLayout, circleLayout, compactLayout, organicLayout ]; 
 				
 				function applyLayout(layout){
 					scope.graph.getModel().beginUpdate();
@@ -227,10 +229,10 @@ function() {
 						scope.graph.getModel().endUpdate();
 					}
 
-					if (scope.currentLayout == stackLayout) {
-						applyLayout(stackLayout);
+					if (scope.currentLayout == organicLayout) {
+						applyLayout(organicLayout);
 					} else {
-						scope.currentLayout = stackLayout;
+						scope.currentLayout = organicLayout;
 					}
 
 				}; 

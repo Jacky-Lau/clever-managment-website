@@ -8,7 +8,7 @@ pageEncoding="UTF-8"%>
 		<!-- css init -->
 		<%@ include file="jspf/css-init.jspf"%>
 	</head>
-	<body ng-controller="AppCtrl">
+	<body ng-controller="AppCtrl" resizable>
 		<!-- header -->
 		<%@ include file="jspf/header.jspf"%>
 		<div class="container content-container" ng-view>

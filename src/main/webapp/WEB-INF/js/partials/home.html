@@ -1,4 +1,4 @@
-<div class="row" style="max-height: 800px">
+<div class="row" style="max-height: 100%;">
 	<div class="col-xs-12 col-md-12 col-lg-12 hbox">
 		<!-- left side navbar -->
 		<nav ng-show="!isNavbarCollapsed" id="navbar" class="vbox">
@@ -18,7 +18,7 @@
 			</div>
 			<!-- archetype list -->
 			<div class="flexBox">
-				<div class="list-group" ng-show="archetypeList.length > 0" style="max-height: 750px; overflow: auto;">
+				<div class="list-group" ng-show="archetypeList.length > 0" ng-style="{height: windowHeight}" style="max-height: 100%; overflow: auto;">
 					<a href class="list-group-item" ng-click="selectOverview()" ng-class="{'active': selectedArchetypeId == 0}"><b>Overview</b></a>
 					<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 					<a href ng-show="archetypeList.length > 0" class="list-group-item" ng-repeat="archetype in archetypeList | filter:archetypeListFilter | orderBy:'name'" ng-click="selectArchetype(archetype)" ng-class="{'active': archetype.id == selectedArchetypeId}">{{archetype.name}}</a>
@@ -26,7 +26,7 @@
 			</div>
 		</nav>
 		<!-- splitter -->
-		<splitter is-adjust-enabled="!isNavbarCollapsed" style="height: 800px;">
+		<splitter is-adjust-enabled="!isNavbarCollapsed" style="max-height: 100%;">
 			<i style="cursor: pointer" ng-click="expandNavbar()" ng-show="isNavbarCollapsed" tooltip-placement="right" tooltip="Expand" tooltip-popup-delay="500"><span class="glyphicon glyphicon-chevron-right" ></span></i>
 			<i style="cursor: pointer" ng-click="collapseNavbar()" ng-show="!isNavbarCollapsed" tooltip-placement="right" tooltip="Collapse" tooltip-popup-delay="500"><span class="glyphicon glyphicon-chevron-left" ></span></i>
 		</splitter>
@@ -38,13 +38,13 @@
 					<a ng-click="selectOverview()" style="cursor: pointer;"><b>&nbsp;Overview&nbsp;</b></a>
 				</li>
 				<li ng-repeat="tab in tabs" ng-class="{'active': tab.id == selectedArchetypeId}">
-					<a style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;" ng-click="selectTab(tab)" style="cursor: pointer;" tooltip-placement="bottom" tooltip-popup-delay='500' tooltip='{{tab.title}}'>{{getTabTitle(tab)}}&nbsp;<span class="close" ng-click="closeTab(tab)"> &times; </span></a>
+					<a style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;" ng-click="selectTab(tab)" style="cursor: pointer;" tooltip-placement="bottom" tooltip-popup-delay='500' tooltip='{{tab.title}}'><span style="cursor: pointer;">{{getTabTitle(tab)}}</span>&nbsp;<span class="close" ng-click="closeTab(tab)"> &times; </span></a>
 				</li>
 			</ul>
 
 			<!-- Tab panes -->
 			<div class="tab-content">
-				<div class="tab-pane" ng-class="{'active': selectedArchetypeId == 0}" style="height: 750px;">
+				<div class="tab-pane" ng-class="{'active': selectedArchetypeId == 0}" style="max-height: 100%;">
 					<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 					<div overview ng-show="archetypeList.length > 0" archetypes-brief-info="archetypesBriefInfo" select-archetype="selectArchetype(selectedArchetype)" animation="false"></div>
 				</div>
@@ -93,27 +93,27 @@
 					<!-- Tab panes -->
 					<div class="tab-content">
 						<!-- Header -->
-						<div class="tab-pane" ng-class="{'active': selectedTab == 'Header'}" style="overflow: auto;height: 700px;">
+						<div class="tab-pane" ng-class="{'active': selectedTab == 'Header'}" style="overflow: auto;max-height: 100%;">
 							<span ng-show="!xmlText"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 							<header-tab ng-show="xmlText" archetype-id="header.id" concept-code="header.concept" description="currentDescription" terminology="currentTerminology"></header-tab>
 						</div>
 						<!-- Definition -->
-						<div class="tab-pane" ng-class="{'active': selectedTab == 'Definition'}" style="height: 700px;">
+						<div class="tab-pane" ng-class="{'active': selectedTab == 'Definition'}" style="overflow: auto;max-height: 100%;">
 							<span ng-show="!xmlText"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 							<definition-tab ng-show="xmlText" definition="definition" terminology="currentTerminology"></definition-tab>
 						</div>
 						<!-- Terminology -->
-						<div class="tab-pane" ng-class="{'active': selectedTab == 'Terminology'}" style="overflow: auto;height: 700px;">
+						<div class="tab-pane" ng-class="{'active': selectedTab == 'Terminology'}" style="overflow: auto;max-height: 100%;">
 							<span ng-show="!xmlText"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 							<terminology-tab ng-show="xmlText" terminology="currentTerminology"></terminology-tab>
 						</div>
 						<!-- Xml -->
-						<div class="tab-pane" ng-class="{'active': selectedTab == 'Xml'}" style="overflow: auto;height: 700px;">
+						<div class="tab-pane" ng-class="{'active': selectedTab == 'Xml'}" style="overflow: auto;max-height: 100%;">
 							<span ng-show="!xmlText"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 							<pre ng-show="xmlText" ng-bind-html-unsafe="text|pretty">{{xmlText}}</pre>
 						</div>
 						<!-- Adl -->
-						<div class="tab-pane" ng-class="{'active': selectedTab == 'Adl'}" style="overflow: auto;height: 700px;">
+						<div class="tab-pane" ng-class="{'active': selectedTab == 'Adl'}" style="overflow: auto;max-height: 100%;">
 							<span ng-show="!adlText"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 							<pre ng-show="adlText" ng-bind-html-unsafe="text|pretty">{{adlText}}</pre>
 						</div>
