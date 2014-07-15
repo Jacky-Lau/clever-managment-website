@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -222,6 +223,23 @@ public class ArchetypePersistanceServiceImpl implements
 						String nodeName = archetype.getOntology()
 								.termDefinition(originalLanguage, code)
 								.getText();
+						Optional<ArchetypeTerm> annotationTerm = Optional
+								.ofNullable(archetype.getOntology()
+										.termDefinition("annotation", code));
+						String columnName = annotationTerm.map(
+								term -> term.getItem("Column_name")).orElse(
+								null);
+						String joinColumnName = annotationTerm.map(
+								term -> term.getItem("JoinColumn_name"))
+								.orElse(null);
+						String oneToMany = annotationTerm
+								.map(term -> term
+										.getItem(ArchetypeRelationship.RelationType.OneToMany
+												.toString())).orElse(null);
+						String manyToOne = annotationTerm
+								.map(term -> term
+										.getItem(ArchetypeRelationship.RelationType.ManyToOne
+												.toString())).orElse(null);
 						newNode.setCode(code);
 						newNode.setCurrentNodeName(nodeName);
 						newNode.setCurrentVersion(version);
@@ -229,7 +247,15 @@ public class ArchetypePersistanceServiceImpl implements
 						newNode.setOriginalVersion(version);
 						newNode.setNodePath(node.path());
 						newNode.setRmType(node.getRmTypeName());
-						newNode.setAliasName(archetype.getOntology().termDefinition("annotation", code).getItem("Column_name"));
+						if (oneToMany != null) {
+							newNode.setAliasName(null);
+						} else {
+							if (manyToOne != null) {
+								newNode.setAliasName(joinColumnName);
+							} else {
+								newNode.setAliasName(columnName);
+							}
+						}
 						this.archetypeNodeDao.save(newNode);
 					}
 				}
@@ -248,53 +274,49 @@ public class ArchetypePersistanceServiceImpl implements
 						.filter(definition -> definition.getLanguage().equals(
 								"annotation")).findFirst().get();
 			} catch (NoSuchElementException ex) {
-				throw new ArchetypePersistenceException("Missing annotation part.");
+				throw new ArchetypePersistenceException(
+						"Missing annotation part.");
 			}
 			for (ArchetypeTerm item : annotations.getDefinitions()) {
-				ArchetypeFile sourceArchetypeFile = null, destinationArchetypeFile = null;
+				ArchetypeHost sourceArchetypeHost = null;
+				ArchetypeHost destinationArchetypeHost = null;
 				if (item.getItem(ArchetypeRelationship.RelationType.OneToMany
 						.toString()) != null) {
-					sourceArchetypeFile = archetypeFiles.get(archetype
-							.getArchetypeId().getValue());
-					String archetypeName = item
+					sourceArchetypeHost = this.archetypeHostDao
+							.findUniqueByProperty("name", archetype
+									.getArchetypeId().base());
+					String archetypeHostName = item
 							.getItem(ArchetypeRelationship.RelationType.OneToMany
 									.toString());
-					destinationArchetypeFile = archetypeFiles
-							.get(archetypeName);
-					if (destinationArchetypeFile == null) {
-						destinationArchetypeFile = this.archetypeFileDao
-								.findUniqueByProperty("name", archetypeName);
-					}
-					if (destinationArchetypeFile == null) {
+					destinationArchetypeHost = this.archetypeHostDao
+							.findUniqueByProperty("name", archetypeHostName);
+					if (destinationArchetypeHost == null) {
 						throw new ArchetypePersistenceException(
-								"Missing archetype " + archetypeName + ".");
+								"Missing archetype " + archetypeHostName + ".");
 					}
 				}
 				if (item.getItem(ArchetypeRelationship.RelationType.ManyToOne
 						.toString()) != null) {
-					destinationArchetypeFile = archetypeFiles.get(archetype
-							.getArchetypeId().getValue());
+					destinationArchetypeHost = this.archetypeHostDao
+							.findUniqueByProperty("name", archetype
+									.getArchetypeId().base());
 					String archetypeName = item
 							.getItem(ArchetypeRelationship.RelationType.ManyToOne
 									.toString());
-					sourceArchetypeFile = archetypeFiles.get(archetypeName);
-					if (sourceArchetypeFile == null) {
-						sourceArchetypeFile = this.archetypeFileDao
-								.findUniqueByProperty("name", archetypeName);
-					}
-					if (sourceArchetypeFile == null) {
+					sourceArchetypeHost = this.archetypeHostDao
+							.findUniqueByProperty("name", archetypeName);
+					if (sourceArchetypeHost == null) {
 						throw new ArchetypePersistenceException(
 								"Miss archetype " + archetypeName + ".");
 					}
 				}
-				if (sourceArchetypeFile != null
-						&& destinationArchetypeFile != null) {
+				if (sourceArchetypeHost != null
+						&& destinationArchetypeHost != null) {
 					String hql = "from ArchetypeRelationship as r where r.sourceArchetypeHost.id = :sourceId and r.destinationArchetypeHost.id = :destinationId and r.relationType = :relationType";
 					Map<String, Object> variables = new HashMap<String, Object>();
-					variables.put("sourceId", sourceArchetypeFile
-							.getArchetypeHost().getId());
-					variables.put("destinationId", destinationArchetypeFile
-							.getArchetypeHost().getId());
+					variables.put("sourceId", sourceArchetypeHost.getId());
+					variables.put("destinationId",
+							destinationArchetypeHost.getId());
 					variables.put("relationType",
 							ArchetypeRelationship.RelationType.OneToMany);
 					List result = this.archetypeRelationshipDao.findByHQL(hql,
@@ -304,11 +326,10 @@ public class ArchetypePersistanceServiceImpl implements
 						ArchetypeRelationship relationship = new ArchetypeRelationship();
 						relationship
 								.setRelationType(ArchetypeRelationship.RelationType.OneToMany);
-						relationship.setSourceArchetypeHost(sourceArchetypeFile
-								.getArchetypeHost());
 						relationship
-								.setDestinationArchetypeHost(destinationArchetypeFile
-										.getArchetypeHost());
+								.setSourceArchetypeHost(sourceArchetypeHost);
+						relationship
+								.setDestinationArchetypeHost(destinationArchetypeHost);
 						this.archetypeRelationshipDao.save(relationship);
 					} else if (result.size() > 1) {
 						throw new ArchetypePersistenceException(
