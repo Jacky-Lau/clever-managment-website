@@ -87,7 +87,8 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 												info.setName(file.getName());
 												info.setVersion(file
 														.getVersion());
-												hostInfo.getArchetypeInfos().add(info);
+												hostInfo.getArchetypeInfos()
+														.add(info);
 												archetypeInfoIndexByVersion
 														.put(file.getVersion(),
 																info);
@@ -140,7 +141,8 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 															.add(nodeInfo);
 												});
 											});
-							archetypeBriefInfo.getArchetypeHostInfos().add(hostInfo);
+							archetypeBriefInfo.getArchetypeHostInfos().add(
+									hostInfo);
 						});
 		return archetypeBriefInfo;
 	}
@@ -217,10 +219,40 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 	}
 
 	@Override
+	public List<String> getAllLatestVersionArchetypeAdls() {
+		return this.archetypeHostDao
+				.selectAll()
+				.stream()
+				.map(host -> {
+					return host
+							.getArchetypeFiles()
+							.stream()
+							.filter(file -> file.getVersion().equals(
+									host.getLatestVersion())).findFirst().get()
+							.getConceptName();
+				}).collect(Collectors.toList());
+	}
+
+	@Override
 	public List<String> getAllArchetypeIds() {
 		return this.archetypeFileDao.selectAll().stream().map(file -> {
 			return file.getName();
 		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<String> getAllLatestVersionArchetypeIds() {
+		return this.archetypeHostDao
+				.selectAll()
+				.stream()
+				.map(host -> {
+					return host
+							.getArchetypeFiles()
+							.stream()
+							.filter(file -> file.getVersion().equals(
+									host.getLatestVersion())).findFirst().get()
+							.getName();
+				}).collect(Collectors.toList());
 	}
 
 	@Override

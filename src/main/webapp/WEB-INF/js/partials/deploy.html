@@ -8,9 +8,9 @@
 	<div class="content-container">
 		<div class="row">
 			<div class="col-xs-5 col-md-5 col-lg-5" style="max-height: 750px;padding: 0% 5%;overflow: auto;">
-				<h5 class="text-center">All Archetypes</h5>
+				<h5 class="text-center">Latest version Archetypes</h5>
 				<ul class="list-group">
-					<li class="list-group-item" ng-repeat="id in allArchetypeIds | orderBy: deployed" ng-class="{true: 'list-group-item-success', false: 'list-group-item-warning'}[id.deployed]">
+					<li class="list-group-item" ng-repeat="id in latestVersionArchetypeIds | orderBy: deployed" ng-class="{true: 'list-group-item-success', false: 'list-group-item-warning'}[id.deployed]">
 						<span style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;cursor: default;">{{id.name}}</span>
 					</li>
 				</ul>

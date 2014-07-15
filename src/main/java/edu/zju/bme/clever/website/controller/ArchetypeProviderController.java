@@ -75,6 +75,12 @@ public class ArchetypeProviderController {
 		return this.archetypeProviderService.getAllArchetypeIds();	
 	}
 	
+	@RequestMapping(value = "/archetypes/latest", method = RequestMethod.GET)
+	@ResponseBody
+	public List<String> getAllLatestVersionArchetypeIds(){
+		return this.archetypeProviderService.getAllLatestVersionArchetypeIds();	
+	}
+	
 	@RequestMapping(value = "/archetypes/briefInfo", method = RequestMethod.GET)
 	@ResponseBody
 	public ArchetypeBriefInfo getAllArchetypesBriefInfo(){

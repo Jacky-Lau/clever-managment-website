@@ -105,10 +105,7 @@ public class ArchetypePersistanceServiceImpl implements
 					.getCodeString();
 
 			// Persist archetype host
-			String archetypeHostName = archetype.getArchetypeId()
-					.qualifiedRmEntity()
-					+ "."
-					+ archetype.getArchetypeId().conceptName();
+			String archetypeHostName = archetype.getArchetypeId().base();
 			ArchetypeHost archetypeHost = this.archetypeHostDao
 					.findUniqueByProperty("name", archetypeHostName);
 			if (archetypeHost != null) {

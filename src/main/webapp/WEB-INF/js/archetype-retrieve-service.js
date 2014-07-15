@@ -1,12 +1,12 @@
-angular.module('clever.management.services.archetypeRetrieve', []).service('archetypeRetrieveService', ['$http', 'ARCHETYPE_BRIEF_INFO_URL', 'ALL_ARCHETYPE_LIST_URL', 'DEPLOYED_ARCHETYPE_LIST_URL', 'ARCHETYPE_BY_ID_URL', 'ARCHETYPE_BY_NAME_URL',
-function($http, ARCHETYPE_BRIEF_INFO_URL, ALL_ARCHETYPE_LIST_URL, DEPLOYED_ARCHETYPE_LIST_URL, ARCHETYPE_BY_ID_URL, ARCHETYPE_BY_NAME_URL) {
+angular.module('clever.management.services.archetypeRetrieve', []).service('archetypeRetrieveService', ['$http', 'ARCHETYPE_BRIEF_INFO_URL', 'LATEST_VERSION_ARCHETYPE_LIST_URL', 'DEPLOYED_ARCHETYPE_LIST_URL', 'ARCHETYPE_BY_ID_URL', 'ARCHETYPE_BY_NAME_URL',
+function($http, ARCHETYPE_BRIEF_INFO_URL, LATEST_VERSION_ARCHETYPE_LIST_URL, DEPLOYED_ARCHETYPE_LIST_URL, ARCHETYPE_BY_ID_URL, ARCHETYPE_BY_NAME_URL) {
 
 	this.getArchetypesBriefInfo = function() {
 		return getFromUrl(ARCHETYPE_BRIEF_INFO_URL);
 	};
 
-	this.getAllArchetypeIds = function() {
-		return getFromUrl(ALL_ARCHETYPE_LIST_URL);
+	this.getLatestVersionArchetypeIds = function() {
+		return getFromUrl(LATEST_VERSION_ARCHETYPE_LIST_URL);
 	};
 
 	this.getDeployedArchetypeIds = function() {

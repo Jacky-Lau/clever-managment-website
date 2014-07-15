@@ -1,17 +1,17 @@
 function DeployCtrl($scope, $http, $timeout, archetypeRetrieveService, ARCHETYPE_DEPLOY_URL) {
 
-	$scope.allArchetypeIds = [];
+	$scope.latestVersionArchetypeIds = [];
 	$scope.alerts = [];
 	$scope.buttonTitle = "Deploy";
 
 	refreshData();
 
 	function refreshData() {
-		$scope.allArchetypeIds = [];
+		$scope.allLatestArchetypeIds = [];
 		$scope.deployedArchetypeIds = [];
-		archetypeRetrieveService.getDeployedArchetypeIds().then(function(result) {
-			$scope.deployedArchetypeIds = result;
-			archetypeRetrieveService.getAllArchetypeIds().then(function(result) {
+		archetypeRetrieveService.getDeployedArchetypeIds().then(function(deployedArchetypeIds) {
+			$scope.deployedArchetypeIds = deployedArchetypeIds;
+			archetypeRetrieveService.getLatestVersionArchetypeIds().then(function(result) {
 				angular.forEach(result, function(id) {
 					var isDeployed = false;
 					for (var i = 0; i < $scope.deployedArchetypeIds.length; i++) {
@@ -20,7 +20,7 @@ function DeployCtrl($scope, $http, $timeout, archetypeRetrieveService, ARCHETYPE
 							break;
 						}
 					}
-					$scope.allArchetypeIds.push({
+					$scope.latestVersionArchetypeIds.push({
 						name : id,
 						deployed : isDeployed,
 					});

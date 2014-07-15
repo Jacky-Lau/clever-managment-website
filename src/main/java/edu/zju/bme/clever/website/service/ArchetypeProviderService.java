@@ -24,8 +24,12 @@ public interface ArchetypeProviderService {
 	public String getArchetypeAdlById(Integer id);
 
 	public List<String> getAllArchetypeAdls();
+	
+	public List<String> getAllLatestVersionArchetypeAdls();
 
 	public List<String> getAllArchetypeIds();
+	
+	public List<String> getAllLatestVersionArchetypeIds();
 
 	public List<String> getDeployedArchetypeIds();
 }

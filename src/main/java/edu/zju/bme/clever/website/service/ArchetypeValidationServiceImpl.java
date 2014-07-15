@@ -89,10 +89,7 @@ public class ArchetypeValidationServiceImpl implements
 					});
 					String originalLanguage = archetype.getOriginalLanguage()
 							.getCodeString();
-					String archetypeHostName = archetype.getArchetypeId()
-							.qualifiedRmEntity()
-							+ "."
-							+ archetype.getArchetypeId().conceptName();
+					String archetypeHostName = archetype.getArchetypeId().base();
 					Optional<ArchetypeHost> archetypeHost = Optional
 							.ofNullable(this.archetypeHostDao
 									.findUniqueByProperty("name",
