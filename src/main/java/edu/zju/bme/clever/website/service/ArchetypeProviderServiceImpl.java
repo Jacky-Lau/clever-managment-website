@@ -229,7 +229,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 							.stream()
 							.filter(file -> file.getVersion().equals(
 									host.getLatestVersion())).findFirst().get()
-							.getConceptName();
+							.getContent();
 				}).collect(Collectors.toList());
 	}
 
