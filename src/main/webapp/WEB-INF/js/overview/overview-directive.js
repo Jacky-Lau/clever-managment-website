@@ -5,6 +5,7 @@ function() {
 		scope : {
 			archetypesBriefInfo : '=',
 			selectArchetype : '&',
+			windowHeight: '=',
 			animation : '@'
 		},
 		templateUrl : 'js/overview/overview.html',

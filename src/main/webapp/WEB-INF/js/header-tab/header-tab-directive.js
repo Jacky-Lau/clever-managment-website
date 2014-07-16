@@ -6,7 +6,8 @@ function() {
 			archetypeId : '=',
 			conceptCode : '=',
 			description : '=',
-			terminology : '='
+			terminology : '=',
+			windowHeight : '=',
 		},
 		template : '<table class="table table-hover">' +
 						'<tbody>' +
