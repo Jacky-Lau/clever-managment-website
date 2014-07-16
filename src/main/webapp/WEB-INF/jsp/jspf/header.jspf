@@ -52,6 +52,9 @@ uri="http://www.springframework.org/security/tags"%>
 								<a href="/clever-management-website/#/deploy"><span class="glyphicon glyphicon-cog"></span> Deploy</a>
 							</li>
 							<li>
+								<a href="/clever-management-website/#/appLibrary"><span class="glyphicon glyphicon-shopping-cart"></span> App Library</a>
+							</li>
+							<li>
 								<a href="/clever-management-website/logout"><span class="glyphicon glyphicon-off"></span> Log out</a>
 							</li>
 						</ul>
