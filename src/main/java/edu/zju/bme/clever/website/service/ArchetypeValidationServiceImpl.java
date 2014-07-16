@@ -154,26 +154,51 @@ public class ArchetypeValidationServiceImpl implements
 									result.setMessage(result.getMessage()
 											+ "Column name for " + node.path()
 											+ " is empty. ");
+
+								} else if (columnName != null){
+									if (existedNodes.containsKey(node.path())) {
+										// Node already exists
+										ArchetypeNode existedNode = existedNodes
+												.get(node.path());
+										if (columnName.compareTo(existedNode
+												.getAliasName()) != 0) {
+											result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
+											result.setMessage(result
+													.getMessage()
+													+ "Column name for "
+													+ node.path()
+													+ " is not allowed for change. The original column name is "
+													+ existedNode
+															.getAliasName()
+													+ ". ");
+										}
+									}
 								}
 								if (joinColumnName == null && manyToOne != null) {
 									result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
 									result.setMessage(result.getMessage()
 											+ "Join column name for "
 											+ node.path() + " is empty. ");
-								}
-							}
-							if (existedNodes.containsKey(node.path())) {
-								// Node already exists
-								ArchetypeNode existedNode = existedNodes
-										.get(node.path());
-								if (columnName.compareTo(existedNode
-										.getAliasName()) != 0) {
-									result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
-									result.setMessage(result.getMessage()
-											+ "Column name for "
-											+ node.path()
-											+ " is not allowed for change. The original column name is "
-											+ existedNode.getAliasName() + ". ");
+								} else if (joinColumnName != null
+										&& manyToOne != null) {
+									if (existedNodes.containsKey(node.path())) {
+										// Node already exists
+										ArchetypeNode existedNode = existedNodes
+												.get(node.path());
+										if (joinColumnName
+												.compareTo(existedNode
+														.getAliasName()) != 0) {
+											result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
+											result.setMessage(result
+													.getMessage()
+													+ "Join column name for "
+													+ node.path()
+													+ " is not allowed for change. The original column name is "
+													+ existedNode
+															.getAliasName()
+													+ ". ");
+										}
+									}
 								}
 							}
 						}
