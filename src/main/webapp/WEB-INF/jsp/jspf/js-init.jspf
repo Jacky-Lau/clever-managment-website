@@ -59,4 +59,6 @@ src="/clever-management-website/js/deploy-controller.js"></script>
 <script
 src="/clever-management-website/js/upload-controller.js"></script>
 <script
+src="/clever-management-website/js/app-library-controller.js"></script>
+<script
 src="/clever-management-website/js/app-controller.js"></script>

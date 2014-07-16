@@ -3,7 +3,7 @@ function() {
 	return {
 		restrict : 'E',
 		scope : {
-			terminology : '='
+			terminology : '=',
 		},
 		templateUrl : 'js/terminology-tab/terminology-tab.html',
 		replace : true,	

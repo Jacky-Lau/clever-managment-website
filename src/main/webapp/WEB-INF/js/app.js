@@ -15,6 +15,9 @@ function($routeProvider) {
 	}).when("/upload", {
 		templateUrl : '/clever-management-website/js/partials/upload.html',
 		controller : UploadCtrl
+	}).when("/appLibrary", {
+		templateUrl : '/clever-management-website/js/partials/app-library.html',
+		controller : AppLibraryCtrl
 	}).otherwise({
 		redirectTo : '/'
 	});

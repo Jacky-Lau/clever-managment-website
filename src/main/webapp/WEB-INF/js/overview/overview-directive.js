@@ -5,6 +5,7 @@ function() {
 		scope : {
 			archetypesBriefInfo : '=',
 			selectArchetype : '&',
+			windowHeight: '=',
 			animation : '@'
 		},
 		templateUrl : 'js/overview/overview.html',
@@ -156,7 +157,7 @@ function() {
 				
 				stackLayout.layout.wrap = stackLayout.layout.getParentSize(scope.graph.getDefaultParent()).width;
 
-				scope.layouts = [stackLayout, circleLayout, compactLayout, organicLayout ]; 
+				scope.layouts = [stackLayout, circleLayout, organicLayout];
 				
 				function applyLayout(layout){
 					scope.graph.getModel().beginUpdate();

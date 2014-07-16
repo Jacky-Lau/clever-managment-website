@@ -4,7 +4,8 @@ function() {
 		restrict : 'E',
 		scope : {
 			definition : '=',
-			terminology : '='
+			terminology : '=',
+			windowHeight: '=',
 		},
 		templateUrl : 'js/definition-tab/definition-tab.html',
 		controller : function($scope, $element, $attrs) {
