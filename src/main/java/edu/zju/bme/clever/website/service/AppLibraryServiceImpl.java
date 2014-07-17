@@ -39,12 +39,7 @@ public class AppLibraryServiceImpl implements AppLibraryService {
 			MultipartFile img) {
 		String appFolderUrl = servletContext.getRealPath("/WEB-INF"
 				+ IMG_PATH_PREFIX);
-		String uuid = UUID.randomUUID().toString();
-		File imgFile = new File(appFolderUrl + uuid);
-		while (imgFile.exists()) {
-			uuid = UUID.randomUUID().toString();
-			imgFile = new File(appFolderUrl + uuid);
-		}
+		File imgFile = new File(appFolderUrl + "/" + name);
 		try {
 			img.transferTo(imgFile);
 		} catch (IllegalStateException | IOException ex) {
@@ -55,7 +50,7 @@ public class AppLibraryServiceImpl implements AppLibraryService {
 		application.setName(name);
 		application.setDescription(description);
 		application.setUrl(url);
-		application.setImgPath(IMG_PATH_PREFIX + uuid);
+		application.setImgPath(IMG_PATH_PREFIX + name);
 		this.applicationDao.save(application);
 	}
 

@@ -1,5 +1,6 @@
 var prefix = '/clever-management-website';
 var config = {
+	'WEBSITE_DOMAIN' : prefix,
 	'ARCHETYPE_LIST_URL' : prefix + '/archetypes',
 	'COMMIT_SEQUENCE_URL' : prefix + '/commitSequence',
 	'ARCHETYPE_UPLOAD_URL' : prefix + '/archetypes',
@@ -14,6 +15,7 @@ var config = {
 	'APPLICATION_BY_ID_URL' : prefix + '/application/id/',
 	'APPLICATIONS_URL' : prefix + '/applications',
 	'APPLICATION_UPLOAD_URL' : prefix + '/application',
+	'TEMP_URL' : prefix + '/temp',
 };
 var configModel = angular.module('clever.management.config', []);
 angular.forEach(config, function(value, key) {

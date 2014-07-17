@@ -1,11 +1,17 @@
 package edu.zju.bme.clever.website.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +30,7 @@ public class AppLibraryController {
 
 	@Resource(name = "appLibraryService")
 	private AppLibraryService appLibraryService;
+	
 
 	@RequestMapping(value = "/applications", method = RequestMethod.GET)
 	@ResponseBody
@@ -45,7 +52,8 @@ public class AppLibraryController {
 			@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "description", required = true) String description,
 			@RequestParam(value = "url", required = true) String url) {
-		this.appLibraryService.updateApplication(id, name, description, url, img);
+		this.appLibraryService.updateApplication(id, name, description, url,
+				img);
 	}
 
 	@RequestMapping(value = "/application", method = RequestMethod.GET)
