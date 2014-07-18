@@ -12,12 +12,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.zju.bme.clever.website.dao.ApplicationDao;
+import edu.zju.bme.clever.website.exception.AppLibraryPersistException;
 import edu.zju.bme.clever.website.model.entity.Application;
 
 @Service("appLibraryService")
+@Transactional
 public class AppLibraryServiceImpl implements AppLibraryService {
 
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -27,7 +30,7 @@ public class AppLibraryServiceImpl implements AppLibraryService {
 	@Resource
 	private ServletContext servletContext;
 
-	private static final String IMG_PATH_PREFIX = "/upload/img/app/";
+	private static final String APP_FOLDER_PATH = "/upload/img/app/";
 
 	@Override
 	public List<Application> getAllApplications() {
@@ -36,38 +39,50 @@ public class AppLibraryServiceImpl implements AppLibraryService {
 
 	@Override
 	public void saveApplication(String name, String description, String url,
-			MultipartFile img) {
+			MultipartFile img) throws AppLibraryPersistException {
+		if (this.applicationDao.findUniqueByProperty("name", name) != null) {
+			throw new AppLibraryPersistException("Application " + name
+					+ " already exists.");
+		}
 		String appFolderUrl = servletContext.getRealPath("/WEB-INF"
-				+ IMG_PATH_PREFIX);
+				+ APP_FOLDER_PATH);
 		File imgFile = new File(appFolderUrl + "/" + name);
 		try {
 			img.transferTo(imgFile);
 		} catch (IllegalStateException | IOException ex) {
 			this.logger.info("Save application {} img failed.", name, ex);
-			return;
+			throw new AppLibraryPersistException("Save application " + name
+					+ " img failed, error: " + ex.getMessage());
 		}
 		Application application = new Application();
 		application.setName(name);
 		application.setDescription(description);
 		application.setUrl(url);
-		application.setImgPath(IMG_PATH_PREFIX + name);
+		application.setImgPath(APP_FOLDER_PATH + name);
 		this.applicationDao.save(application);
 	}
 
 	@Override
 	public void updateApplication(Integer id, String name, String description,
-			String url, MultipartFile img) {
+			String url, MultipartFile img) throws AppLibraryPersistException {
 		Application application = this.applicationDao.findById(id);
 		application.setDescription(description);
 		application.setName(name);
 		application.setUrl(url);
-		File imgFile = new File(servletContext.getRealPath("/WEB-INF"
-				+ application.getUrl()));
-		try {
-			img.transferTo(imgFile);
-		} catch (IllegalStateException | IOException ex) {
-			this.logger.info("Update application {} img failed.", name, ex);
-			return;
+		if (img != null) {
+			File oldImgFile = new File(servletContext.getRealPath("/WEB-INF"
+					+ application.getImgPath()));
+			oldImgFile.delete();
+			File newImgFile = new File(servletContext.getRealPath("/WEB-INF"
+					+ APP_FOLDER_PATH + name));
+			try {
+				img.transferTo(newImgFile);
+			} catch (IllegalStateException | IOException ex) {
+				this.logger.info("Update application {} img failed.", name, ex);
+				throw new AppLibraryPersistException("Update application "
+						+ name + " img failed, error: " + ex.getMessage());
+			}
+			application.setImgPath(APP_FOLDER_PATH + name);
 		}
 		this.applicationDao.update(application);
 	}
@@ -75,5 +90,10 @@ public class AppLibraryServiceImpl implements AppLibraryService {
 	@Override
 	public Application getApplicationById(Integer id) {
 		return this.applicationDao.findById(id);
+	}
+	
+	@Override
+	public void deleteApplicationById(Integer id){
+		this.applicationDao.delete(id);
 	}
 }

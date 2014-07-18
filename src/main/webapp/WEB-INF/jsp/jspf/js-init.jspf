@@ -41,6 +41,8 @@ src="/clever-management-website/js/upload-modal/files-model-directive.js"></scri
 <script
 src="/clever-management-website/js/app-modal/file-model-directive.js"></script>
 <script
+src="/clever-management-website/js/app-modal/app-library-service.js"></script>
+<script
 src="/clever-management-website/js/upload-modal/file-upload-service.js"></script>
 <script
 src="/clever-management-website/js/app-modal/app-modal-controller.js"></script>

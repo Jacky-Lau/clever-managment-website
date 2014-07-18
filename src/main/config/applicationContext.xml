@@ -49,6 +49,7 @@
 	<sec:http pattern="/font/**" security="none" />
 	<sec:http pattern="/img/**" security="none" />
 	<sec:http pattern="/resources/**" security="none" />
+	<sec:http pattern="/upload/**" security="none" />
 
 	<!-- 开启默认的拦截器 -->
 	<sec:http auto-config="true" use-expressions="true">
@@ -57,10 +58,12 @@
 		<sec:intercept-url pattern="/" access="permitAll" />
 		<sec:intercept-url pattern="/archetypes" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/authentication" access="permitAll" method="GET"/>
+		<sec:intercept-url pattern="/applications" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetypes/briefInfo" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetype/id/*" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetype/name/*" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetypes/validation" access="isAuthenticated()" method="POST"/>
+		<sec:intercept-url pattern="/application/id/*" access="isAuthenticated()" method="POST"/>
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
 
 		<!-- 登陆页面配置 -->

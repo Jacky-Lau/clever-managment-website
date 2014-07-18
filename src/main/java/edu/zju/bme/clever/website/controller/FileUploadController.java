@@ -37,7 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import se.acode.openehr.parser.ADLParser;
 import edu.zju.bme.clever.website.dao.CommitSequenceDao;
 import edu.zju.bme.clever.website.dao.UserDao;
-import edu.zju.bme.clever.website.exception.ArchetypePersistenceException;
+import edu.zju.bme.clever.website.exception.ArchetypePersistException;
 import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
 import edu.zju.bme.clever.website.model.entity.ArchetypeNode;
 import edu.zju.bme.clever.website.model.entity.CommitSequence;
@@ -109,7 +109,7 @@ public class FileUploadController {
 		try {
 			this.archetypePersistanceService.saveArchetypes(
 					new ArrayList<Archetype>(archetypes.values()), userName);
-		} catch (ArchetypePersistenceException ex) {
+		} catch (ArchetypePersistException ex) {
 			this.logger.debug("Persist archetypes failed.", ex);
 			result.setSucceeded(false);
 			result.setMessage("Persist archetypes failed, error: "

@@ -10,47 +10,50 @@
 			<div class="col-lg-6 col-md-6 col-sm-6">
 				<div class="input-group">
 					<span class="input-group-addon">Name: </span>
-					<input type="text" class="form-control" placeholder="Name">
+					<input type="text" class="form-control" placeholder="Name" ng-model="application.name">
 				</div>
+				<span style="color: red;" ng-show="!nameValidation.validated">{{nameValidation.msg}}</span>
 				<br />
 				<div class="input-group">
 					<span class="input-group-addon">Description: </span>
-					<textarea class="form-control" placeholder="Description" rows=10></textarea>
+					<textarea class="form-control" placeholder="Description (Less than 200 words)" rows=10 ng-model="application.description"></textarea>
 				</div>
+				<span style="color: red;" ng-show="!descriptionValidation.validated">{{descriptionValidation.msg}}</span>
 				<br />
 				<div class="input-group">
 					<span class="input-group-addon">URL: </span>
-					<input type="text" class="form-control" placeholder="URL">
+					<input type="text" class="form-control" placeholder="URL" ng-model="application.url">
 				</div>
+				<span style="color: red;" ng-show="!urlValidation.validated">{{urlValidation.msg}}</span>
 			</div>
 			<div class="col-lg-6 col-md-6 col-sm-6">
 				<div class="row">
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						<div class="text-center">
-							<img src="{{imgPath}}" style="width: 200px;height: 200px;">
+							<img ng-src="{{imgPath}}" style="width: 200px;height: 200px;">
 						</div>
 					</div>
 				</div>
 				<br />
-				<span style="color: red;" ng-show="imgErrorMsg">{{imgErrorMsg}}</span>
 				<div class="row">
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						<div class="input-group">
-							<input class="form-control" type="text" ng-model="file.path" disabled="true" style="cursor: default;"/>
+							<input class="form-control" type="text" value="{{application.img.path}}" disabled="true" style="cursor: default;"/>
 							<span class="input-group-btn">
 								<button class="btn btn-success fileinput-button" type="button">
 									Choose a file...
-									<input type="file" file-model file="file" on-change="previewImg(file)">
+									<input type="file" file-model file="application.img" on-change="previewImg(file)">
 								</button> </span>
 						</div>
 					</div>
 				</div>
+				<span style="color: red;" ng-show="!imgValidation.validated">{{imgValidation.msg}}</span>
 			</div>
 		</div>
 	</div>
 </div>
 <div class="modal-footer">
-	<button class="btn btn-primary" ng-click="cancel()">
+	<button class="btn btn-primary" ng-click="confirm()">
 		Confirm
 	</button>
 	<button class="btn btn-warning" ng-click="cancel()">

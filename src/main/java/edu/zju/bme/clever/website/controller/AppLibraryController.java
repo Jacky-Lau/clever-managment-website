@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import edu.zju.bme.clever.website.exception.AppLibraryPersistException;
 import edu.zju.bme.clever.website.model.entity.Application;
 import edu.zju.bme.clever.website.service.AppLibraryService;
 
@@ -30,7 +31,6 @@ public class AppLibraryController {
 
 	@Resource(name = "appLibraryService")
 	private AppLibraryService appLibraryService;
-	
 
 	@RequestMapping(value = "/applications", method = RequestMethod.GET)
 	@ResponseBody
@@ -46,23 +46,45 @@ public class AppLibraryController {
 
 	@RequestMapping(value = "/application/id/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public void updateApplicationById(
+	public FileUploadResult updateApplicationById(
 			@PathVariable Integer id,
-			@RequestParam(value = "img", required = true) MultipartFile img,
+			@RequestParam(value = "img", required = false) MultipartFile img,
 			@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "description", required = true) String description,
 			@RequestParam(value = "url", required = true) String url) {
-		this.appLibraryService.updateApplication(id, name, description, url,
-				img);
+		FileUploadResult result = new FileUploadResult();
+		result.setSucceeded(true);
+		try {
+			this.appLibraryService.updateApplication(id, name, description,
+					url, img);
+		} catch (AppLibraryPersistException ex) {
+			result.setSucceeded(false);
+			result.setMessage(ex.getMessage());
+		}
+		return result;
 	}
 
-	@RequestMapping(value = "/application", method = RequestMethod.GET)
+	@RequestMapping(value = "/application/id/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public void uploadApplication(
+	public void deleteApplicationById(@PathVariable Integer id) {
+		this.appLibraryService.deleteApplicationById(id);
+	}
+
+	@RequestMapping(value = "/application", method = RequestMethod.POST)
+	@ResponseBody
+	public FileUploadResult uploadNewApplication(
 			@RequestParam(value = "img", required = true) MultipartFile img,
 			@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "description", required = true) String description,
 			@RequestParam(value = "url", required = true) String url) {
-		this.appLibraryService.saveApplication(name, description, url, img);
+		FileUploadResult result = new FileUploadResult();
+		result.setSucceeded(true);
+		try {
+			this.appLibraryService.saveApplication(name, description, url, img);
+		} catch (AppLibraryPersistException ex) {
+			result.setSucceeded(false);
+			result.setMessage(ex.getMessage());
+		}
+		return result;
 	}
 }
