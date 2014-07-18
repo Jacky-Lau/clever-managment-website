@@ -207,7 +207,7 @@ function() {
 					var parent = scope.graph.getDefaultParent();
 					scope.graph.view.scale = 1;
 					try {
-						scope.graph.removeCells(scope.graph.getChildVertices(parent));
+						scope.graph.removeCells(scope.graph.getChildCells(parent));
 						var cells = [];
 						angular.forEach(scope.archetypesBriefInfo.archetypeHostInfos, function(value, index) {
 							var vertex = scope.graph.insertVertex(parent, null, value, 0, 0, cellWidth, 0);
