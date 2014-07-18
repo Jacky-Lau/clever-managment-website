@@ -1,7 +1,7 @@
 angular.module('clever.management.services.msgbox', []).service('msgboxService', ['$modal',
 function($modal) {
 		return function(title, content){
-			var msgBoxInstance = $modal.open({
+			return msgBoxInstance = $modal.open({
 				template : '<div class="modal-header">' +
 								'<h3 class="modal-title">{{title}}</h3>' +
 							'</div>' +
@@ -16,10 +16,16 @@ function($modal) {
 								'<button class="btn btn-primary text-center" ng-click="ok()">' +
 									'OK' +
 								'</button>' +
+								'<button class="btn btn-warning text-center" ng-click="cancel()">' +
+									'Cancel' +
+								'</button>' +
 							'</div>',	
 				controller : function($scope, $modalInstance) {
 					$scope.ok = function() {
-						$modalInstance.close();
+						$modalInstance.close(true);
+					};
+					$scope.cancel = function() {
+						$modalInstance.dismiss();
 					};
 					$scope.title = title;
 					$scope.content = content;

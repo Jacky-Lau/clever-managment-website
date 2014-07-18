@@ -49,6 +49,7 @@
 	<sec:http pattern="/font/**" security="none" />
 	<sec:http pattern="/img/**" security="none" />
 	<sec:http pattern="/resources/**" security="none" />
+	<sec:http pattern="/upload/**" security="none" />
 
 	<!-- 开启默认的拦截器 -->
 	<sec:http auto-config="true" use-expressions="true">
@@ -57,10 +58,12 @@
 		<sec:intercept-url pattern="/" access="permitAll" />
 		<sec:intercept-url pattern="/archetypes" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/authentication" access="permitAll" method="GET"/>
+		<sec:intercept-url pattern="/applications" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetypes/briefInfo" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetype/id/*" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetype/name/*" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetypes/validation" access="isAuthenticated()" method="POST"/>
+		<sec:intercept-url pattern="/application/id/*" access="isAuthenticated()" method="POST"/>
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
 
 		<!-- 登陆页面配置 -->
@@ -121,7 +124,7 @@
 			<props>
 				<prop key="hibernate.dialect">edu.zju.bme.clever.website.util.UnicodeSQLServerDialect</prop>
 				<prop key="hibernate.connection.autocommit">false</prop>
-				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
 				<prop key="hibernate.format_sql">true</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
 				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>

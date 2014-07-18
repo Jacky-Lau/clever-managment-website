@@ -31,7 +31,7 @@ import edu.zju.bme.clever.website.dao.ArchetypeRelationshipDao;
 import edu.zju.bme.clever.website.dao.CommitSequenceDao;
 import edu.zju.bme.clever.website.dao.HistoriedArchetypeFileDao;
 import edu.zju.bme.clever.website.dao.UserDao;
-import edu.zju.bme.clever.website.exception.ArchetypePersistenceException;
+import edu.zju.bme.clever.website.exception.ArchetypePersistException;
 import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
 import edu.zju.bme.clever.website.model.entity.ArchetypeHost;
 import edu.zju.bme.clever.website.model.entity.ArchetypeNode;
@@ -66,16 +66,16 @@ public class ArchetypePersistanceServiceImpl implements
 	private UserDao userDao;
 
 	@Override
-	@Transactional(rollbackFor = { ArchetypePersistenceException.class })
+	@Transactional(rollbackFor = { ArchetypePersistException.class })
 	public void saveArchetypes(List<Archetype> archetypes, String submitter)
-			throws ArchetypePersistenceException {
+			throws ArchetypePersistException {
 
 		Map<String, ArchetypeFile> archetypeFiles = new HashMap<String, ArchetypeFile>();
 
 		// Persist commit sequence
 		User user = this.userDao.findUniqueByProperty("userName", submitter);
 		if (user == null) {
-			throw new ArchetypePersistenceException("User " + submitter
+			throw new ArchetypePersistException("User " + submitter
 					+ " not found.");
 		}
 		CommitSequence commitSequence = new CommitSequence();
@@ -87,7 +87,7 @@ public class ArchetypePersistanceServiceImpl implements
 					.findUniqueByProperty("name", archetype.getArchetypeId()
 							.getValue());
 			if (archetypeFileFromDB != null) {
-				throw new ArchetypePersistenceException("Archetype "
+				throw new ArchetypePersistException("Archetype "
 						+ archetype.getArchetypeId().getValue()
 						+ " already exists.");
 			}
@@ -96,7 +96,7 @@ public class ArchetypePersistanceServiceImpl implements
 			try {
 				archetypeContent = serializer.output(archetype);
 			} catch (IOException e) {
-				throw new ArchetypePersistenceException("Serialize archetype "
+				throw new ArchetypePersistException("Serialize archetype "
 						+ archetype.getArchetypeId().getValue() + " failed.");
 			}
 
@@ -114,7 +114,7 @@ public class ArchetypePersistanceServiceImpl implements
 				String nextVersion = "v"
 						+ (Integer.valueOf(latestVersion.replace("v", "")) + 1);
 				if (version.compareTo(nextVersion) != 0) {
-					throw new ArchetypePersistenceException("Archetype "
+					throw new ArchetypePersistException("Archetype "
 							+ archetype.getArchetypeId().getValue()
 							+ " version should be " + nextVersion + ".");
 				}
@@ -122,7 +122,7 @@ public class ArchetypePersistanceServiceImpl implements
 				archetypeHost.setModifyTime(Calendar.getInstance());
 			} else {
 				if (version.compareTo("v1") != 0) {
-					throw new ArchetypePersistenceException("Archetype "
+					throw new ArchetypePersistException("Archetype "
 							+ archetype.getArchetypeId().getValue()
 							+ " version should be v1.");
 				}
@@ -274,7 +274,7 @@ public class ArchetypePersistanceServiceImpl implements
 						.filter(definition -> definition.getLanguage().equals(
 								"annotation")).findFirst().get();
 			} catch (NoSuchElementException ex) {
-				throw new ArchetypePersistenceException(
+				throw new ArchetypePersistException(
 						"Missing annotation part.");
 			}
 			for (ArchetypeTerm item : annotations.getDefinitions()) {
@@ -291,7 +291,7 @@ public class ArchetypePersistanceServiceImpl implements
 					destinationArchetypeHost = this.archetypeHostDao
 							.findUniqueByProperty("name", archetypeHostName);
 					if (destinationArchetypeHost == null) {
-						throw new ArchetypePersistenceException(
+						throw new ArchetypePersistException(
 								"Missing archetype " + archetypeHostName + ".");
 					}
 				}
@@ -306,7 +306,7 @@ public class ArchetypePersistanceServiceImpl implements
 					sourceArchetypeHost = this.archetypeHostDao
 							.findUniqueByProperty("name", archetypeName);
 					if (sourceArchetypeHost == null) {
-						throw new ArchetypePersistenceException(
+						throw new ArchetypePersistException(
 								"Miss archetype " + archetypeName + ".");
 					}
 				}
@@ -332,7 +332,7 @@ public class ArchetypePersistanceServiceImpl implements
 								.setDestinationArchetypeHost(destinationArchetypeHost);
 						this.archetypeRelationshipDao.save(relationship);
 					} else if (result.size() > 1) {
-						throw new ArchetypePersistenceException(
+						throw new ArchetypePersistException(
 								"More than one relationships were found.");
 					}
 				}
