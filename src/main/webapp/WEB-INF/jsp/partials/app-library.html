@@ -3,47 +3,55 @@
 		{{alert.msg}}
 	</alert>
 </div>
-<div class="row">
-	<div class="col-sm-4 col-md-3 col-lg-3" ng-repeat="application in applications">
-		<div class="thumbnail" style="height: 420px;">
+<div class="modal-header">
+	<h3 class="modal-title">Applications</h3>
+</div>
+<div class="modal-body">
+	<div class="content-container" ng-style="{height: windowHeight - 260}" style="overflow: auto;">
+		<div class="row">
+			<div class="col-sm-4 col-md-3 col-lg-3" ng-repeat="application in applications">
+				<div class="thumbnail" style="height: 420px;">
+					<sec:authorize access="isAuthenticated()">
+						<div class="row">
+							<div class="col-lg-12 col-md-12 col-sm-12">
+								<div class="pull-right">
+									<span type="button" class="glyphicon glyphicon-wrench" style="padding: 5px;cursor: pointer;" ng-click="editApp(application)"></span>
+									<span type="button" class="glyphicon glyphicon-trash" style="padding: 5px;cursor: pointer;" ng-click="deleteApplication(application)"></span>
+								</div>
+							</div>
+						</div>
+					</sec:authorize>
+					<sec:authorize access="!isAuthenticated()">
+						<br />
+					</sec:authorize>
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12">
+							<div class="text-center">
+								<img ng-src="{{websiteDomain + application.imgPath}}" style="width: 200px;height: 200px;">
+							</div>
+						</div>
+					</div>
+					<div class="caption">
+						<h3 class="text-center">{{application.name}}</h3>
+						<p style="height: 90px;overflow: auto;">
+							<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>{{application.description}}
+						</p>
+						<a href="{{application.url}}" class="pull-right" style="position: absolute;bottom: 0px;right: 0px;margin-bottom: 25px;margin-right: 25px;">{{application.url}}</a>
+						<br />
+					</div>
+				</div>
+			</div>
 			<sec:authorize access="isAuthenticated()">
-				<div class="row">
-					<div class="col-lg-12 col-md-12 col-sm-12">
-						<div class="pull-right">
-							<span type="button" class="glyphicon glyphicon-wrench" style="padding: 5px;cursor: pointer;" ng-click="editApp(application)"></span>
-							<span type="button" class="glyphicon glyphicon-trash" style="padding: 5px;cursor: pointer;" ng-click="deleteApplication(application)"></span>
+				<div class="col-sm-4 col-md-3">
+					<div class="thumbnail" style="opacity: 0.5;" style="height: 420px;">
+						<div style="margin-top: 110px;">
+							<span ng-click="addNewApp()" class="glyphicon glyphicon-plus text-center" style="font-size: 15em;width: 100%;cursor: pointer;"></span>
 						</div>
 					</div>
 				</div>
 			</sec:authorize>
-			<sec:authorize access="!isAuthenticated()">
-				<br />
-			</sec:authorize>
-			<div class="row">
-				<div class="col-lg-12 col-md-12 col-sm-12">
-					<div class="text-center">
-						<img ng-src="{{websiteDomain + application.imgPath}}" style="width: 200px;height: 200px;">
-					</div>
-				</div>
-			</div>
-			<div class="caption">
-				<h2 class="text-center">{{application.name}}</h2>
-				<p style="height: 80px;overflow: auto;">
-					<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>{{application.description}}
-				</p>
-				<a href="{{application.url}}" class="pull-right" style="position: absolute;bottom: 0px;right: 0px;margin-bottom: 25px;margin-right: 25px;">{{application.url}}</a>
-				<br />
-			</div>
 		</div>
 	</div>
-	<sec:authorize access="isAuthenticated()">
-		<div class="col-sm-4 col-md-3">
-			<div class="thumbnail" style="opacity: 0.5;" style="height: 420px;">
-				<div style="margin-top: 110px;">
-					<span ng-click="addNewApp()" class="glyphicon glyphicon-plus text-center" style="font-size: 15em;width: 100%;cursor: pointer;"></span>
-				</div>
-			</div>
-		</div>
-	</sec:authorize>
 </div>
+<div class="modal-footer"></div>
 

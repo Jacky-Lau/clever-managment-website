@@ -94,6 +94,10 @@ public class AppLibraryServiceImpl implements AppLibraryService {
 	
 	@Override
 	public void deleteApplicationById(Integer id){
-		this.applicationDao.delete(id);
+		Application application = this.applicationDao.findById(id);
+		File imgFile = new File(servletContext.getRealPath("/WEB-INF"
+				+ APP_FOLDER_PATH + application.getName()));
+		imgFile.delete();
+		this.applicationDao.delete(application);
 	}
 }

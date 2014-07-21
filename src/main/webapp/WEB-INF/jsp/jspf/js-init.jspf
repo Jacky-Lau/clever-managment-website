@@ -35,6 +35,8 @@ src="/clever-management-website/js/header-tab/header-tab-directive.js"></script>
 <script
 src="/clever-management-website/js/overview/overview-directive.js"></script>
 <script
+src="/clever-management-website/js/overview/layout-service.js"></script>
+<script
 src="/clever-management-website/js/upload-modal/upload-modal-controller.js"></script>
 <script
 src="/clever-management-website/js/upload-modal/files-model-directive.js"></script>

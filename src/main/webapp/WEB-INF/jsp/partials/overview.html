@@ -24,6 +24,11 @@
 					<button type="button" class="btn btn-default" ng-click="reset()" tooltip-placement="top" tooltip="Reset" tooltip-popup-delay="500">
 						<span class="glyphicon glyphicon-refresh"></span>
 					</button>
+					<sec:authorize access="isAuthenticated()">
+						<button ng-show="currentLayout.type == 'custom'" type="button" class="btn btn-default" ng-click="saveLayout()" tooltip-placement="top" tooltip="Save layout" tooltip-popup-delay="500">
+							<span class="glyphicon glyphicon-floppy-disk"></span>
+						</button>
+					</sec:authorize>
 				</div>
 			</div>
 		</div>

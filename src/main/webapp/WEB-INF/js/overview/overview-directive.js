@@ -1,5 +1,5 @@
-angular.module('clever.management.directives.overview', []).directive('overview', [
-function() {
+angular.module('clever.management.directives.overview', []).directive('overview', ['layoutService',
+function(layoutService) {
 	return {
 		restrict : 'EA',
 		scope : {
@@ -8,7 +8,7 @@ function() {
 			windowHeight: '=',
 			animation : '@'
 		},
-		templateUrl : 'js/overview/overview.html',
+		templateUrl : 'overview.html',
 		transclude : true,
 		replace : true,
 		controller : function($scope, $element, $attrs){
@@ -61,6 +61,28 @@ function() {
 				var style = scope.graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_FILLCOLOR] = 'white';
 				style[mxConstants.STYLE_STROKECOLOR] = 'white';
+				style[mxConstants.CURSOR_MOVABLE_EDGE] = 'default';
+				
+				// Disable cell resize
+				scope.graph.cellsResizable = false;
+				
+				// Override isCellSelectable
+				scope.graph.isCellSelectable = function(cell) {
+					if (cell.isEdge()) {
+						return false;
+					} else {
+						return true;
+					}
+				}; 
+				
+				// Override isCellMovable
+				scope.graph.isCellMovable = function(cell){
+					if (cell.isEdge()) {
+						return false;
+					} else {
+						return true;
+					}
+				};
 				
 				// Disables built-in context menu
 				//mxEvent.disableContextMenu(container);
@@ -127,56 +149,114 @@ function() {
 				// Circle layout, too big
 				var circleLayout = {
 					name : 'Circle',
+					type : 'system',
 					layout : new mxCircleLayout(scope.graph)
 				};
 
 				// Compact tree layout, not work
 				var compactLayout = {
 					name : 'Compact tree',
+					type : 'system',
 					layout : new mxCompactTreeLayout(scope.graph)
 				};
 
 				// Edge label layout, not work
 				var edgeLayout = {
 					name : 'Edge',
+					type : 'system',
 					layout : new mxEdgeLabelLayout(scope.graph)
 				};
 
 				// Stack layout, work, but very simple
 				var stackLayout = {
 					name : 'Stack',
+					type : 'system',
 					layout : new mxStackLayout(scope.graph, true, 30, 10, 10)
 				};
+				stackLayout.layout.wrap = stackLayout.layout.getParentSize(scope.graph.getDefaultParent()).width;
 				
 				var organicLayout = {
 					name : 'Organic',
+					type : 'system',
 					layout : new mxFastOrganicLayout(scope.graph)
 				};
 				//organicLayout.layout.minDistanceLimit = 20;
 				//organicLayout.layout.allowedToRun = 20;
 				
-				stackLayout.layout.wrap = stackLayout.layout.getParentSize(scope.graph.getDefaultParent()).width;
-
-				scope.layouts = [stackLayout, circleLayout, organicLayout];
+				scope.layouts = [];
+				initLayouts();
 				
-				function applyLayout(layout){
-					scope.graph.getModel().beginUpdate();
-					try {
-						layout.layout.execute(scope.graph.getDefaultParent());
-					} finally {
-						// Updates the display
-						if (animation == 'true') {
-							var morph = new mxMorphing(scope.graph);
-							morph.addListener(mxEvent.DONE, function() {
+				// Init layouts				
+				function initLayouts() {
+					scope.layouts = [];
+					layoutService.getAllLayouts().then(function(result) {
+						angular.forEach(result, function(layout) {
+							layout.type = 'custom';
+							scope.layouts.push(layout);
+						});
+						scope.layouts.push(stackLayout);
+						scope.layouts.push(circleLayout);
+						scope.layouts.push(organicLayout);
+					});
+				}	
+
+				scope.saveLayout = function() {
+					var parent = scope.graph.getDefaultParent();
+					var settings = [];
+					angular.forEach(scope.graph.getChildVertices(parent), function(cell) {
+						settings.push({
+							archetypeHostId: cell.value.id,
+							positionX : cell.geometry.x,
+							positionY : cell.geometry.y,
+						});
+					});
+					layoutService.updateLayoutById(scope.currentLayout.id, settings).then(function(result) {
+						if (result.succeeded) {
+							aletr("succeeded");
+						}
+					}); 
+				}; 
+			
+				function applyLayout(layout) {
+					if (layout.type == 'system') {
+						scope.graph.getModel().beginUpdate();
+						try {
+							layout.layout.execute(scope.graph.getDefaultParent());
+						} finally {
+							// Updates the display
+							if (animation == 'true') {
+								var morph = new mxMorphing(scope.graph);
+								morph.addListener(mxEvent.DONE, function() {
+									scope.graph.getModel().endUpdate();
+								});
+								morph.startAnimation();
+							} else {
 								scope.graph.getModel().endUpdate();
+							}
+						}
+					} else if (layout.type == 'custom') {
+						layoutService.getLayoutById(layout.id).then(function(result) {
+							var parent = scope.graph.getDefaultParent();
+							var vertices = scope.graph.getChildVertices(parent);
+							angular.forEach(result, function(setting) {
+								var vertex = findVertexById(setting.archetypeHostId, vertices);
+								if (vertex) {
+									vertex.geometry.x = new Number(setting.positionX);
+									vertex.geometry.y = new Number(setting.positionY);
+								}
 							});
-							morph.startAnimation();
-						} else {
-							scope.graph.getModel().endUpdate();
-						}					
+						});
 					}
 				}
-		
+
+				function findVertexById(id, vertices) {
+					for ( i = 0; i < vertices.length; i++) {
+						if (vertices[i].value.id == id) {
+							return vertices[i];
+						}
+					}
+				}
+
 				scope.$watch('currentLayout', function(newLayout) {
 					if(newLayout){
 						applyLayout(newLayout);
@@ -238,9 +318,6 @@ function() {
 
 				}; 
 
-				
-				// Gets the default parent for inserting new cells. This
-				// is normally the first child of the root (ie. layer 0).
 				scope.$watch('archetypesBriefInfo', function(archetypesBriefInfo) {
 					if (archetypesBriefInfo) {
 						scope.reset();

@@ -40,6 +40,10 @@ uri="http://www.springframework.org/security/tags"%>
 		<script type="text/ng-template" id="app-library.html">
 			<%@ include file="partials/app-library.html"%>
 		</script>
+		<!-- overview -->
+		<script type="text/ng-template" id="overview.html">
+			<%@ include file="partials/overview.html"%>
+		</script>
 			
 	</body>
 </html>

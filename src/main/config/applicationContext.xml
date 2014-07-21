@@ -59,11 +59,14 @@
 		<sec:intercept-url pattern="/archetypes" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/authentication" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/applications" access="permitAll" method="GET"/>
+		<sec:intercept-url pattern="/layout/id/*" access="permitAll" method="GET"/>
+		<sec:intercept-url pattern="/layouts" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetypes/briefInfo" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetype/id/*" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetype/name/*" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/archetypes/validation" access="isAuthenticated()" method="POST"/>
 		<sec:intercept-url pattern="/application/id/*" access="isAuthenticated()" method="POST"/>
+		<sec:intercept-url pattern="/layout/id/*" access="isAuthenticated()" method="POST"/>
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
 
 		<!-- 登陆页面配置 -->
