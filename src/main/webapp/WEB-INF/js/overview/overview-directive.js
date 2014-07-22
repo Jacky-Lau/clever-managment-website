@@ -1,12 +1,11 @@
-angular.module('clever.management.directives.overview', []).directive('overview', ['layoutService',
-function(layoutService) {
+angular.module('clever.management.directives.overview', []).directive('overview', ['layoutService', 'msgboxService',
+function(layoutService, msgboxService) {
 	return {
 		restrict : 'EA',
 		scope : {
 			archetypesBriefInfo : '=',
 			selectArchetype : '&',
 			windowHeight: '=',
-			animation : '@'
 		},
 		templateUrl : 'overview.html',
 		transclude : true,
@@ -29,8 +28,6 @@ function(layoutService) {
 			};
 		},
 		link : function(scope, element, attrs) {
-			
-			var animation = scope.animation || 'false';
 
 			// Checks if the browser is supported
 			if (!mxClient.isBrowserSupported()) {
@@ -201,7 +198,9 @@ function(layoutService) {
 				}	
 
 				scope.saveLayout = function() {
-					var parent = scope.graph.getDefaultParent();
+					msgboxService('Save','Do you want to save layout "'+ scope.currentLayout.name +'" ?').result.then(function(isOk){
+						if(isOk){
+							var parent = scope.graph.getDefaultParent();
 					var settings = [];
 					angular.forEach(scope.graph.getChildVertices(parent), function(cell) {
 						settings.push({
@@ -212,47 +211,50 @@ function(layoutService) {
 					});
 					layoutService.updateLayoutById(scope.currentLayout.id, settings).then(function(result) {
 						if (result.succeeded) {
-							aletr("succeeded");
+							alert("succeeded");
 						}
 					}); 
+						}
+					});				
 				}; 
 			
 				function applyLayout(layout) {
-					if (layout.type == 'system') {
-						scope.graph.getModel().beginUpdate();
-						try {
+					var model = scope.graph.getModel();
+					model.beginUpdate();
+					try {
+						if (layout.type == 'system') {
 							layout.layout.execute(scope.graph.getDefaultParent());
-						} finally {
-							// Updates the display
-							if (animation == 'true') {
-								var morph = new mxMorphing(scope.graph);
-								morph.addListener(mxEvent.DONE, function() {
-									scope.graph.getModel().endUpdate();
+						} else if (layout.type == 'custom') {
+							layoutService.getLayoutById(layout.id).then(function(result) {
+								var parent = scope.graph.getDefaultParent();
+								var vertices = scope.graph.getChildVertices(parent);
+								angular.forEach(result, function(setting) {
+									var vertex = findVertexById(setting.archetypeHostId, vertices);
+									var geo = model.getGeometry(vertex);
+									var dx = new Number(setting.positionX) - geo.x;
+									var dy = new Number(setting.positionY) - geo.y;
+									scope.graph.moveCells([vertex], dx, dy);
 								});
-								morph.startAnimation();
-							} else {
-								scope.graph.getModel().endUpdate();
-							}
-						}
-					} else if (layout.type == 'custom') {
-						layoutService.getLayoutById(layout.id).then(function(result) {
-							var parent = scope.graph.getDefaultParent();
-							var vertices = scope.graph.getChildVertices(parent);
-							angular.forEach(result, function(setting) {
-								var vertex = findVertexById(setting.archetypeHostId, vertices);
-								if (vertex) {
-									vertex.geometry.x = new Number(setting.positionX);
-									vertex.geometry.y = new Number(setting.positionY);
-								}
+								angular.forEach(vertices, function(vertex) {
+									var geo = model.getGeometry(vertex);
+									var dx = new Number(setting.positionX) - geo.x;
+									var dy = new Number(setting.positionY) - geo.y;
+									scope.graph.moveCells([vertex], dx, dy);
+								});
 							});
-						});
+						}
+					} finally {
+						// Updates the display
+						model.endUpdate();
 					}
 				}
 
 				function findVertexById(id, vertices) {
 					for ( i = 0; i < vertices.length; i++) {
 						if (vertices[i].value.id == id) {
-							return vertices[i];
+							var result = vertices[i];
+							vertices.splice(i, 1);
+							return result;
 						}
 					}
 				}
