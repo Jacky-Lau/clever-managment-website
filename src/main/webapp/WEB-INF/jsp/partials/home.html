@@ -46,7 +46,7 @@
 			<div class="tab-content">
 				<div class="tab-pane" ng-class="{'active': selectedArchetypeId == 0}">
 					<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-					<div overview ng-show="archetypeList.length > 0" window-height="windowHeight" archetypes-brief-info="archetypesBriefInfo" select-archetype="selectArchetype(selectedArchetype)"></div>
+					<div overview ng-show="archetypeList.length > 0" window-height="windowHeight" archetypes-brief-info="archetypesBriefInfo" select-archetype="selectArchetype(selectedArchetype)" add-alert="addAlert(alert)"></div>
 				</div>
 				<div class="tab-pane" ng-class="{'active': tab.id == selectedArchetypeId}" ng-repeat="tab in tabs" ng-controller="ArchetypeDisplayCtrl" ng-init="init(tab)">
 					<div class="container content-container">

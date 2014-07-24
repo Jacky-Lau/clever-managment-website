@@ -23,13 +23,13 @@ function($routeProvider) {
 	});
 }]).run(function($rootScope, $location, $http, AUTHENTICATION_URL) {
 	// register listener to watch route changes
-	/*$rootScope.$on("$routeChangeStart", function(event, next, current) {
-	 if (next.originalPath != '/') {
-	 $http.get(AUTHENTICATION_URL).then(function(response) {
-	 if (response.data != 'true') {
-	 $location.path("/");
-	 }
-	 });
-	 }
-	 });*/
+	$rootScope.$on("$routeChangeStart", function(event, next, current) {
+		if (next.originalPath != '/' || next.originalPath != '/appLibrary') {
+			$http.get(AUTHENTICATION_URL).then(function(response) {
+				if (response.data != 'true') {
+					$location.path("/");
+				}
+			});
+		}
+	}); 
 });

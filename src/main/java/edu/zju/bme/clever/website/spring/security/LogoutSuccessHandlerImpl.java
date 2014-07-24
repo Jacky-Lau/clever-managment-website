@@ -2,6 +2,7 @@ package edu.zju.bme.clever.website.spring.security;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
@@ -33,22 +34,25 @@ public class LogoutSuccessHandlerImpl extends SimpleUrlLogoutSuccessHandler {
 			throws IOException, ServletException {
 
 		String httpSessionId = request.getSession().getId();
-		String userName = ((UserDetails) authentication.getPrincipal())
-				.getUsername();
-		this.logger.trace("User {} with session {} authenticates.", userName,
-				httpSessionId);
+		String userName = Optional.ofNullable(authentication).map(auth -> {
+			return (UserDetails) auth.getPrincipal();
+		}).map(user -> user.getUsername()).orElse(null);
+		if (userName != null) {
+			this.logger.trace("User {} with session {} authenticates.",
+					userName, httpSessionId);
 
-		// clear user temp folder when log out
-		File userFolder = new File(
-				servletContext.getRealPath("/WEB-INF/upload/temp") + "/"
-						+ userName);
-		if (userFolder.exists() && userFolder.isDirectory()) {
-			for (File file : userFolder.listFiles()) {
-				file.delete();
+			// clear user temp folder when log out
+			File userFolder = new File(
+					servletContext.getRealPath("/WEB-INF/upload/temp") + "/"
+							+ userName);
+			if (userFolder.exists() && userFolder.isDirectory()) {
+				for (File file : userFolder.listFiles()) {
+					file.delete();
+				}
+				userFolder.delete();
 			}
-			userFolder.delete();
-		}
 
+		}
 		super.onLogoutSuccess(request, response, authentication);
 	}
 }

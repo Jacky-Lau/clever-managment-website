@@ -12,17 +12,20 @@ uri="http://www.springframework.org/security/tags"%>
 		<%@ include file="jspf/css-init.jspf"%>
 	</head>
 	<body ng-controller="AppCtrl" resizable>
+
+		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+			&nbsp;&nbsp;&nbsp;&nbsp;{{alert.msg}}
+		</alert>
 		<!-- header -->
 		<%@ include file="jspf/header.jspf"%>
-		<div class="container content-container" ng-style="{height: windowHeight - 100}" style="overflow: auto;" ng-view>
-			
-		</div>
-
+		<!-- content -->
+		<div class="container content-container" ng-style="{height: windowHeight - 100}" style="overflow: auto;" ng-view></div>
 		<!-- footer -->
 		<%@ include file="jspf/footer.jspf"%>
+
 		<!-- js init -->
 		<%@ include file="jspf/js-init.jspf"%>
-		
+
 		<!-- partials -->
 		<!-- home -->
 		<script type="text/ng-template" id="home.html">
@@ -44,6 +47,6 @@ uri="http://www.springframework.org/security/tags"%>
 		<script type="text/ng-template" id="overview.html">
 			<%@ include file="partials/overview.html"%>
 		</script>
-			
+
 	</body>
 </html>

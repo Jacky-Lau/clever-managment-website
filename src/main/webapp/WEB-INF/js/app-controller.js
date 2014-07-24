@@ -1,9 +1,24 @@
-function AppCtrl($scope, $modal, archetypeRetrieveService) {
+function AppCtrl($scope, $modal, $timeout, archetypeRetrieveService) {
 	
 	$scope.windowHeight;
 	
 	$scope.windowWidth;
 	
+	$scope.alerts = [];
+	
+	$scope.addAlert = function(alert) {
+		$scope.alerts.push(alert);
+		$timeout(function() {
+			if ($scope.alerts.length > 0) {
+				$scope.alerts.pop();
+			}
+		}, 5000);
+	};
+
+	$scope.closeAlert = function(index) {
+		$scope.alerts.splice(index, 1);
+	}; 
+
 	$scope.openUploadModal = function(size) {
 		var modalInstance = $modal.open({
 			templateUrl : 'js/upload-modal/upload-modal.html',
