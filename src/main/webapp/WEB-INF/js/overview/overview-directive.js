@@ -40,7 +40,7 @@ function(layoutService, msgboxService) {
 				
 				var container = element.find('#overview-container')[0];
 				
-				var outline = element.find('#outline-container')[0];
+				var outlineContainer = element.find('#outline-container')[0];
 				
 				// Disables built-in context menu
 				mxEvent.disableContextMenu(container);
@@ -55,16 +55,18 @@ function(layoutService, msgboxService) {
 				scope.graph.setHtmlLabels(true);
 				
 				// 图形窗口的右上角的周围创建导航提示。  
-                var outln = new mxOutline(scope.graph, outline); 
+                scope.outline = new mxOutline(scope.graph, outlineContainer); 
                 
                 // 要显示的图像的轮廓，去掉下面的代码  
-                outln.outline.labelsVisible = true;  
-                outln.outline.setHtmlLabels(true);
+                scope.outline.outline.labelsVisible = true;  
+                scope.outline.outline.setHtmlLabels(true);
+                
+                scope.outline.outline.view.canvas.viewportElement.height.baseVal.value = (scope.windowHeight - 190)/3;
                 
                 // Overrides getLabel to return empty labels for edges and
 				// short markup for collapsed cells.	
 				scope.graph.getLabel = getLabel;
-				outln.outline.getLabel = getLabel;			
+				scope.outline.outline.getLabel = getLabel;			
 				
 				// Override folding to allow for tables
 				/*scope.graph.isCellFoldable = function(cell, collapse) {

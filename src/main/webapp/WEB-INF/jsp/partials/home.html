@@ -1,5 +1,99 @@
-<a href="/clever-management-website/#/">Home</a>
-<a href="/clever-management-website/#/archetype">Archetype</a>
-<a href="/clever-management-website/#/appLibrary">App Library</a>
-<a href="/clever-management-website/#/upload">Upload</a>
-<a href="/clever-management-website/#/deploy">Deploy</a>
+<div class="row">
+	<carousel interval="interval" ng-style="{height: carouselHeight}">
+		<slide ng-repeat="slide in slides" active="slide.active">
+			<img ng-src="{{slide.image}}" style="margin:auto;" ng-style="{height: carouselHeight}">
+			<div class="carousel-caption">
+				<h4>Slide {{$index+1}}</h4>
+				<p>
+					{{slide.text}}
+				</p>
+			</div>
+		</slide>
+	</carousel>
+</div>
+<br />
+<br />
+<div class="row">
+	<div class="col-sm-1 col-md-2 col-lg-2"></div>
+	<div class="col-sm-10 col-md-8 col-lg-8">
+		<div class="row">
+			<div class="col-sm-6 col-md-6 col-lg-6">
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<span class="glyphicon glyphicon-th" style="font-size: 8em;"></span>
+					</div>
+					<div class="col-sm-8 col-md-8 col-lg-8">
+						<h3 class="text-center">Archetype</h3>
+						<p>
+							dfsaf fdsfsadf fdsafsda sdfas sadfasdfas fdsaf as
+						</p>
+						<p class="pull-right">
+							<a class="btn btn-default"
+							href="/clever-management-website/#/archetype"
+							role="button">Detail &raquo;</a>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-6 col-lg-6">
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<span class="glyphicon glyphicon-shopping-cart" style="font-size: 8em;"></span>
+					</div>
+					<div class="col-sm-8 col-md-8 col-lg-8">
+						<h3 class="text-center">App library</h3>
+						<p>
+							dfsaf fdsfsadf fdsafsda sdfas sadfasdfas fdsaf as
+						</p>
+						<p class="pull-right">
+							<a class="btn btn-default"
+							href="/clever-management-website/#/appLibrary"
+							role="button">Detail &raquo;</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<br />
+		<br />
+		<div class="row">
+			<div class="col-sm-6 col-md-6 col-lg-6">
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<span class="glyphicon glyphicon-upload" style="font-size: 8em;"></span>
+					</div>
+					<div class="col-sm-8 col-md-8 col-lg-8">
+						<h3 class="text-center">Upload archetypes</h3>
+						<p>
+							dfsaf fdsfsadf fdsafsda sdfas sadfasdfas fdsaf as
+						</p>
+						<p class="pull-right">
+							<a class="btn btn-default"
+							href="/clever-management-website/#/upload"
+							role="button">Detail &raquo;</a>
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-6 col-lg-6">
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<span class="glyphicon glyphicon-cog" style="font-size: 8em;"></span>
+					</div>
+					<div class="col-sm-8 col-md-8 col-lg-8">
+						<h3 class="text-center">Deploy archetypes</h3>
+						<p>
+							dfsaf fdsfsadf fdsafsda sdfas sadfasdfas fdsaf as
+						</p>
+						<p class="pull-right">
+							<a class="btn btn-default"
+							href="/clever-management-website/#/deploy"
+							role="button">Detail &raquo;</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-1 col-md-2 col-lg-2"></div>
+</div>

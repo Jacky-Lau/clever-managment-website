@@ -19,7 +19,11 @@ uri="http://www.springframework.org/security/tags"%>
 		<!-- header -->
 		<%@ include file="jspf/header.jspf"%>
 		<!-- content -->
-		<div class="container content-container" ng-style="{height: windowHeight - 100}" style="overflow: auto;" ng-view></div>
+		<div class="container content-container">
+			<div class="col-sm-1 col-md-2 col-lg-2"></div>
+			<div class="col-sm-10 col-md-8 col-lg-8" ng-view></div>
+			<div class="col-sm-1 col-md-2 col-lg-2"></div>
+		</div>
 		<!-- footer -->
 		<%@ include file="jspf/footer.jspf"%>
 
