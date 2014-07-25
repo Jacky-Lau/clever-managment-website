@@ -49,7 +49,7 @@ function(layoutService, msgboxService) {
 				// Creates the graph inside the given container
 				scope.graph = new mxGraph(container);
 				
-				scope.graph.centerZoom = false;
+				//scope.graph.centerZoom = false;
 				
 				// Enables HTML markup in all labels
 				scope.graph.setHtmlLabels(true);
@@ -347,7 +347,7 @@ function(layoutService, msgboxService) {
 					if (scope.currentLayout) {
 						applyLayout(scope.currentLayout);
 					} else {
-						scope.currentLayout = organicLayout;
+						scope.currentLayout = stackLayout;
 					}
 				}; 
 

@@ -6,9 +6,6 @@ function($routeProvider) {
 	$routeProvider.when("/", {
 		templateUrl : 'home.html',
 		controller : HomeCtrl
-	}).when("/home", {
-		templateUrl : 'home.html',
-		controller : HomeCtrl
 	}).when("/deploy", {
 		templateUrl : 'deploy.html',
 		controller : DeployCtrl
@@ -18,18 +15,26 @@ function($routeProvider) {
 	}).when("/appLibrary", {
 		templateUrl : 'app-library.html',
 		controller : AppLibraryCtrl
+	}).when("/archetype", {
+		templateUrl : 'archetype.html',
+		controller : ArchetypeCtrl
+	}).when("/login", {
+		templateUrl : 'login.html',
+		controller : LoginCtrl
 	}).otherwise({
 		redirectTo : '/'
 	});
 }]).run(function($rootScope, $location, $http, AUTHENTICATION_URL) {
 	// register listener to watch route changes
 	$rootScope.$on("$routeChangeStart", function(event, next, current) {
-		if (next.originalPath != '/' || next.originalPath != '/appLibrary') {
+		if (next.originalPath != '/' && next.originalPath != '/appLibrary' && next.originalPath != '/archetype' && next.originalPath != '') {
 			$http.get(AUTHENTICATION_URL).then(function(response) {
 				if (response.data != 'true') {
+					$location.path("/login");
+				} else if (response.data == 'true' && next.originalPath == '/login') {
 					$location.path("/");
 				}
 			});
 		}
-	}); 
+	});
 });

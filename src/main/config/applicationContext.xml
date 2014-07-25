@@ -54,7 +54,7 @@
 	<!-- 开启默认的拦截器 -->
 	<sec:http auto-config="true" use-expressions="true">
 		<!-- 允许访问的uri -->
-		<sec:intercept-url pattern="/login" access="permitAll" />
+		<sec:intercept-url pattern="/#/login" access="permitAll" />
 		<sec:intercept-url pattern="/" access="permitAll" />
 		<sec:intercept-url pattern="/archetypes" access="permitAll" method="GET"/>
 		<sec:intercept-url pattern="/authentication" access="permitAll" method="GET"/>
@@ -70,12 +70,16 @@
 		<sec:intercept-url pattern="/**" access="isAuthenticated()" />
 
 		<!-- 登陆页面配置 -->
-		<sec:form-login login-page="/login"
+		<sec:form-login login-page="/#/login"
 			authentication-success-handler-ref="authenticationSuccessHandler"
-			authentication-failure-url="/login?error=true" />
+			authentication-failure-handler-ref="authenticationFailureHandler" 
+			username-parameter="username"
+			password-parameter="password"/>
 		<!-- 退出页面设置 -->
-		<sec:logout logout-url="/logout" invalidate-session="true"
+		<sec:logout logout-url="/logout" invalidate-session="true" delete-cookies="JSESSIONID"
 			success-handler-ref="logoutSuccessHandler" />
+		<!-- remember me -->
+		<sec:remember-me remember-me-parameter="remember-me"/>
 
 		<!-- 会话管理 -->
 		<sec:session-management>
@@ -92,6 +96,9 @@
 
 	<bean id="authenticationSuccessHandler"
 		class="edu.zju.bme.clever.website.spring.security.AuthenticationSuccessHandlerImpl" />
+		
+	<bean id="authenticationFailureHandler"
+		class="edu.zju.bme.clever.website.spring.security.AuthenticationFailureHandlerImpl" />
 
 	<!-- 权限管理者 -->
 	<sec:authentication-manager>

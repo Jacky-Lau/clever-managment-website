@@ -8,34 +8,16 @@
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="clever-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
+				<li>
+					<a href="/clever-management-website/#/"><span class="glyphicon glyphicon-home"></span> Home</a>
+				</li>
 				<sec:authorize access="!isAuthenticated()">
 					<li>
-						<a href="/clever-management-website/#/home"><span class="glyphicon glyphicon-home"></span> Home</a>
-					</li>
-					<li>
-						<a href="/clever-management-website/#/appLibrary"><span class="glyphicon glyphicon-shopping-cart"></span> App Library</a>
-					</li>
-					<li>
-						<form class="navbar-form navbar-right"
-						action="j_spring_security_check" method="post" role="form">
-							<div class="form-group">
-								<input name="j_username" type="text" placeholder="User name"
-								class="form-control" required autofocus>
-								<input
-								name="j_password" type="password" placeholder="Password"
-								class="form-control" required>
-								<button type="submit" class="btn btn-success">
-									Log in
-								</button>
-							</div>
-						</form>
+						<a href="/clever-management-website/#/login"><span class="glyphicon glyphicon-log-in"></span> Log in</a>
 					</li>
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
 					<sec:authentication property="principal.username" var="userName" />
-					<li>
-						<a href="/clever-management-website/#/home"><span class="glyphicon glyphicon-home"></span> Home</a>
-					</li>
 					<li>
 						<p class="navbar-text">
 							Welcome,
@@ -55,7 +37,7 @@
 								<a href="/clever-management-website/#/appLibrary"><span class="glyphicon glyphicon-shopping-cart"></span> Manage App Library</a>
 							</li>
 							<li>
-								<a href="/clever-management-website/logout"><span class="glyphicon glyphicon-off"></span> Log out</a>
+								<a href="/clever-management-website/logout"><span class="glyphicon glyphicon-log-in"></span> Log out</a>
 							</li>
 						</ul>
 					</li>

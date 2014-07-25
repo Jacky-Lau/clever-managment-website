@@ -61,12 +61,18 @@ src="/clever-management-website/js/app-config.js"></script>
 <script
 src="/clever-management-website/js/app.js"></script>
 <script
-src="/clever-management-website/js/home-controller.js"></script>
-<script
-src="/clever-management-website/js/deploy-controller.js"></script>
-<script
-src="/clever-management-website/js/upload-controller.js"></script>
-<script
-src="/clever-management-website/js/app-library-controller.js"></script>
-<script
 src="/clever-management-website/js/app-controller.js"></script>
+
+<!-- page controller -->
+<script
+src="/clever-management-website/js/page-controllers/home-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/deploy-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/upload-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/app-library-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/archetype-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/login-controller.js"></script>

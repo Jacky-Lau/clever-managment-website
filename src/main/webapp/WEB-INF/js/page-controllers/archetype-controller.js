@@ -1,4 +1,4 @@
-function HomeCtrl($scope, $modal, archetypeRetrieveService) {
+function ArchetypeCtrl($scope, $modal, archetypeRetrieveService) {
 
 	var undefined;
 

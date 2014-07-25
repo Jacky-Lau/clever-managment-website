@@ -12,7 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
+public class AuthenticationSuccessHandlerImpl implements
+		AuthenticationSuccessHandler {
 
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -25,7 +26,8 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
 				.getUsername();
 		this.logger.trace("User {} with session {} authenticates.", userName,
 				httpSessionId);
-		response.sendRedirect("/clever-management-website");
+		response.sendRedirect("/clever-management-website/#/");
+		// response.getWriter().print("{\"succeeded\":\"true\"}");
 	}
 
 }
