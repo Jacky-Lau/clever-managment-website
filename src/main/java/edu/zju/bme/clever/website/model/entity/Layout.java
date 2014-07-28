@@ -1,8 +1,10 @@
 package edu.zju.bme.clever.website.model.entity;
 
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -32,7 +34,7 @@ public class Layout {
 	@Column(name = "MODIFY_TIME")
 	private Calendar modifyTime;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "layout")
-	private List<LayoutSetting> layoutSettings;
+	private Set<LayoutSetting> layoutSettings = new HashSet<LayoutSetting>();
 
 	public Integer getId() {
 		return id;
@@ -58,17 +60,21 @@ public class Layout {
 		this.modifyTime = modifyTime;
 	}
 
-	public List<LayoutSetting> getLayoutSettings() {
+	public Set<LayoutSetting> getLayoutSettings() {
 		return layoutSettings;
-	}
-
-	public void setLayoutSettings(List<LayoutSetting> layoutSettings) {
-		this.layoutSettings = layoutSettings;
 	}
 
 	public <T> Map<T, LayoutSetting> getLayoutSettingMap(
 			Function<LayoutSetting, T> keyMapper) {
 		return this.layoutSettings.stream().collect(
 				Collectors.toMap(keyMapper, setting -> setting));
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Layout) {
+			return ((Layout) obj).getId() == this.id;
+		}
+		return false;
 	}
 }

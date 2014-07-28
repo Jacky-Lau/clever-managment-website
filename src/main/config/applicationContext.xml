@@ -6,6 +6,7 @@
 	xmlns:tx="http://www.springframework.org/schema/tx" 
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:cache="http://www.springframework.org/schema/cache"
 	xmlns:sec="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
@@ -18,6 +19,8 @@
 		http://www.springframework.org/schema/context/spring-context.xsd
 		http://cxf.apache.org/jaxws 
 		http://cxf.apache.org/schemas/jaxws.xsd
+		http://www.springframework.org/schema/cache
+		http://www.springframework.org/schema/cache/spring-cache.xsd
 		http://www.springframework.org/schema/security
 		http://www.springframework.org/schema/security/spring-security-3.2.xsd">	
 		
@@ -134,7 +137,7 @@
 			<props>
 				<prop key="hibernate.dialect">edu.zju.bme.clever.website.util.UnicodeSQLServerDialect</prop>
 				<prop key="hibernate.connection.autocommit">false</prop>
-				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.format_sql">true</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
 				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>

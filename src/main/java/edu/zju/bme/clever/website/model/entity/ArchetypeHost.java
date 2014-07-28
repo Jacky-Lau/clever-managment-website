@@ -2,8 +2,10 @@ package edu.zju.bme.clever.website.model.entity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -44,11 +46,11 @@ public class ArchetypeHost {
 	@Column(name = "MODIFY_TIME")
 	private Calendar modifyTime;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "archetypeHost")
-	private List<ArchetypeFile> archetypeFiles = new ArrayList<ArchetypeFile>();
+	private Set<ArchetypeFile> archetypeFiles = new HashSet<ArchetypeFile>();
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "archetypeHost")
-	private List<ArchetypeNode> archetypeNodes = new ArrayList<ArchetypeNode>();
+	private Set<ArchetypeNode> archetypeNodes = new HashSet<ArchetypeNode>();
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "archetypeHost")
-	private List<ArchetypeNodeChangeLog> archetypeNodeChangeLogs = new ArrayList<ArchetypeNodeChangeLog>();
+	private Set<ArchetypeNodeChangeLog> archetypeNodeChangeLogs = new HashSet<ArchetypeNodeChangeLog>();
 
 	public Integer getId() {
 		return id;
@@ -114,31 +116,6 @@ public class ArchetypeHost {
 		this.modifyTime = modifyTime;
 	}
 
-	public List<ArchetypeFile> getArchetypeFiles() {
-		return archetypeFiles;
-	}
-
-	public void setArchetypeFiles(List<ArchetypeFile> archetypeFiles) {
-		this.archetypeFiles = archetypeFiles;
-	}
-
-	public List<ArchetypeNode> getArchetypeNodes() {
-		return archetypeNodes;
-	}
-
-	public void setArchetypeNodes(List<ArchetypeNode> archetypeNodes) {
-		this.archetypeNodes = archetypeNodes;
-	}
-
-	public List<ArchetypeNodeChangeLog> getArchetypeNodeChangeLogs() {
-		return archetypeNodeChangeLogs;
-	}
-
-	public void setArchetypeNodeChangeLogs(
-			List<ArchetypeNodeChangeLog> archetypeNodeChangeLogs) {
-		this.archetypeNodeChangeLogs = archetypeNodeChangeLogs;
-	}
-
 	public <T> Map<T, ArchetypeNode> getArchetypeNodeMap(
 			Function<ArchetypeNode, T> keyMapper) {
 		return this.getArchetypeNodes().stream()
@@ -156,4 +133,25 @@ public class ArchetypeHost {
 		return this.getArchetypeNodeChangeLogs().stream()
 				.collect(Collectors.toMap(keyMapper, log -> log));
 	}
+
+	public Set<ArchetypeFile> getArchetypeFiles() {
+		return archetypeFiles;
+	}
+
+	public Set<ArchetypeNode> getArchetypeNodes() {
+		return archetypeNodes;
+	}
+
+	public Set<ArchetypeNodeChangeLog> getArchetypeNodeChangeLogs() {
+		return archetypeNodeChangeLogs;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ArchetypeHost) {
+			return ((ArchetypeHost) obj).getId() == this.id;
+		}
+		return false;
+	}
+
 }

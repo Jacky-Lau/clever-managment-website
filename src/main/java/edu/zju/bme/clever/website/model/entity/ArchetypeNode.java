@@ -40,6 +40,8 @@ public class ArchetypeNode {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ARCHETYPE_HOST_ID")
 	private ArchetypeHost archetypeHost;
+	@Column(name = "ARCHETYPE_HOST_ID", updatable = false, insertable = false)
+	private Integer archetypeHostId;
 
 	public Integer getId() {
 		return id;
@@ -121,4 +123,15 @@ public class ArchetypeNode {
 		this.aliasName = aliasName;
 	}
 
+	public Integer getArchetypeHostId() {
+		return archetypeHostId;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ArchetypeNode) {
+			return ((ArchetypeNode) obj).getId() == this.id;
+		}
+		return false;
+	}
 }

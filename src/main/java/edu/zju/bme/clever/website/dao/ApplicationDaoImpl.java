@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import edu.zju.bme.clever.website.model.entity.Application;
 
 @Repository("applicationDao")
-public class ApplicationDaoImpl extends GenericDaoImpl<Application, Integer>
+public class ApplicationDaoImpl extends AbstractGenericDao<Application, Integer>
 		implements ApplicationDao {
 
 	@Override

@@ -35,6 +35,8 @@ public class ArchetypeNodeChangeLog {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ARCHETYPE_HOST_ID")
 	private ArchetypeHost archetypeHost;
+	@Column(name = "ARCHETYPE_HOST_ID", updatable = false, insertable = false)
+	private Integer archetypeHostId;
 
 	public Integer getId() {
 		return id;
@@ -100,4 +102,15 @@ public class ArchetypeNodeChangeLog {
 		this.nodePath = nodePath;
 	}
 
+	public Integer getArchetypeHostId() {
+		return archetypeHostId;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ArchetypeNodeChangeLog) {
+			return ((ArchetypeNodeChangeLog) obj).getId() == this.id;
+		}
+		return false;
+	}
 }

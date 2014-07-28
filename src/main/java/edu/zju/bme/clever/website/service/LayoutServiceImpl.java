@@ -49,8 +49,7 @@ public class LayoutServiceImpl implements LayoutService {
 					+ "' does not exist.");
 		}
 		Map<Integer, LayoutSetting> settings = layout
-				.getLayoutSettingMap(setting -> setting.getArchetypeHost()
-						.getId());
+				.getLayoutSettingMap(setting -> setting.getArchetypeHostId());
 		for (LayoutSettingInfo info : infos) {
 			LayoutSetting setting = settings.get(info.getArchetypeHostId());
 			if(setting ==null){
@@ -78,7 +77,7 @@ public class LayoutServiceImpl implements LayoutService {
 			LayoutSettingInfo settingInfo = new LayoutSettingInfo();
 			settingInfo.setPositionX(setting.getPositionX());
 			settingInfo.setPositionY(setting.getPositionY());
-			settingInfo.setArchetypeHostId(setting.getArchetypeHost().getId());
+			settingInfo.setArchetypeHostId(setting.getArchetypeHostId());
 			return settingInfo;
 		}).collect(Collectors.toList());
 	}

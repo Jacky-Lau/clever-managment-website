@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
 
 @Repository("archetypeFileDao")
-public class ArchetypeFileDaoImpl extends GenericDaoImpl<ArchetypeFile,Integer> implements ArchetypeFileDao{
+public class ArchetypeFileDaoImpl extends AbstractGenericDao<ArchetypeFile,Integer> implements ArchetypeFileDao{
 
 }

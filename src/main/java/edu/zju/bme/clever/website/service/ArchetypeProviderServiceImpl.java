@@ -58,11 +58,11 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 									.getRelationType());
 							relationshipInfo
 									.setSourceArchetypeHostId(relationship
-											.getSourceArchetypeHost().getId());
+											.getSourceArchetypeHostId());
 							relationshipInfo
 									.setDestinationArchetypeHostId(relationship
-											.getDestinationArchetypeHost()
-											.getId());
+											.getDestinationArchetypeHostId()
+											);
 							archetypeBriefInfo.getArchetypeRelationshipInfos()
 									.add(relationshipInfo);
 						});
@@ -87,6 +87,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 												info.setName(file.getName());
 												info.setVersion(file
 														.getVersion());
+												
 												hostInfo.getArchetypeInfos()
 														.add(info);
 												archetypeInfoIndexByVersion
@@ -113,6 +114,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 															.getRmType());
 													nodeInfo.setNodePath(node
 															.getNodePath());
+													
 													info.getArchetypeNodeInfos()
 															.add(nodeInfo);
 												});
@@ -137,6 +139,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 															.getRmType());
 													nodeInfo.setNodePath(log
 															.getNodePath());
+													
 													info.getArchetypeNodeInfos()
 															.add(nodeInfo);
 												});

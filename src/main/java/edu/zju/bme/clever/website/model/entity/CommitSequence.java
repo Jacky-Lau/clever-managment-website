@@ -37,6 +37,8 @@ public class CommitSequence implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "SUBMITTER_ID")
 	private User submitter;
+	@Column(name = "SUBMITTER_ID", updatable = false, insertable = false)
+	private Integer submitterId;
 
 	public Integer getId() {
 		return id;
@@ -62,4 +64,15 @@ public class CommitSequence implements Serializable {
 		this.submitter = submitter;
 	}
 
+	public Integer getSubmitterId() {
+		return submitterId;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof CommitSequence) {
+			return ((CommitSequence) obj).getId() == this.id;
+		}
+		return false;
+	}
 }

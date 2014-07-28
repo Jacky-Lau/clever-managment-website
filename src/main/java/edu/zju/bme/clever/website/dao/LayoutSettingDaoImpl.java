@@ -6,6 +6,6 @@ import edu.zju.bme.clever.website.model.entity.LayoutSetting;
 
 @Repository("layoutSettingDao")
 public class LayoutSettingDaoImpl extends
-		GenericDaoImpl<LayoutSetting, Integer> implements LayoutSettingDao {
+		AbstractGenericDao<LayoutSetting, Integer> implements LayoutSettingDao {
 
 }

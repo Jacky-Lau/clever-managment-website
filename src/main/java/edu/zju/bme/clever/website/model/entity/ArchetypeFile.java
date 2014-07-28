@@ -67,9 +67,13 @@ public class ArchetypeFile implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "COMMIT_SEQUENCE_ID")
 	private CommitSequence commitSequence;
+	@Column(name = "COMMIT_SEQUENCE_ID", updatable = false, insertable = false)
+	private Integer commitSequenceId;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ARCHETYPE_HOST_ID")
 	private ArchetypeHost archetypeHost;
+	@Column(name = "ARCHETYPE_HOST_ID", updatable = false, insertable = false)
+	private Integer archetypeHostId;
 
 	public Integer getId() {
 		return id;
@@ -183,4 +187,19 @@ public class ArchetypeFile implements Serializable {
 		this.archetypeHost = archetypeHost;
 	}
 
+	public Integer getCommitSequenceId() {
+		return commitSequenceId;
+	}
+
+	public Integer getArchetypeHostId() {
+		return archetypeHostId;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ArchetypeFile) {
+			return ((ArchetypeFile) obj).getId() == this.id;
+		}
+		return false;
+	}
 }

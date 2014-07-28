@@ -6,8 +6,10 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -38,8 +40,11 @@ public class HistoriedArchetypeFile implements Serializable {
 	@Column(name = "CONTENT")
 	private String content;
 	@Temporal(TemporalType.TIMESTAMP)
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "COMMIT_SEQUENCE_ID")
 	private CommitSequence commitSequence;
+	@Column(name = "COMMIT_SEQUENCE_ID", updatable = false, insertable = false)
+	private Integer commitSequenceId;
 
 	public Integer getId() {
 		return id;
@@ -71,5 +76,17 @@ public class HistoriedArchetypeFile implements Serializable {
 
 	public void setCommitSequence(CommitSequence commitSequence) {
 		this.commitSequence = commitSequence;
+	}
+
+	public Integer getCommitSequenceId() {
+		return commitSequenceId;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof HistoriedArchetypeFile) {
+			return ((HistoriedArchetypeFile) obj).getId() == this.id;
+		}
+		return false;
 	}
 }

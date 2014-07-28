@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import edu.zju.bme.clever.website.model.entity.Layout;
 
 @Repository("layoutDao")
-public class LayoutDaoImpl extends GenericDaoImpl<Layout, Integer> implements
+public class LayoutDaoImpl extends AbstractGenericDao<Layout, Integer> implements
 		LayoutDao {
 	@Override
 	public void save(Layout entity) {

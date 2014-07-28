@@ -6,6 +6,6 @@ import edu.zju.bme.clever.website.model.entity.ArchetypeHost;
 
 @Repository("archetypeHostDao")
 public class ArchetypeHostDaoImpl extends
-		GenericDaoImpl<ArchetypeHost, Integer> implements ArchetypeHostDao {
+		AbstractGenericDao<ArchetypeHost, Integer> implements ArchetypeHostDao {
 
 }
