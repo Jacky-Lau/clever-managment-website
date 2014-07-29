@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +44,7 @@ public class LayoutServiceImpl implements LayoutService {
 	}
 
 	@Override
+	@CacheEvict(value = "layoutCache", key = "'layoutId:' + #id")
 	public void updateLayout(Integer id, List<LayoutSettingInfo> infos)
 			throws LayoutException {
 		Layout layout = this.layoutDao.findById(id);
@@ -52,10 +56,10 @@ public class LayoutServiceImpl implements LayoutService {
 				.getLayoutSettingMap(setting -> setting.getArchetypeHostId());
 		for (LayoutSettingInfo info : infos) {
 			LayoutSetting setting = settings.get(info.getArchetypeHostId());
-			if(setting ==null){
+			if (setting == null) {
 				setting = new LayoutSetting();
-				ArchetypeHost archetypeHost = this.archetypeHostDao.findById(info
-						.getArchetypeHostId());
+				ArchetypeHost archetypeHost = this.archetypeHostDao
+						.findById(info.getArchetypeHostId());
 				if (archetypeHost == null) {
 					throw new LayoutException("Archetype host with id '"
 							+ info.getArchetypeHostId() + "' does not exist.");
@@ -71,6 +75,7 @@ public class LayoutServiceImpl implements LayoutService {
 	}
 
 	@Override
+	@Cacheable(value = "layoutCache", key = "'layoutId:' + #id")
 	public List<LayoutSettingInfo> getLayoutById(Integer id) {
 		Layout layout = this.layoutDao.findById(id);
 		return layout.getLayoutSettings().stream().map(setting -> {
