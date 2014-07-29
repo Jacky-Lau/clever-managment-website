@@ -57,6 +57,11 @@ src="/clever-management-website/js/archetype-parse-service.js"></script>
 <script
 src="/clever-management-website/js/archetype-display-controller.js"></script>
 <script
+src="/clever-management-website/js/classification-view/classification-view-directive.js"></script>
+
+
+<!-- app setup -->
+<script
 src="/clever-management-website/js/app-config.js"></script>
 <script
 src="/clever-management-website/js/app.js"></script>
@@ -76,3 +81,5 @@ src="/clever-management-website/js/page-controllers/app-library-controller.js"><
 src="/clever-management-website/js/page-controllers/archetype-controller.js"></script>
 <script
 src="/clever-management-website/js/page-controllers/login-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/classification-controller.js"></script>

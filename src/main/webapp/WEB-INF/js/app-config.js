@@ -17,6 +17,8 @@ var config = {
 	'APPLICATION_UPLOAD_URL' : prefix + '/application',
 	'LAYOUTS_URL' : prefix + '/layouts',
 	'LAYOUT_BY_ID_URL' : prefix + '/layout/id/',
+	'CLASSIFICATIONS_URL' : prefix + '/classifications',
+	'CLASSIFICATION_BY_ID_URL' : prefix + '/classification/id/',
 	'TEMP_URL' : prefix + '/temp',
 };
 var configModel = angular.module('clever.management.config', []);

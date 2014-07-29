@@ -14,6 +14,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -51,6 +54,9 @@ public class ArchetypeHost {
 	private Set<ArchetypeNode> archetypeNodes = new HashSet<ArchetypeNode>();
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "archetypeHost")
 	private Set<ArchetypeNodeChangeLog> archetypeNodeChangeLogs = new HashSet<ArchetypeNodeChangeLog>();
+	@ManyToMany(targetEntity = ArchetypeType.class, fetch = FetchType.LAZY)
+	@JoinTable(name = "HOST_TYPES", joinColumns = { @JoinColumn(name = "HOST_ID") }, inverseJoinColumns = { @JoinColumn(name = "TYPE_ID") })
+	private Set<ArchetypeType> types = new HashSet<ArchetypeType>();
 
 	public Integer getId() {
 		return id;

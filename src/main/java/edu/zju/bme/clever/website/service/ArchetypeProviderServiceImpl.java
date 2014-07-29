@@ -24,10 +24,14 @@ import edu.zju.bme.clever.website.dao.ArchetypeHostDao;
 import edu.zju.bme.clever.website.dao.ArchetypeNodeChangeLogDao;
 import edu.zju.bme.clever.website.dao.ArchetypeNodeDao;
 import edu.zju.bme.clever.website.dao.ArchetypeRelationshipDao;
+import edu.zju.bme.clever.website.dao.ArchetypeTypeClassificationDao;
+import edu.zju.bme.clever.website.dao.ArchetypeTypeDao;
 import edu.zju.bme.clever.website.dao.HistoriedArchetypeFileDao;
 import edu.zju.bme.clever.website.model.entity.ArchetypeFile;
 import edu.zju.bme.clever.website.model.entity.ArchetypeNode;
 import edu.zju.bme.clever.website.model.entity.ArchetypeNodeChangeLog;
+import edu.zju.bme.clever.website.model.entity.ArchetypeType;
+import edu.zju.bme.clever.website.model.entity.ArchetypeTypeClassification;
 import edu.zju.bme.clever.website.view.entity.*;
 
 @Service("archetypeProviderService")
@@ -42,6 +46,10 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 	private ArchetypeRelationshipDao archetypeRelationshipDao;
 	@Resource(name = "archetypeHostDao")
 	private ArchetypeHostDao archetypeHostDao;
+	@Resource(name = "archetypeTypeDao")
+	private ArchetypeTypeDao archetypeTypeDao;
+	@Resource(name = "archetypeTypeClassificationDao")
+	private ArchetypeTypeClassificationDao archetypeTypeClassifictionDao;
 	@Resource(name = "cleverClient")
 	private CleverService cleverClient;
 
@@ -61,12 +69,10 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 											.getSourceArchetypeHostId());
 							relationshipInfo
 									.setDestinationArchetypeHostId(relationship
-											.getDestinationArchetypeHostId()
-											);
+											.getDestinationArchetypeHostId());
 							archetypeBriefInfo.getArchetypeRelationshipInfos()
 									.add(relationshipInfo);
 						});
-		// get all archetype hosts
 		this.archetypeHostDao
 				.selectAll()
 				.forEach(
@@ -87,7 +93,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 												info.setName(file.getName());
 												info.setVersion(file
 														.getVersion());
-												
+
 												hostInfo.getArchetypeInfos()
 														.add(info);
 												archetypeInfoIndexByVersion
@@ -114,7 +120,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 															.getRmType());
 													nodeInfo.setNodePath(node
 															.getNodePath());
-													
+
 													info.getArchetypeNodeInfos()
 															.add(nodeInfo);
 												});
@@ -139,7 +145,115 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 															.getRmType());
 													nodeInfo.setNodePath(log
 															.getNodePath());
-													
+
+													info.getArchetypeNodeInfos()
+															.add(nodeInfo);
+												});
+											});
+							archetypeBriefInfo.getArchetypeHostInfos().add(
+									hostInfo);
+						});
+		return archetypeBriefInfo;
+	}
+
+	@Override
+	public ArchetypeBriefInfo getArchetypeBriefInfoByTypeId(Integer typeId) {
+		final ArchetypeBriefInfo archetypeBriefInfo = new ArchetypeBriefInfo();
+		// get all relationships
+		this.archetypeRelationshipDao
+				.selectAll()
+				.forEach(
+						relationship -> {
+							ArchetypeRelationshipInfo relationshipInfo = new ArchetypeRelationshipInfo();
+							relationshipInfo.setRelationType(relationship
+									.getRelationType());
+							relationshipInfo
+									.setSourceArchetypeHostId(relationship
+											.getSourceArchetypeHostId());
+							relationshipInfo
+									.setDestinationArchetypeHostId(relationship
+											.getDestinationArchetypeHostId());
+							archetypeBriefInfo.getArchetypeRelationshipInfos()
+									.add(relationshipInfo);
+						});
+		ArchetypeType type = this.archetypeTypeDao.findById(typeId);
+		if (type == null) {
+			this.logger.info("Cannot find archetype type with id: {}.", typeId);
+			return null;
+		}
+		// get all archetype hosts
+		type.getArchetypeHosts()
+				.forEach(
+						host -> {
+							final ArchetypeHostInfo hostInfo = new ArchetypeHostInfo();
+							final Map<String, ArchetypeInfo> archetypeInfoIndexByVersion = new HashMap<String, ArchetypeInfo>();
+							hostInfo.setConceptName(host.getConceptName());
+							hostInfo.setName(host.getName());
+							hostInfo.setRmEntity(host.getRmEntity());
+							hostInfo.setRmName(host.getRmName());
+							hostInfo.setRmOriginator(host.getRmOriginator());
+							hostInfo.setId(host.getId());
+							host.getArchetypeFiles()
+									.forEach(
+											file -> {
+												ArchetypeInfo info = new ArchetypeInfo();
+												info.setId(file.getId());
+												info.setName(file.getName());
+												info.setVersion(file
+														.getVersion());
+
+												hostInfo.getArchetypeInfos()
+														.add(info);
+												archetypeInfoIndexByVersion
+														.put(file.getVersion(),
+																info);
+											});
+							host.getArchetypeNodes()
+									.stream()
+									.collect(
+											Collectors
+													.groupingBy(ArchetypeNode::getOriginalVersion))
+									.forEach(
+											(version, nodes) -> {
+												final ArchetypeInfo info = archetypeInfoIndexByVersion
+														.get(version);
+												nodes.forEach(node -> {
+													ArchetypeNodeInfo nodeInfo = new ArchetypeNodeInfo();
+													nodeInfo.setType(ArchetypeNodeInfo.Type.Add);
+													nodeInfo.setPreviousName(node
+															.getOriginalNodeName());
+													nodeInfo.setCurrentName(node
+															.getOriginalNodeName());
+													nodeInfo.setRmType(node
+															.getRmType());
+													nodeInfo.setNodePath(node
+															.getNodePath());
+
+													info.getArchetypeNodeInfos()
+															.add(nodeInfo);
+												});
+											});
+							host.getArchetypeNodeChangeLogs()
+									.stream()
+									.collect(
+											Collectors
+													.groupingBy(ArchetypeNodeChangeLog::getCurrentVersion))
+									.forEach(
+											(version, logs) -> {
+												final ArchetypeInfo info = archetypeInfoIndexByVersion
+														.get(version);
+												logs.forEach(log -> {
+													ArchetypeNodeInfo nodeInfo = new ArchetypeNodeInfo();
+													nodeInfo.setType(ArchetypeNodeInfo.Type.Modify);
+													nodeInfo.setCurrentName(log
+															.getCurrentNodeName());
+													nodeInfo.setPreviousName(log
+															.getPreviousNodeName());
+													nodeInfo.setRmType(log
+															.getRmType());
+													nodeInfo.setNodePath(log
+															.getNodePath());
+
 													info.getArchetypeNodeInfos()
 															.add(nodeInfo);
 												});
@@ -261,5 +375,92 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 	@Override
 	public List<String> getDeployedArchetypeIds() {
 		return this.cleverClient.getArchetypeIds();
+	}
+
+	@Override
+	public List<ClassificationBriefInfo> getAllClassifications() {
+		return this.archetypeTypeClassifictionDao
+				.selectAll()
+				.stream()
+				.map(classification -> {
+					ClassificationBriefInfo info = new ClassificationBriefInfo();
+					info.setId(classification.getId());
+					info.setName(classification.getName());
+					return info;
+				}).collect(Collectors.toList());
+	}
+
+	@Override
+	public ClassificationBriefInfo getClassificationBriefInfoById(
+			Integer classificationId) {
+		ClassificationBriefInfo info = new ClassificationBriefInfo();
+		ArchetypeTypeClassification classification = this.archetypeTypeClassifictionDao
+				.findById(classificationId);
+		if (classification == null) {
+			this.logger.info("Cannot find classification with id: {}.",
+					classificationId);
+			return null;
+		}
+		final Map<Integer, Integer> hostIdTypeIdIndex = new HashMap<Integer, Integer>();
+		info.setId(classificationId);
+		info.setName(classification.getName());
+		info.setArchetypeTypeInfos(classification
+				.getTypes()
+				.stream()
+				.map(type -> {
+					final ArchetypeTypeInfo typeInfo = new ArchetypeTypeInfo();
+					typeInfo.setName(type.getName());
+					typeInfo.setId(type.getId());
+					typeInfo.setArchetypeHostInfos(type
+							.getArchetypeHosts()
+							.stream()
+							.map(host -> {
+								hostIdTypeIdIndex.put(host.getId(),
+										typeInfo.getId());
+								ArchetypeHostInfo hostInfo = new ArchetypeHostInfo();
+								hostInfo.setId(host.getId());
+								hostInfo.setName(host.getName());
+								hostInfo.setConceptName(host.getConceptName());
+								return hostInfo;
+							}).collect(Collectors.toList()));
+					return typeInfo;
+				}).collect(Collectors.toList()));
+		final Map<String, ArchetypeTypeRelationshipInfo> relationships = new HashMap<String, ArchetypeTypeRelationshipInfo>();
+		this.archetypeRelationshipDao
+				.selectAll()
+				.forEach(
+						relationship -> {
+							Integer sourceTypeId = hostIdTypeIdIndex
+									.get(relationship
+											.getSourceArchetypeHostId());
+							Integer destinationTypeId = hostIdTypeIdIndex
+									.get(relationship
+											.getDestinationArchetypeHostId());
+							if (sourceTypeId == null
+									|| destinationTypeId == null
+									|| sourceTypeId == destinationTypeId) {
+								return;
+							}
+
+							String key = relationship.getRelationType() + "-"
+									+ sourceTypeId + "-" + destinationTypeId;
+							ArchetypeTypeRelationshipInfo relationshipInfo = relationships
+									.get(key);
+							if (relationshipInfo == null) {
+								relationshipInfo = new ArchetypeTypeRelationshipInfo();
+								relationshipInfo.setRelationType(relationship
+										.getRelationType());
+								relationshipInfo
+										.setSourceArchetypeTypeId(sourceTypeId);
+								relationshipInfo
+										.setDestinationArchetypeTypeId(destinationTypeId);
+								relationships.put(key, relationshipInfo);
+							}
+							relationshipInfo.setWeight(relationshipInfo
+									.getWeight() + 1);
+						});
+		info.setArchetypeTypeRelationshipInfos(new ArrayList<ArchetypeTypeRelationshipInfo>(
+				relationships.values()));
+		return info;
 	}
 }

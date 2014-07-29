@@ -1,0 +1,42 @@
+<div class="container content-container">
+	<div class="row">
+		<div class="col-xs-12 col-md-12 col-lg-12" style="padding: 5px 0px;">
+			<!-- Single button -->
+			<div class="input-group">
+				<span class="input-group-addon">Layout:</span>
+				<div class="btn-group pull-left" dropdown is-open="isDropdownOpened">
+					<button type="button" class="btn btn-default dropdown-toggle">
+						{{currentLayout.name}} <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li ng-repeat="layout in layouts">
+							<a href ng-click="selectLayout(layout)">{{layout.name}}</a>
+						</li>
+					</ul>
+				</div>
+				<div class="btn-group pull-right">
+					<button type="button" class="btn btn-default" ng-click="zoomIn()" tooltip-placement="top" tooltip="Zoom in" tooltip-popup-delay="500">
+						<span class="glyphicon glyphicon-zoom-in"></span>
+					</button>
+					<button type="button" class="btn btn-default" ng-click="zoomOut()" tooltip-placement="top" tooltip="Zoom out" tooltip-popup-delay="500">
+						<span class="glyphicon glyphicon-zoom-out"></span>
+					</button>
+					<button type="button" class="btn btn-default" ng-click="reset()" tooltip-placement="top" tooltip="Reset" tooltip-popup-delay="500">
+						<span class="glyphicon glyphicon-refresh"></span>
+					</button>
+					<sec:authorize access="isAuthenticated()">
+						<button ng-show="currentLayout.type == 'custom'" type="button" class="btn btn-default" ng-click="saveLayout()" tooltip-placement="top" tooltip="Save layout" tooltip-popup-delay="500">
+							<span class="glyphicon glyphicon-floppy-disk"></span>
+						</button>
+					</sec:authorize>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-md-12 col-lg-12">
+			<div id="outline-container" ng-style="{height: (windowHeight - 190)/3}" style="position: absolute;top: 0;right: 30px;z-index: 100;"></div>
+			<div id="classification-view-container" class="text-center" ng-style="{height: windowHeight - 190}" style="overflow: auto;padding-left: -15px;width: 100%;" ng-transclude></div>
+		</div>
+	</div>
+</div>

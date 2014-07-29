@@ -47,17 +47,25 @@ uri="http://www.springframework.org/security/tags"%>
 		<script type="text/ng-template" id="app-library.html">
 			<%@ include file="partials/app-library.html"%>
 		</script>
-		<!-- overview -->
-		<script type="text/ng-template" id="overview.html">
-			<%@ include file="partials/overview.html"%>
-		</script>
 		<!-- archetype -->
 		<script type="text/ng-template" id="archetype.html">
 			<%@ include file="partials/archetype.html"%>
 		</script>
+		<!-- overview -->
+		<script type="text/ng-template" id="overview.html">
+			<%@ include file="partials/overview.html"%>
+		</script>
 		<!-- login -->
 		<script type="text/ng-template" id="login.html">
 			<%@ include file="partials/login.html"%>
+		</script>
+		<!-- classification -->
+		<script type="text/ng-template" id="classification.html">
+			<%@ include file="partials/classification.html"%>
+		</script>
+		<!-- classification view -->
+		<script type="text/ng-template" id="classification-view.html">
+			<%@ include file="partials/classification-view.html"%>
 		</script>
 
 	</body>
