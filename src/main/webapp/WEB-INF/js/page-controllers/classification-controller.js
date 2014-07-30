@@ -1,6 +1,6 @@
-function ClassificationCtrl($scope, $http, CLASSIFICATIONS_URL, CLASSIFICATION_BY_ID_URL) {
+function ClassificationCtrl($scope, $http, $location, CLASSIFICATIONS_URL, CLASSIFICATION_BY_ID_URL) {
 
-	initClassifications();	
+	initClassifications();
 
 	// Init classifications
 	function initClassifications() {
@@ -17,4 +17,8 @@ function ClassificationCtrl($scope, $http, CLASSIFICATIONS_URL, CLASSIFICATION_B
 		});
 	}
 
+
+	$scope.selectType = function(selectedType) {
+		$location.path('/classification/' + $scope.currentClassification.name + '/type/id/' + selectedType.id);
+	};
 }

@@ -139,4 +139,21 @@ public abstract class AbstractGenericDao<T, ID extends Serializable> implements
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return (T) criteria.uniqueResult();
 	}
+
+	@Override
+	public List<T> findByProperty(Object... params) {
+		if (params.length % 2 != 0) {
+			throw new IllegalArgumentException("Parameters' length should be in multiples of two.");
+		}
+		Criteria criteria = this.getSession().createCriteria(clazz);
+		for (int i = 0; i < params.length; i += 2) {
+			if (params[i] instanceof String) {
+				criteria.add(Restrictions.eq((String) params[i], params[i + 1]));
+			} else {
+				throw new IllegalArgumentException(
+						"Property name must be string.");
+			}
+		}
+		return criteria.list();
+	}
 }

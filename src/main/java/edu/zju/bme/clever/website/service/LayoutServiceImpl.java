@@ -6,58 +6,156 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.zju.bme.clever.website.dao.ArchetypeHostDao;
-import edu.zju.bme.clever.website.dao.LayoutDao;
-import edu.zju.bme.clever.website.dao.LayoutSettingDao;
+import edu.zju.bme.clever.website.dao.ArchetypeHostLayoutSettingDao;
+import edu.zju.bme.clever.website.dao.ArchetypeTypeClassificationDao;
+import edu.zju.bme.clever.website.dao.ArchetypeTypeDao;
+import edu.zju.bme.clever.website.dao.ArchetypeTypeLayoutSettingDao;
+import edu.zju.bme.clever.website.dao.UserDao;
 import edu.zju.bme.clever.website.exception.LayoutException;
 import edu.zju.bme.clever.website.model.entity.ArchetypeHost;
-import edu.zju.bme.clever.website.model.entity.Layout;
-import edu.zju.bme.clever.website.model.entity.LayoutSetting;
-import edu.zju.bme.clever.website.view.entity.LayoutInfo;
-import edu.zju.bme.clever.website.view.entity.LayoutSettingInfo;
+import edu.zju.bme.clever.website.model.entity.ArchetypeHostLayoutSetting;
+import edu.zju.bme.clever.website.model.entity.ArchetypeType;
+import edu.zju.bme.clever.website.model.entity.ArchetypeTypeClassification;
+import edu.zju.bme.clever.website.model.entity.ArchetypeTypeLayoutSetting;
+import edu.zju.bme.clever.website.model.entity.User;
+import edu.zju.bme.clever.website.view.entity.ArchetypeHostLayoutSettingInfo;
+import edu.zju.bme.clever.website.view.entity.ArchetypeTypeLayoutSettingInfo;
 
 @Service("layoutService")
 @Transactional
 public class LayoutServiceImpl implements LayoutService {
 
-	@Resource(name = "layoutDao")
-	private LayoutDao layoutDao;
-	@Resource(name = "layoutSettingDao")
-	private LayoutSettingDao layoutSettingDao;
+	@Resource(name = "archetypeHostLayoutSettingDao")
+	private ArchetypeHostLayoutSettingDao archetypeHostLayoutSettingDao;
+	@Resource(name = "archetypeTypeLayoutSettingDao")
+	private ArchetypeTypeLayoutSettingDao archetypeTypeLayoutSettingDao;
 	@Resource(name = "archetypeHostDao")
 	private ArchetypeHostDao archetypeHostDao;
+	@Resource(name = "userDao")
+	private UserDao userDao;
+	@Resource(name = "archetypeTypeDao")
+	private ArchetypeTypeDao archetypeTypeDao;
+	@Resource(name = "archetypeTypeClassificationDao")
+	private ArchetypeTypeClassificationDao archetypeTypeClassificationDao;
 
 	@Override
-	public List<LayoutInfo> getAllLayouts() {
-		return this.layoutDao.selectAll().stream().map(layout -> {
-			LayoutInfo info = new LayoutInfo();
-			info.setId(layout.getId());
-			info.setName(layout.getName());
-			return info;
-		}).collect(Collectors.toList());
+	public List<ArchetypeTypeLayoutSettingInfo> getClassificationLayoutByIdAndUserName(
+			Integer classifcationId, String userName) throws LayoutException {
+		User user = this.userDao.findUniqueByProperty("userName", userName);
+		if (user == null) {
+			throw new LayoutException("User '" + userName + "' does not exist.");
+		}
+		ArchetypeTypeClassification classifcation = this.archetypeTypeClassificationDao
+				.findById(classifcationId);
+		if (classifcation == null) {
+			throw new LayoutException("Classifcation with id '"
+					+ classifcationId + "' does not exist.");
+		}
+		return this.archetypeTypeLayoutSettingDao
+				.findByProperty("user", user, "archetypeTypeClassification",
+						classifcation)
+				.stream()
+				.map(setting -> {
+					ArchetypeTypeLayoutSettingInfo info = new ArchetypeTypeLayoutSettingInfo();
+					info.setArchetypeTypeId(setting.getArchetypeTypeId());
+					info.setPositionX(setting.getPositionX());
+					info.setPositionY(setting.getPositionY());
+					return info;
+				}).collect(Collectors.toList());
 	}
 
 	@Override
-	@CacheEvict(value = "layoutCache", key = "'layoutId:' + #id")
-	public void updateLayout(Integer id, List<LayoutSettingInfo> infos)
-			throws LayoutException {
-		Layout layout = this.layoutDao.findById(id);
-		if (layout == null) {
-			throw new LayoutException("Layout with id '" + id
+	public void updateClassificationLayoutByIdAndUserName(
+			Integer classifcationId, String userName,
+			List<ArchetypeTypeLayoutSettingInfo> infos) throws LayoutException {
+		User user = this.userDao.findUniqueByProperty("userName", userName);
+		if (user == null) {
+			throw new LayoutException("User '" + userName + "' does not exist.");
+		}
+		ArchetypeTypeClassification classifcation = this.archetypeTypeClassificationDao
+				.findById(classifcationId);
+		if (classifcation == null) {
+			throw new LayoutException("Classifcation with id '"
+					+ classifcationId + "' does not exist.");
+		}
+		Map<Integer, ArchetypeTypeLayoutSetting> settings = this.archetypeTypeLayoutSettingDao
+				.findByProperty("user", user, "archetypeTypeClassification",
+						classifcation)
+				.stream()
+				.collect(
+						Collectors.toMap(setting -> setting.getId(),
+								setting -> setting));
+		for (ArchetypeTypeLayoutSettingInfo info : infos) {
+			ArchetypeTypeLayoutSetting setting = settings.get(info
+					.getArchetypeTypeId());
+			if (setting == null) {
+				setting = new ArchetypeTypeLayoutSetting();
+				ArchetypeType archetypeType = this.archetypeTypeDao
+						.findById(info.getArchetypeTypeId());
+				if (archetypeType == null) {
+					throw new LayoutException("Archetype type with id '"
+							+ info.getArchetypeTypeId() + "' does not exist.");
+				}
+				setting.setArchetypeType(archetypeType);
+			}
+			setting.setPositionX(info.getPositionX());
+			setting.setPositionY(info.getPositionY());
+			this.archetypeTypeLayoutSettingDao.saveOrUpdate(setting);
+		}
+	}
+
+	@Override
+	public List<ArchetypeHostLayoutSettingInfo> getArchetypeTypeLatyoutByIdAndUserName(
+			Integer typeId, String userName) throws LayoutException {
+		User user = this.userDao.findUniqueByProperty("userName", userName);
+		if (user == null) {
+			throw new LayoutException("User '" + userName + "' does not exist.");
+		}
+		ArchetypeType type = this.archetypeTypeDao.findById(typeId);
+		if (type == null) {
+			throw new LayoutException("Archetype type with id '" + typeId
 					+ "' does not exist.");
 		}
-		Map<Integer, LayoutSetting> settings = layout
-				.getLayoutSettingMap(setting -> setting.getArchetypeHostId());
-		for (LayoutSettingInfo info : infos) {
-			LayoutSetting setting = settings.get(info.getArchetypeHostId());
+		return this.archetypeHostLayoutSettingDao
+				.findByProperty("user", user, "archetypeType", type)
+				.stream()
+				.map(setting -> {
+					ArchetypeHostLayoutSettingInfo info = new ArchetypeHostLayoutSettingInfo();
+					info.setArchetypeHostId(setting.getArchetypeHostId());
+					info.setPositionX(setting.getPositionX());
+					info.setPositionY(setting.getPositionY());
+					return info;
+				}).collect(Collectors.toList());
+	}
+
+	@Override
+	public void updateArchetypeTypeLatyoutByIdAndUserName(Integer typeId,
+			String userName, List<ArchetypeHostLayoutSettingInfo> infos)
+			throws LayoutException {
+		User user = this.userDao.findUniqueByProperty("userName", userName);
+		if (user == null) {
+			throw new LayoutException("User '" + userName + "' does not exist.");
+		}
+		ArchetypeType type = this.archetypeTypeDao.findById(typeId);
+		if (type == null) {
+			throw new LayoutException("Archetype type with id '" + typeId
+					+ "' does not exist.");
+		}
+		Map<Integer, ArchetypeHostLayoutSetting> settings = this.archetypeHostLayoutSettingDao
+				.findByProperty("user", user, "archetypeType", type)
+				.stream()
+				.collect(
+						Collectors.toMap(setting -> setting.getId(),
+								setting -> setting));
+		for (ArchetypeHostLayoutSettingInfo info : infos) {
+			ArchetypeHostLayoutSetting setting = settings.get(info
+					.getArchetypeHostId());
 			if (setting == null) {
-				setting = new LayoutSetting();
+				setting = new ArchetypeHostLayoutSetting();
 				ArchetypeHost archetypeHost = this.archetypeHostDao
 						.findById(info.getArchetypeHostId());
 				if (archetypeHost == null) {
@@ -65,25 +163,11 @@ public class LayoutServiceImpl implements LayoutService {
 							+ info.getArchetypeHostId() + "' does not exist.");
 				}
 				setting.setArchetypeHost(archetypeHost);
-				setting.setLayout(layout);
 			}
 			setting.setPositionX(info.getPositionX());
 			setting.setPositionY(info.getPositionY());
-			this.layoutSettingDao.saveOrUpdate(setting);
+			this.archetypeHostLayoutSettingDao.saveOrUpdate(setting);
 		}
-		this.layoutDao.update(layout);
 	}
 
-	@Override
-	@Cacheable(value = "layoutCache", key = "'layoutId:' + #id")
-	public List<LayoutSettingInfo> getLayoutById(Integer id) {
-		Layout layout = this.layoutDao.findById(id);
-		return layout.getLayoutSettings().stream().map(setting -> {
-			LayoutSettingInfo settingInfo = new LayoutSettingInfo();
-			settingInfo.setPositionX(setting.getPositionX());
-			settingInfo.setPositionY(setting.getPositionY());
-			settingInfo.setArchetypeHostId(setting.getArchetypeHostId());
-			return settingInfo;
-		}).collect(Collectors.toList());
-	}
 }

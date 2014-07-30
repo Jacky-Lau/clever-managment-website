@@ -265,10 +265,12 @@ function(layoutService, msgboxService) {
 							var vertices = scope.graph.getChildVertices(parent);
 							angular.forEach(layout.settings, function(setting) {
 								var vertex = findVertexById(setting.archetypeHostId, vertices);
-								var geo = model.getGeometry(vertex);
-								var dx = new Number(setting.positionX) - geo.x;
-								var dy = new Number(setting.positionY) - geo.y;
-								scope.graph.moveCells([vertex], dx, dy);
+								if(vertex){
+									var geo = model.getGeometry(vertex);
+									var dx = new Number(setting.positionX) - geo.x;
+									var dy = new Number(setting.positionY) - geo.y;
+									scope.graph.moveCells([vertex], dx, dy);
+								}				
 							});
 							angular.forEach(vertices, function(vertex) {
 								var geo = model.getGeometry(vertex);
@@ -338,7 +340,9 @@ function(layoutService, msgboxService) {
 							if (relationship.relationType == 'OneToMany') {
 								var sourceCell = getCellById(relationship.sourceArchetypeHostId, cells);
 								var destinationCell = getCellById(relationship.destinationArchetypeHostId, cells);
-								var edge = scope.graph.insertEdge(parent, null, '', sourceCell, destinationCell);
+								if (sourceCell && destinationCell) {
+									var edge = scope.graph.insertEdge(parent, null, '', sourceCell, destinationCell);
+								}
 							}
 						});
 					} finally {

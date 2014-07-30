@@ -1,6 +1,6 @@
 package edu.zju.bme.clever.website.view.entity;
 
-public class LayoutSettingInfo {
+public class ArchetypeHostLayoutSettingInfo {
 
 	private Integer archetypeHostId;
 	private String positionX;

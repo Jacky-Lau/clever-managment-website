@@ -1,6 +1,9 @@
 package edu.zju.bme.clever.website.model.entity;
 
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,6 +47,12 @@ public class ArchetypeTypeClassification {
 
 	public Set<ArchetypeType> getTypes() {
 		return types;
+	}
+
+	public <T> Map<T, ArchetypeType> getArchetypeTypeMap(
+			Function<ArchetypeType, T> keyMapper) {
+		return this.types.stream().collect(
+				Collectors.toMap(keyMapper, type -> type));
 	}
 
 	@Override

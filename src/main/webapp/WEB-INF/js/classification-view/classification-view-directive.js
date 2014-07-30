@@ -5,6 +5,7 @@ function(layoutService, msgboxService) {
 		scope : {
 			classificationBriefInfo: '=',
 			windowHeight: '=',
+			doubleClick: '&',
 			addAlert: '&',
 		},
 		templateUrl : 'classification-view.html',
@@ -83,10 +84,14 @@ function(layoutService, msgboxService) {
 				style[mxConstants.STYLE_STROKECOLOR] = 'white';
 				style[mxConstants.CURSOR_MOVABLE_EDGE] = 'default';
 				
+				style = scope.graph.getStylesheet().getDefaultEdgeStyle();
+				style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
+				style[mxConstants.STYLE_STARTARROW] = mxConstants.ARROW_CLASSIC;
+				
 				// Disable cell resize
 				scope.graph.cellsResizable = false;
 				
-				// Override isCellSelectable
+				/*// Override isCellSelectable
 				scope.graph.isCellSelectable = function(cell) {
 					if (cell.isEdge()) {
 						return false;
@@ -102,7 +107,7 @@ function(layoutService, msgboxService) {
 					} else {
 						return true;
 					}
-				};
+				};*/
 				
 				/*// Enables tooltips
 				scope.graph.setTooltips(true);
@@ -119,10 +124,10 @@ function(layoutService, msgboxService) {
 				};
 				
 				// Overrides method to provide a cell label in the display
-				scope.graph.convertValueToString = function(cell)
+				/*scope.graph.convertValueToString = function(cell)
 				{
-					return cell.value.name;
-				};
+					return cell.value;
+				};*/
 				
 				// Enables panning
 				scope.graph.setPanning(true);
@@ -147,20 +152,20 @@ function(layoutService, msgboxService) {
 				}; 
 				
 				// Installs a handler for double click events in the graph
-				// that shows an alert box				
-				/*scope.graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
+				// that shows an alert box								
+				scope.graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
 					var cell = evt.getProperty('cell');
 					scope.graph.tooltipHandler.resetTimer();
 					if (cell != null) {
-						scope.$apply(function(){
+						scope.$apply(function() {
 							scope.doubleClick({
-								selectedArchetype : cell.value
+								selectedValue : cell.value
 							});
-						});				
+						});
 					}
 					evt.consume();
-				});	*/
-				
+				});
+			
 				// select all
 				var keyHandler = new mxKeyHandler(scope.graph);
 				keyHandler.bindControlKey(65, function(evt) {
@@ -264,10 +269,12 @@ function(layoutService, msgboxService) {
 							var vertices = scope.graph.getChildVertices(parent);
 							angular.forEach(layout.settings, function(setting) {
 								var vertex = findVertexById(setting.archetypeHostId, vertices);
-								var geo = model.getGeometry(vertex);
-								var dx = new Number(setting.positionX) - geo.x;
-								var dy = new Number(setting.positionY) - geo.y;
-								scope.graph.moveCells([vertex], dx, dy);
+								if(vertex){
+									var geo = model.getGeometry(vertex);
+									var dx = new Number(setting.positionX) - geo.x;
+									var dy = new Number(setting.positionY) - geo.y;
+									scope.graph.moveCells([vertex], dx, dy);
+								}				
 							});
 							angular.forEach(vertices, function(vertex) {
 								var geo = model.getGeometry(vertex);
@@ -316,7 +323,7 @@ function(layoutService, msgboxService) {
 					});
 					return selectedCell;
 				}
-							
+												
 				scope.reset = function() {
 					scope.graph.getModel().beginUpdate();
 					var parent = scope.graph.getDefaultParent();
@@ -333,13 +340,23 @@ function(layoutService, msgboxService) {
 							vertex.geometry.alternateBounds = new mxRectangle(0, 0, cellWidth, 27);
 							cells.push(vertex);
 						});
+						var relations = {};
 						angular.forEach(scope.classificationBriefInfo.archetypeTypeRelationshipInfos, function(relationship) {
-							if (relationship.relationType == 'OneToMany') {
-								var sourceCell = getCellById(relationship.sourceArchetypeTypeId, cells);
-								var destinationCell = getCellById(relationship.destinationArchetypeTypeId, cells);
-								var edge = scope.graph.insertEdge(parent, null, relationship.weight, sourceCell, destinationCell);
+							var key = relationship.destinationArchetypeTypeId + '-' + relationship.sourceArchetypeTypeId;
+							if (relations[key]) {
+								relations[key].weight += relationship.weight;
+							} else {
+								relations[relationship.sourceArchetypeTypeId + '-' + relationship.destinationArchetypeTypeId] = relationship;
 							}
-						});
+						}); 
+						angular.forEach(relations, function(relationship, key) {
+							var sourceCell = getCellById(relationship.sourceArchetypeTypeId, cells);
+							var destinationCell = getCellById(relationship.destinationArchetypeTypeId, cells);
+							if (sourceCell && destinationCell) {
+								var edge = scope.graph.insertEdge(parent, null, relationship.weight, sourceCell, destinationCell, 'strokeWidth=' + relationship.weight / 2);
+
+							}
+						}); 
 					} finally {
 						// Updates the display
 						scope.graph.getModel().endUpdate();
@@ -387,7 +404,7 @@ function(layoutService, msgboxService) {
 					angular.forEach(archetypeHostInfos, function(archetypeHostInfo, index) {
 						if(index < maxRows){
 							subTable += '<tr>' +
-											'<td width="' + (geo.width - 1) + '">' + archetypeHostInfo.conceptName + '</td>' + 
+											'<td width="' + (geo.width - 1) + '" style="font-size: 10pt;" class="overview-' + archetypeHostInfo.rmEntity.toLowerCase() + '">&nbsp;&nbsp;' + archetypeHostInfo.conceptName + '</td>' + 
 										'</tr>';
 						} else if (index == maxRows) {
 							subTable += '<tr>' +
@@ -409,7 +426,7 @@ function(layoutService, msgboxService) {
 						if (geo) {
 							archetypeTypeName = getFixedText(cell.value.name, geo.width - 8, 8, 8);
 							var title = '<table style="color: black;border:1px solid black;" width="' + geo.width + '" cellpadding="2" class="title">' + 
-											'<tr><th colspan="2" class="text-center" >' + archetypeTypeName + '</th></tr>' + 
+											'<tr><th colspan="2" class="text-center" >' + archetypeTypeName + '<sapn class="pull-right">(' + cell.value.archetypeHostInfos.length + ')&nbsp;</span></th></tr>' + 
 										'</table>';
 							if (this.isCellCollapsed(cell)) {
 								temp = title;
@@ -420,10 +437,11 @@ function(layoutService, msgboxService) {
 										'</div>';
 							}
 						}
-					    
+					} else if (this.getModel().isEdge(cell)) {
+						temp = '<span style="background: white;font-size: 10pt;">' + cell.value + '</span>';
 					} else {
 						temp = '';
-					}			
+					}
 					return temp;
 				}
 			}

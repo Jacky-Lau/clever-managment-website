@@ -81,24 +81,12 @@ public class ArchetypeProviderController {
 	public List<String> getAllLatestVersionArchetypeIds() {
 		return this.archetypeProviderService.getAllLatestVersionArchetypeIds();
 	}
-
-	@RequestMapping(value = "/archetypes/briefInfo", method = RequestMethod.GET)
+	
+	@RequestMapping(value = "/archetypes/type/id/{id}", method = RequestMethod.GET)
 	@ResponseBody
-	public ArchetypeBriefInfo getAllArchetypesBriefInfo() {
-		return this.archetypeProviderService.getArchetypeBriefInfo();
-	}
-
-	@RequestMapping(value = "/classifications", method = RequestMethod.GET)
-	@ResponseBody
-	public List<ClassificationBriefInfo> getAllClassificationInfos() {
-		return this.archetypeProviderService.getAllClassifications();
-	}
-
-	@RequestMapping(value = "/classification/id/{id}", method = RequestMethod.GET)
-	@ResponseBody
-	public ClassificationBriefInfo getClassificationById(
+	public ArchetypeBriefInfo getArchetypeBriefInfoByTypeId(
 			@PathVariable Integer id) {
-		return this.archetypeProviderService.getClassificationBriefInfoById(id);
+		return this.archetypeProviderService.getArchetypeBriefInfoByTypeId(id);
 	}
 
 }

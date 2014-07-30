@@ -38,8 +38,4 @@ public interface ArchetypeProviderService {
 
 	public ArchetypeBriefInfo getArchetypeBriefInfo();
 
-	public ClassificationBriefInfo getClassificationBriefInfoById(
-			Integer classificationId);
-
-	public List<ClassificationBriefInfo> getAllClassifications();
 }

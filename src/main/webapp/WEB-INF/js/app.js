@@ -15,7 +15,7 @@ function($routeProvider) {
 	}).when("/appLibrary", {
 		templateUrl : 'app-library.html',
 		controller : AppLibraryCtrl
-	}).when("/archetype", {
+	}).when("/classification/:classification/type/id/:typeId", {
 		templateUrl : 'archetype.html',
 		controller : ArchetypeCtrl
 	}).when("/login", {
@@ -29,7 +29,7 @@ function($routeProvider) {
 	});
 }]).run(function($rootScope, $location, $http, AUTHENTICATION_URL) {
 	// register listener to watch route changes
-	$rootScope.$on("$routeChangeStart", function(event, next, current) {
+	/*$rootScope.$on("$routeChangeStart", function(event, next, current) {
 		if (next.originalPath != '/' && next.originalPath != '/appLibrary' && next.originalPath != '/classification' && next.originalPath != '' && next.originalPath != '/archetype') {
 			$http.get(AUTHENTICATION_URL).then(function(response) {
 				if (response.data != 'true') {
@@ -39,5 +39,5 @@ function($routeProvider) {
 				}
 			});
 		}
-	});
+	});*/
 });
