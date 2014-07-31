@@ -101,6 +101,8 @@ public class LayoutServiceImpl implements LayoutService {
 							+ info.getArchetypeTypeId() + "' does not exist.");
 				}
 				setting.setArchetypeType(archetypeType);
+				setting.setArchetypeTypeClassification(classifcation);
+				setting.setUser(user);
 			}
 			setting.setPositionX(info.getPositionX());
 			setting.setPositionY(info.getPositionY());
@@ -163,6 +165,8 @@ public class LayoutServiceImpl implements LayoutService {
 							+ info.getArchetypeHostId() + "' does not exist.");
 				}
 				setting.setArchetypeHost(archetypeHost);
+				setting.setArchetypeType(type);
+				setting.setUser(user);
 			}
 			setting.setPositionX(info.getPositionX());
 			setting.setPositionY(info.getPositionY());

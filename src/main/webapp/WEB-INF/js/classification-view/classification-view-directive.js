@@ -1,10 +1,11 @@
-angular.module('clever.management.directives.classificationView', []).directive('classificationView', ['layoutService', 'msgboxService',
-function(layoutService, msgboxService) {
+angular.module('clever.management.directives.classificationView', []).directive('classificationView', ['msgboxService',
+function(msgboxService) {
 	return {
 		restrict : 'EA',
 		scope : {
 			classificationBriefInfo: '=',
 			windowHeight: '=',
+			control: '=',
 			doubleClick: '&',
 			addAlert: '&',
 		},
@@ -13,20 +14,6 @@ function(layoutService, msgboxService) {
 		replace : true,
 		controller : function($scope, $element, $attrs){
 			
-			$scope.isDropdownOpened = false;
-			
-			$scope.zoomIn = function(){
-				$scope.graph.zoomIn();
-			};
-			
-			$scope.zoomOut = function(){
-				$scope.graph.zoomOut();
-			};
-			
-			$scope.selectLayout = function(layout){
-				$scope.currentLayout = layout;
-				$scope.isDropdownOpened = false;
-			};
 		},
 		link : function(scope, element, attrs) {
 
@@ -63,6 +50,8 @@ function(layoutService, msgboxService) {
                 
                 scope.outline.outline.view.canvas.viewportElement.height.baseVal.value = (scope.windowHeight - 190)/3;
                 
+                scope.isOutlineHided = false;
+                
                 // Overrides getLabel to return empty labels for edges and
 				// short markup for collapsed cells.	
 				scope.graph.getLabel = getLabel;
@@ -91,7 +80,7 @@ function(layoutService, msgboxService) {
 				// Disable cell resize
 				scope.graph.cellsResizable = false;
 				
-				/*// Override isCellSelectable
+				// Override isCellSelectable
 				scope.graph.isCellSelectable = function(cell) {
 					if (cell.isEdge()) {
 						return false;
@@ -107,7 +96,7 @@ function(layoutService, msgboxService) {
 					} else {
 						return true;
 					}
-				};*/
+				};
 				
 				/*// Enables tooltips
 				scope.graph.setTooltips(true);
@@ -132,7 +121,7 @@ function(layoutService, msgboxService) {
 				// Enables panning
 				scope.graph.setPanning(true);
 		
-				// Configures automatic expand on mouseover
+				/*// Configures automatic expand on mouseover
 				scope.graph.panningHandler.autoExpand = true;
 
 				scope.graph.panningHandler.factoryMethod = function(menu, cell, evt) {
@@ -149,14 +138,13 @@ function(layoutService, msgboxService) {
 							}, submenu);
 						});
 					}
-				}; 
+				}; */
 				
-				// Installs a handler for double click events in the graph
-				// that shows an alert box								
+				// Installs a handler for double click events in the graph							
 				scope.graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
 					var cell = evt.getProperty('cell');
 					scope.graph.tooltipHandler.resetTimer();
-					if (cell != null) {
+					if (cell != null && cell.isVertex()) {
 						scope.$apply(function() {
 							scope.doubleClick({
 								selectedValue : cell.value
@@ -166,128 +154,12 @@ function(layoutService, msgboxService) {
 					evt.consume();
 				});
 			
-				// select all
+				// Select all
 				var keyHandler = new mxKeyHandler(scope.graph);
 				keyHandler.bindControlKey(65, function(evt) {
 					var parent = scope.graph.getDefaultParent();
 					scope.graph.selectVertices(parent);
 				});
-
-				// Layouts
-				// Circle layout, too big
-				var circleLayout = {
-					name : 'Circle',
-					type : 'system',
-					layout : new mxCircleLayout(scope.graph)
-				};
-
-				// Compact tree layout, not work
-				var compactLayout = {
-					name : 'Compact tree',
-					type : 'system',
-					layout : new mxCompactTreeLayout(scope.graph)
-				};
-
-				// Edge label layout, not work
-				var edgeLayout = {
-					name : 'Edge',
-					type : 'system',
-					layout : new mxEdgeLabelLayout(scope.graph)
-				};
-
-				// Stack layout, work, but very simple
-				var stackLayout = {
-					name : 'Stack',
-					type : 'system',
-					layout : new mxStackLayout(scope.graph, true, 30, 10, 10)
-				};
-				stackLayout.layout.wrap = stackLayout.layout.getParentSize(scope.graph.getDefaultParent()).width;
-				
-				var organicLayout = {
-					name : 'Organic',
-					type : 'system',
-					layout : new mxFastOrganicLayout(scope.graph)
-				};
-				//organicLayout.layout.minDistanceLimit = 20;
-				//organicLayout.layout.allowedToRun = 20;
-				
-				scope.layouts = [];
-				initLayouts();
-				
-				// Init layouts				
-				function initLayouts() {
-					scope.layouts = [];
-					layoutService.getAllLayouts().then(function(result) {
-						angular.forEach(result, function(layout) {
-							layout.type = 'custom';
-							layoutService.getLayoutById(layout.id).then(function(result) {
-								layout.settings = result;
-							});
-							scope.layouts.push(layout);
-						});
-						scope.layouts.push(stackLayout);
-						scope.layouts.push(circleLayout);
-						scope.layouts.push(organicLayout);
-					});
-				}	
-
-				scope.saveLayout = function() {
-					msgboxService('Save', 'Do you want to save layout "' + scope.currentLayout.name + '" ?').result.then(function(isOk) {
-						if (isOk) {
-							var parent = scope.graph.getDefaultParent();
-							var settings = [];
-							angular.forEach(scope.graph.getChildVertices(parent), function(cell) {
-								settings.push({
-									archetypeHostId : cell.value.id,
-									positionX : cell.geometry.x,
-									positionY : cell.geometry.y,
-								});
-							});
-							layoutService.updateLayoutById(scope.currentLayout.id, settings).then(function(result) {
-								if (result.succeeded) {
-									scope.currentLayout.settings = settings;
-									scope.addAlert({
-										alert : {
-											type : 'success',
-											msg : 'Save layout ' + scope.currentLayout.name + ' succeeded.',
-										}
-									});
-								}
-							});
-						}
-					});
-				};
-	
-				function applyLayout(layout) {
-					var model = scope.graph.getModel();
-					model.beginUpdate();
-					try {
-						if (layout.type == 'system') {
-							layout.layout.execute(scope.graph.getDefaultParent());
-						} else if (layout.type == 'custom') {
-							var parent = scope.graph.getDefaultParent();
-							var vertices = scope.graph.getChildVertices(parent);
-							angular.forEach(layout.settings, function(setting) {
-								var vertex = findVertexById(setting.archetypeHostId, vertices);
-								if(vertex){
-									var geo = model.getGeometry(vertex);
-									var dx = new Number(setting.positionX) - geo.x;
-									var dy = new Number(setting.positionY) - geo.y;
-									scope.graph.moveCells([vertex], dx, dy);
-								}				
-							});
-							angular.forEach(vertices, function(vertex) {
-								var geo = model.getGeometry(vertex);
-								var dx = new Number(setting.positionX) - geo.x;
-								var dy = new Number(setting.positionY) - geo.y;
-								scope.graph.moveCells([vertex], dx, dy);
-							});
-						}
-					} finally {
-						// Updates the display
-						model.endUpdate();
-					}
-				}
 
 				function findVertexById(id, vertices) {
 					for ( i = 0; i < vertices.length; i++) {
@@ -298,12 +170,21 @@ function(layoutService, msgboxService) {
 						}
 					}
 				}
+				
+				scope.control = {
+					zoomIn : zoomIn,
+					zoomOut : zoomOut,
+					reset : reset,
+					getCurrentLayout : getCurrentLayout,
+				}; 
+				
+				function zoomIn() {
+					scope.graph.zoomIn();
+				}
 
-				scope.$watch('currentLayout', function(newLayout) {
-					if(newLayout){
-						applyLayout(newLayout);
-					}			
-				});
+				function zoomOut() {
+					scope.graph.zoomOut();
+				}
 				
 				// Highlights the vertices when the mouse enters
 				// var highlight = new mxCellTracker(graph, '#00FF00');
@@ -323,8 +204,19 @@ function(layoutService, msgboxService) {
 					});
 					return selectedCell;
 				}
-												
-				scope.reset = function() {
+					
+				function getLayoutSettingByArchetypeTypeId(id, settings) {
+					var selectedSetting;
+					angular.forEach(settings, function(setting) {
+						if (setting.archetypeTypeId == id) {
+							selectedSetting = setting;
+							return false;
+						}
+					});
+					return selectedSetting;
+				}
+																				
+				function reset() {
 					scope.graph.getModel().beginUpdate();
 					var parent = scope.graph.getDefaultParent();
 					scope.graph.view.scale = 1;
@@ -333,6 +225,7 @@ function(layoutService, msgboxService) {
 						var cells = [];
 						angular.forEach(scope.classificationBriefInfo.archetypeTypeInfos, function(value, index) {
 							var vertex = scope.graph.insertVertex(parent, null, value, 0, 0, cellWidth, 0);
+
 							// Updates the height of the cell (override width
 							// for table width is set to 100%)
 							scope.graph.updateCellSize(vertex);
@@ -346,9 +239,13 @@ function(layoutService, msgboxService) {
 							if (relations[key]) {
 								relations[key].weight += relationship.weight;
 							} else {
-								relations[relationship.sourceArchetypeTypeId + '-' + relationship.destinationArchetypeTypeId] = relationship;
+								relations[relationship.sourceArchetypeTypeId + '-' + relationship.destinationArchetypeTypeId] = {
+									sourceArchetypeTypeId : relationship.sourceArchetypeTypeId,
+									destinationArchetypeTypeId : relationship.destinationArchetypeTypeId,
+									weight : relationship.weight,
+								};
 							}
-						}); 
+						});
 						angular.forEach(relations, function(relationship, key) {
 							var sourceCell = getCellById(relationship.sourceArchetypeTypeId, cells);
 							var destinationCell = getCellById(relationship.destinationArchetypeTypeId, cells);
@@ -356,22 +253,53 @@ function(layoutService, msgboxService) {
 								var edge = scope.graph.insertEdge(parent, null, relationship.weight, sourceCell, destinationCell, 'strokeWidth=' + relationship.weight / 2);
 
 							}
-						}); 
+						});
 					} finally {
 						// Updates the display
 						scope.graph.getModel().endUpdate();
 					}
+					applyLayout(scope.classificationBriefInfo.layout);
+				}
 
-					if (scope.currentLayout) {
-						applyLayout(scope.currentLayout);
-					} else {
-						scope.currentLayout = stackLayout;
+						
+				function applyLayout(layout) {
+					var model = scope.graph.getModel();
+					model.beginUpdate();
+					try {
+
+						var parent = scope.graph.getDefaultParent();
+						var vertices = scope.graph.getChildVertices(parent);
+						angular.forEach(layout, function(setting) {
+							var vertex = findVertexById(setting.archetypeTypeId, vertices);
+							if (vertex) {
+								var geo = model.getGeometry(vertex);
+								var dx = new Number(setting.positionX) - geo.x;
+								var dy = new Number(setting.positionY) - geo.y;
+								scope.graph.moveCells([vertex], dx, dy);
+							}
+						});
+					} finally {
+						// Updates the display
+						model.endUpdate();
 					}
-				};
+				}
+				
+				function getCurrentLayout() {
+					var parent = scope.graph.getDefaultParent();
+					var settings = [];
+					angular.forEach(scope.graph.getChildVertices(parent), function(cell) {
+						settings.push({
+							archetypeTypeId : cell.value.id,
+							positionX : cell.geometry.x,
+							positionY : cell.geometry.y,
+						});
+					});
+					return settings;
+				}
 
 				scope.$watch('classificationBriefInfo', function(classificationBriefInfo) {
 					if (classificationBriefInfo) {
-						scope.reset();
+						reset();
 					}				
 				});
 				
@@ -384,17 +312,6 @@ function(layoutService, msgboxService) {
 						fixedText = text.substring(0, max - trimWordCount) + '...';
 					}
 					return fixedText;
-				}
-				
-				function getArchetypeInfoByVersion(version, archetypeInfos) {
-					var archetypeInfo;
-					angular.forEach(archetypeInfos, function(info) {
-						if (info.version == version) {
-							archetypeInfo = info;
-							return false;
-						}
-					});
-					return archetypeInfo;
 				}
 
 				function getTypeSubTable(archetypeHostInfos, geo) {

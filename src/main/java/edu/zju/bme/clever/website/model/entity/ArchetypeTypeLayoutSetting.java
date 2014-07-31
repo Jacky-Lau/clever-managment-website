@@ -33,7 +33,7 @@ public class ArchetypeTypeLayoutSetting {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ARCHETYPE_TYPE_CLASSIFICATION_ID")
-	private ArchetypeType archetypeTypeClassification;
+	private ArchetypeTypeClassification archetypeTypeClassification;
 	@Column(name = "ARCHETYPE_TYPE_CLASSIFICATION_ID", updatable = false, insertable = false)
 	private Integer archetypeTypeClassificationId;
 
@@ -75,12 +75,12 @@ public class ArchetypeTypeLayoutSetting {
 		this.user = user;
 	}
 
-	public ArchetypeType getArchetypeTypeClassification() {
+	public ArchetypeTypeClassification getArchetypeTypeClassification() {
 		return archetypeTypeClassification;
 	}
 
 	public void setArchetypeTypeClassification(
-			ArchetypeType archetypeTypeClassification) {
+			ArchetypeTypeClassification archetypeTypeClassification) {
 		this.archetypeTypeClassification = archetypeTypeClassification;
 	}
 

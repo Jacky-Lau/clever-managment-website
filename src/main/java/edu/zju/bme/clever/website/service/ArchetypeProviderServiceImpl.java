@@ -159,6 +159,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 	@Override
 	public ArchetypeBriefInfo getArchetypeBriefInfoByTypeId(Integer typeId) {
 		final ArchetypeBriefInfo archetypeBriefInfo = new ArchetypeBriefInfo();
+		archetypeBriefInfo.setArchetypeTypeId(typeId);
 		// get all relationships
 		this.archetypeRelationshipDao
 				.selectAll()

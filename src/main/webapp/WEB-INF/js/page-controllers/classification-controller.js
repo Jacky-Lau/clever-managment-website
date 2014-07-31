@@ -1,24 +1,43 @@
-function ClassificationCtrl($scope, $http, $location, CLASSIFICATIONS_URL, CLASSIFICATION_BY_ID_URL) {
+function ClassificationCtrl($scope, $location, layoutService, msgboxService, classifications, selectedClassification) {
 
-	initClassifications();
+	$scope.classifications = classifications;
+	$scope.currentClassification = selectedClassification;
+	$scope.isDropdownOpened = false;
 
-	// Init classifications
-	function initClassifications() {
-		$scope.classifications = [];
-		$http.get(CLASSIFICATIONS_URL).then(function(response) {
-			angular.forEach(response.data, function(classification, index) {
-				$http.get(CLASSIFICATION_BY_ID_URL + classification.id).then(function(response) {
-					$scope.classifications.push(response.data);
-					if (index == 0) {
-						$scope.currentClassification = $scope.classifications[0];
-					}
-				});
-			});
-		});
-	}
+	$scope.zoomIn = function() {
+		$scope.classificationViewControl.zoomIn();
+	};
 
+	$scope.zoomOut = function() {
+		$scope.classificationViewControl.zoomOut();
+	};
+
+	$scope.reset = function() {
+		$scope.classificationViewControl.reset();
+	};
 
 	$scope.selectType = function(selectedType) {
-		$location.path('/classification/' + $scope.currentClassification.name + '/type/id/' + selectedType.id);
+		$location.path('/classification/id/' + $scope.currentClassification.id + '/type/id/' + selectedType.id);
+	};
+	
+	$scope.selectClassification = function(classification){
+		$location.path('/classification/id/' + classification.id);
+	};
+
+	$scope.saveLayout = function() {
+		msgboxService('Save', 'Do you want to save classification "' + $scope.currentClassification.name + '" ?').result.then(function(isOk) {
+			if (isOk) {
+				var settings = $scope.classificationViewControl.getCurrentLayout();
+				layoutService.updateClassificationLayouById($scope.currentClassification.id, settings).then(function(result) {
+					if (result.succeeded) {
+						$scope.currentClassification.layout = settings;
+						$scope.addAlert({
+							type : 'success',
+							msg : 'Save classification "' + $scope.currentClassification.name + '" succeeded.',
+						});
+					}
+				});
+			}
+		});
 	};
 }

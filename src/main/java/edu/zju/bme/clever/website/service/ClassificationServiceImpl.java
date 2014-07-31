@@ -2,8 +2,10 @@ package edu.zju.bme.clever.website.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -11,6 +13,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.zju.bme.clever.website.dao.ArchetypeRelationshipDao;
 import edu.zju.bme.clever.website.dao.ArchetypeTypeClassificationDao;
@@ -24,6 +27,7 @@ import edu.zju.bme.clever.website.view.entity.ArchetypeTypeRelationshipInfo;
 import edu.zju.bme.clever.website.view.entity.ClassificationBriefInfo;
 
 @Service("classificationService")
+@Transactional
 public class ClassificationServiceImpl implements ClassificationService {
 
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -34,7 +38,6 @@ public class ClassificationServiceImpl implements ClassificationService {
 	private ArchetypeTypeClassificationDao archetypeTypeClassificationDao;
 	@Resource(name = "archetypeRelationshipDao")
 	private ArchetypeRelationshipDao archetypeRelationshipDao;
-
 
 	@Override
 	public List<ClassificationBriefInfo> getAllClassifications() {
@@ -60,7 +63,7 @@ public class ClassificationServiceImpl implements ClassificationService {
 					classificationId);
 			return null;
 		}
-		final Map<Integer, Integer> hostIdTypeIdIndex = new HashMap<Integer, Integer>();
+		final Map<Integer, Set<Integer>> hostIdTypeIdIndex = new HashMap<Integer, Set<Integer>>();
 		info.setId(classificationId);
 		info.setName(classification.getName());
 		info.setArchetypeTypeInfos(classification
@@ -74,8 +77,13 @@ public class ClassificationServiceImpl implements ClassificationService {
 							.getArchetypeHosts()
 							.stream()
 							.map(host -> {
-								hostIdTypeIdIndex.put(host.getId(),
-										typeInfo.getId());
+								Set<Integer> typeIds = hostIdTypeIdIndex
+										.get(host.getId());
+								if (typeIds == null) {
+									typeIds = new HashSet<Integer>();
+									hostIdTypeIdIndex.put(host.getId(), typeIds);
+								}
+								typeIds.add(typeInfo.getId());
 								ArchetypeHostInfo hostInfo = new ArchetypeHostInfo();
 								hostInfo.setId(host.getId());
 								hostInfo.setName(host.getName());
@@ -90,34 +98,47 @@ public class ClassificationServiceImpl implements ClassificationService {
 				.selectAll()
 				.forEach(
 						relationship -> {
-							Integer sourceTypeId = hostIdTypeIdIndex
+							Set<Integer> sourceTypeIds = hostIdTypeIdIndex
 									.get(relationship
 											.getSourceArchetypeHostId());
-							Integer destinationTypeId = hostIdTypeIdIndex
+							Set<Integer> destinationTypeIds = hostIdTypeIdIndex
 									.get(relationship
 											.getDestinationArchetypeHostId());
-							if (sourceTypeId == null
-									|| destinationTypeId == null
-									|| sourceTypeId == destinationTypeId) {
+							if (sourceTypeIds == null
+									|| destinationTypeIds == null) {
 								return;
 							}
 
-							String key = relationship.getRelationType() + "-"
-									+ sourceTypeId + "-" + destinationTypeId;
-							ArchetypeTypeRelationshipInfo relationshipInfo = relationships
-									.get(key);
-							if (relationshipInfo == null) {
-								relationshipInfo = new ArchetypeTypeRelationshipInfo();
-								relationshipInfo.setRelationType(relationship
-										.getRelationType());
-								relationshipInfo
-										.setSourceArchetypeTypeId(sourceTypeId);
-								relationshipInfo
-										.setDestinationArchetypeTypeId(destinationTypeId);
-								relationships.put(key, relationshipInfo);
+							for (Integer sourceTypeId : sourceTypeIds) {
+								for (Integer destinationTypeId : destinationTypeIds) {
+									if (sourceTypeId != destinationTypeId) {
+										String key = relationship
+												.getRelationType()
+												+ "-"
+												+ sourceTypeId
+												+ "-"
+												+ destinationTypeId;
+										ArchetypeTypeRelationshipInfo relationshipInfo = relationships
+												.get(key);
+										if (relationshipInfo == null) {
+											relationshipInfo = new ArchetypeTypeRelationshipInfo();
+											relationshipInfo
+													.setRelationType(relationship
+															.getRelationType());
+											relationshipInfo
+													.setSourceArchetypeTypeId(sourceTypeId);
+											relationshipInfo
+													.setDestinationArchetypeTypeId(destinationTypeId);
+											relationships.put(key,
+													relationshipInfo);
+										}
+										relationshipInfo
+												.setWeight(relationshipInfo
+														.getWeight() + 1);
+									}
+								}
 							}
-							relationshipInfo.setWeight(relationshipInfo
-									.getWeight() + 1);
+
 						});
 		info.setArchetypeTypeRelationshipInfos(new ArrayList<ArchetypeTypeRelationshipInfo>(
 				relationships.values()));

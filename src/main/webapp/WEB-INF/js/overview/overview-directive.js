@@ -1,5 +1,5 @@
-angular.module('clever.management.directives.overview', []).directive('overview', ['layoutService', 'msgboxService',
-function(layoutService, msgboxService) {
+angular.module('clever.management.directives.overview', []).directive('overview', ['$q', 'layoutService', 'msgboxService',
+function($q, layoutService, msgboxService) {
 	return {
 		restrict : 'EA',
 		scope : {
@@ -21,11 +21,6 @@ function(layoutService, msgboxService) {
 			
 			$scope.zoomOut = function(){
 				$scope.graph.zoomOut();
-			};
-			
-			$scope.selectLayout = function(layout){
-				$scope.currentLayout = layout;
-				$scope.isDropdownOpened = false;
 			};
 		},
 		link : function(scope, element, attrs) {
@@ -60,6 +55,8 @@ function(layoutService, msgboxService) {
                 // 要显示的图像的轮廓，去掉下面的代码  
                 scope.outline.outline.labelsVisible = true;  
                 scope.outline.outline.setHtmlLabels(true);
+                
+                scope.isOutlineHided = false;
                 
                 scope.outline.outline.view.canvas.viewportElement.height.baseVal.value = (scope.windowHeight - 190)/3;
                 
@@ -206,26 +203,34 @@ function(layoutService, msgboxService) {
 				};
 				//organicLayout.layout.minDistanceLimit = 20;
 				//organicLayout.layout.allowedToRun = 20;
+							
+				scope.selectLayout = function(layout) {
+					scope.currentLayout = layout;
+					applyLayout(layout);
+					scope.isDropdownOpened = false;
+				}; 
 				
-				scope.layouts = [];
-				initLayouts();
-				
-				// Init layouts				
+				// Init layouts						
 				function initLayouts() {
+					var deferred = $q.defer();
 					scope.layouts = [];
-					layoutService.getAllLayouts().then(function(result) {
-						angular.forEach(result, function(layout) {
-							layout.type = 'custom';
-							layoutService.getLayoutById(layout.id).then(function(result) {
-								layout.settings = result;
-							});
-							scope.layouts.push(layout);
-						});
+					layoutService.getArchetypeTypeLayoutById(scope.archetypesBriefInfo.archetypeTypeId).then(function(result) {
+						
+						var layout = {};
+						layout.name = 'Custom';
+						layout.type = 'custom';
+						layout.layout = result;
+						
+						scope.layouts.push(layout);
 						scope.layouts.push(stackLayout);
 						scope.layouts.push(circleLayout);
 						scope.layouts.push(organicLayout);
+						
+						scope.currentLayout = layout;
+						deferred.resolve();
 					});
-				}	
+					return deferred.promise;
+				}
 
 				scope.saveLayout = function() {
 					msgboxService('Save', 'Do you want to save layout "' + scope.currentLayout.name + '" ?').result.then(function(isOk) {
@@ -239,9 +244,9 @@ function(layoutService, msgboxService) {
 									positionY : cell.geometry.y,
 								});
 							});
-							layoutService.updateLayoutById(scope.currentLayout.id, settings).then(function(result) {
+							layoutService.updateArchetypeTypeLayoutById(scope.archetypesBriefInfo.archetypeTypeId, settings).then(function(result) {
 								if (result.succeeded) {
-									scope.currentLayout.settings = settings;
+									scope.currentLayout.layout = settings;
 									scope.addAlert({
 										alert : {
 											type : 'success',
@@ -263,7 +268,7 @@ function(layoutService, msgboxService) {
 						} else if (layout.type == 'custom') {
 							var parent = scope.graph.getDefaultParent();
 							var vertices = scope.graph.getChildVertices(parent);
-							angular.forEach(layout.settings, function(setting) {
+							angular.forEach(layout.layout, function(setting) {
 								var vertex = findVertexById(setting.archetypeHostId, vertices);
 								if(vertex){
 									var geo = model.getGeometry(vertex);
@@ -271,12 +276,6 @@ function(layoutService, msgboxService) {
 									var dy = new Number(setting.positionY) - geo.y;
 									scope.graph.moveCells([vertex], dx, dy);
 								}				
-							});
-							angular.forEach(vertices, function(vertex) {
-								var geo = model.getGeometry(vertex);
-								var dx = new Number(setting.positionX) - geo.x;
-								var dy = new Number(setting.positionY) - geo.y;
-								scope.graph.moveCells([vertex], dx, dy);
 							});
 						}
 					} finally {
@@ -294,12 +293,6 @@ function(layoutService, msgboxService) {
 						}
 					}
 				}
-
-				scope.$watch('currentLayout', function(newLayout) {
-					if(newLayout){
-						applyLayout(newLayout);
-					}			
-				});
 				
 				// Highlights the vertices when the mouse enters
 				// var highlight = new mxCellTracker(graph, '#00FF00');
@@ -349,19 +342,16 @@ function(layoutService, msgboxService) {
 						// Updates the display
 						scope.graph.getModel().endUpdate();
 					}
-					
-					if (scope.currentLayout) {
-						applyLayout(scope.currentLayout);
-					} else {
-						scope.currentLayout = stackLayout;
-					}
+					applyLayout(scope.currentLayout);
 				}; 
-
+			
 				scope.$watch('archetypesBriefInfo', function(archetypesBriefInfo) {
 					if (archetypesBriefInfo) {
-						scope.reset();
-					}				
-				});
+						initLayouts().then(function() {
+							scope.reset();
+						});
+					}
+				}); 
 				
 				function getFixedText(text, width, wordWidth, trimWordCount) {
 					wordWidth = wordWidth || 7;
