@@ -15,7 +15,10 @@ src="/clever-management-website/js/lib/mxClient-src.js"></script>
 src="/clever-management-website/js/lib/ui-bootstrap-tpls-0.11.0.js"></script>
 <script
 src="/clever-management-website/js/lib/ui-utils.js"></script>
+<script
+src="/clever-management-website/js/lib/ng-context-menu.js"></script>
 
+<!-- filter -->
 <script
 src="/clever-management-website/js/pretty-filter.js"></script>
 <script

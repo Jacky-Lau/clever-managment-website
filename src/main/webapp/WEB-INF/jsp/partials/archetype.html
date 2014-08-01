@@ -38,7 +38,20 @@
 					<a ng-click="selectOverview()" style="cursor: pointer;"><b>&nbsp;Overview&nbsp;</b></a>
 				</li>
 				<li ng-repeat="tab in tabs" ng-class="{'active': tab.id == selectedArchetypeId}">
-					<a style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;" ng-click="selectTab(tab)" style="cursor: pointer;" tooltip-placement="bottom" tooltip-popup-delay='500' tooltip='{{tab.title}}'><span style="cursor: pointer;">{{getTabTitle(tab)}}</span>&nbsp;<span class="close" ng-click="closeTab(tab)"> &times; </span></a>
+					<a style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;" ng-click="selectTab(tab)" style="cursor: pointer;" tooltip-placement="bottom" tooltip-popup-delay='500' tooltip='{{tab.title}}'> <span style="cursor: pointer;" context-menu data-target="{{'contextMenu-'+$index}}"> {{getTabTitle(tab)}}</span>&nbsp;<span class="close" ng-click="closeTab(tab)"> &times; </span> </a>
+					<div class="dropdown" id="{{'contextMenu-'+$index}}" style="position: fixed;z-index: 100;">
+						<ul class="dropdown-menu" role="menu">
+							<li>
+								<a class="pointer ng-binding" role="menuitem" tabindex="1" ng-click="closeTab(tab)" href>Close</a>
+							</li>
+							<li>
+								<a class="pointer ng-binding" role="menuitem" tabindex="2" ng-click="closeOtherTabs(tab)" href>Close others</a>
+							</li>
+							<li>
+								<a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="closeAllTabs()" href>Close all</a>
+							</li>
+						</ul>
+					</div>
 				</li>
 			</ul>
 
@@ -48,7 +61,7 @@
 					<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
 					<div overview ng-show="archetypeList.length > 0" window-height="windowHeight" archetypes-brief-info="archetypesBriefInfo" select-archetype="selectArchetype(selectedArchetype)" add-alert="addAlert(alert)"></div>
 				</div>
-				<div class="tab-pane" ng-class="{'active': tab.id == selectedArchetypeId}" ng-repeat="tab in tabs" ng-controller="ArchetypeDisplayCtrl" ng-init="init(tab)">
+				<div class="tab-pane" ng-class="{'active': tab.id == selectedArchetypeId}" ng-repeat="tab in tabs" ng-controller="archetypeDisplayCtrl" ng-init="init(tab)">
 					<div class="container content-container">
 						<div class="row">
 							<div class="col-xs-8 col-md-8 col-lg-8">

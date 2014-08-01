@@ -53,6 +53,16 @@ function ArchetypeCtrl($scope, $modal, $routeParams, archetypeRetrieveService) {
 	$scope.selectTab = function(tab) {
 		$scope.selectedArchetypeId = tab.id;
 	};
+	
+	$scope.closeAllTabs = function(){
+		$scope.tabs = [];
+		$scope.selectedArchetypeId = 0;
+	};
+
+	$scope.closeOtherTabs = function(tab) {
+		$scope.tabs = [tab];
+		$scope.selectedArchetypeId = tab.id;
+	};
 
 	$scope.closeTab = function(tab) {
 		var index = $scope.tabs.indexOf(tab);

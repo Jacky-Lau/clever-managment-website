@@ -1,7 +1,8 @@
-function ArchetypeDisplayCtrl($scope, archetypeParseService) {
+angular.module('clever.management.controllers.archetypeDisplayCtrl', []).controller('archetypeDisplayCtrl', ['$scope', 'archetypeParseService',
+function archetypeDisplayCtrl($scope, archetypeParseService) {
 
 	$scope.selectedTab = 'Header';
-	
+
 	$scope.selectTab = function(tab) {
 		$scope.selectedTab = tab;
 	};
@@ -29,7 +30,7 @@ function ArchetypeDisplayCtrl($scope, archetypeParseService) {
 			$scope.adlText = adl;
 		});
 	};
-	
+
 	$scope.isDropdownOpened = false;
 
 	$scope.$watch('selectedLanguage', function(language) {
@@ -59,10 +60,10 @@ function ArchetypeDisplayCtrl($scope, archetypeParseService) {
 				}
 			});
 		}
-	}); 
+	});
 
 	$scope.selectLanguage = function(language) {
 		$scope.selectedLanguage = language;
 		$scope.isDropdownOpened = false;
 	};
-}
+}]);
