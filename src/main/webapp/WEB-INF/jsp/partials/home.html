@@ -1,12 +1,12 @@
-<div class="row">
+<div class="row" style="margin: 0 20px;">
 	<carousel interval="interval" ng-style="{height: carouselHeight}">
 		<slide ng-repeat="slide in slides" active="slide.active">
-			<img ng-src="{{slide.image}}" style="margin:auto;" ng-style="{height: carouselHeight}">
+			<img ng-src="{{slide.image}}" style="margin:auto;width: 100%;" ng-style="{height: carouselHeight}">
 			<div class="carousel-caption">
-				<h4>Slide {{$index+1}}</h4>
+				<!--<h4>Slide {{$index+1}}</h4>
 				<p>
-					{{slide.text}}
-				</p>
+				{{slide.text}}
+				</p> -->
 			</div>
 		</slide>
 	</carousel>

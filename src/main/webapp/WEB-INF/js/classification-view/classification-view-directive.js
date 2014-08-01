@@ -313,11 +313,20 @@ function(msgboxService) {
 					}
 					return fixedText;
 				}
+				
+				function compareArchetypeHost(hostA, hostB) {
+					if (hostA.rmEntity < hostB.rmEntity)
+						return -1;
+					if (hostA.rmEntity > hostB.rmEntity)
+						return 1;
+					return 0;
+				}
 
 				function getTypeSubTable(archetypeHostInfos, geo) {
 					var subTable = "";
 					subTable += '<table style="color: black;border:1px solid black;table-layout: fixed;word-wrap: break-word;word-break: break-all;white-space: pre-wrap;text-align: left;" width="' + (geo.width - 9) + '" cellpadding="2">';
 					var maxRows = 10;
+					archetypeHostInfos.sort(compareArchetypeHost);
 					angular.forEach(archetypeHostInfos, function(archetypeHostInfo, index) {
 						if(index < maxRows){
 							subTable += '<tr>' +

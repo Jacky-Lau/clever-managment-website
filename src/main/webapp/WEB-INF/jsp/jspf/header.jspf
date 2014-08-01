@@ -1,10 +1,10 @@
 <nav class="navbar navbar-default" role="navigation">
 	<div class="container-fluid" >
-		<div class="col-sm-1 col-md-1 col-lg-1"></div>
-		<div class="col-sm-10 col-md-10 col-lg-10">
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
+		<div class="col-sm-8 col-md-8 col-lg-8">
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
-				<a class="navbar-brand" href="/clever-management-website">CLEVER Management</a>
+				<a class="navbar-brand" href="/clever-management-website"><img src="/clever-management-website/img/logo.png" style="height: 28px;margin-top: -5px;">&nbsp;CLEVER Management</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -48,6 +48,6 @@
 				</ul>
 			</div><!-- /.navbar-collapse -->
 		</div>
-		<div class="col-sm-1 col-md-1 col-lg-1"></div>
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
 	</div><!-- /.container-fluid -->
 </nav>
