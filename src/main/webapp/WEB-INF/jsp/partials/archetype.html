@@ -21,7 +21,7 @@
 				<div class="list-group" ng-show="archetypeList.length > 0">
 					<a href class="list-group-item" ng-click="selectOverview()" ng-class="{'active': selectedArchetypeId == 0}"><b>Overview</b></a>
 					<span ng-show="archetypeList.length == 0"><img src="/clever-management-website/img/loading.gif" style="max-height: 20px;"></img> Loading...</span>
-					<a href ng-show="archetypeList.length > 0" class="list-group-item" ng-repeat="archetype in archetypeList | filter:archetypeListFilter | orderBy:'name'" ng-click="selectArchetype(archetype)" ng-class="{'active': archetype.id == selectedArchetypeId}">{{archetype.name}}</a>
+					<a href ng-show="archetypeList.length > 0" class="list-group-item" ng-repeat="archetype in archetypeList | filter:archetypeListFilter | orderBy:'name'" ng-click="selectArchetype(archetype)" ng-class="{'active': archetype.id == selectedArchetypeId}"><span ng-bind-html="archetype.name | highlight:archetypeListFilter | unsafe"></span></a>
 				</div>
 			</div>
 		</nav>

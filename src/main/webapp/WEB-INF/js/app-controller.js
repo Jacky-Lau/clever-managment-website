@@ -1,4 +1,5 @@
-function AppCtrl($scope, $modal, $http, $timeout, archetypeRetrieveService, CLASSIFICATIONS_URL) {
+angular.module('clever.management.controllers.app', []).controller('appCtrl', ['$scope', '$timeout',
+function($scope, $timeout) {
 
 	$scope.windowHeight
 
@@ -18,4 +19,4 @@ function AppCtrl($scope, $modal, $http, $timeout, archetypeRetrieveService, CLAS
 	$scope.closeAlert = function(index) {
 		$scope.alerts.splice(index, 1);
 	};
-}
+}]); 

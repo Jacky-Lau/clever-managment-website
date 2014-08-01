@@ -25,16 +25,24 @@ public class LayoutController {
 	@Resource(name = "layoutService")
 	private LayoutService layoutService;
 
+	final private static String DEFAULT_USER = "admin";
+
 	@RequestMapping(value = "/classification/id/{id}/layout", method = RequestMethod.GET)
 	@ResponseBody
 	public List<ArchetypeTypeLayoutSettingInfo> getClassificationLayoutById(
 			@PathVariable Integer id, Authentication authentication) {
 		String userName = Optional.ofNullable(authentication)
 				.map(authen -> (UserDetails) authen.getPrincipal())
-				.map(principal -> principal.getUsername()).orElse("admin");
+				.map(principal -> principal.getUsername()).orElse(DEFAULT_USER);
 		try {
-			return this.layoutService.getClassificationLayoutByIdAndUserName(
-					id, userName);
+			List<ArchetypeTypeLayoutSettingInfo> infos = this.layoutService
+					.getClassificationLayoutByIdAndUserName(id, userName);
+			if (infos.size() == 0) {
+				infos = this.layoutService
+						.getClassificationLayoutByIdAndUserName(id,
+								DEFAULT_USER);
+			}
+			return infos;
 		} catch (LayoutException ex) {
 			return null;
 		}
@@ -46,10 +54,16 @@ public class LayoutController {
 			@PathVariable Integer id, Authentication authentication) {
 		String userName = Optional.ofNullable(authentication)
 				.map(authen -> (UserDetails) authen.getPrincipal())
-				.map(principal -> principal.getUsername()).orElse("admin");
+				.map(principal -> principal.getUsername()).orElse(DEFAULT_USER);
 		try {
-			return this.layoutService.getArchetypeTypeLatyoutByIdAndUserName(
-					id, userName);
+			List<ArchetypeHostLayoutSettingInfo> infos = this.layoutService
+					.getArchetypeTypeLatyoutByIdAndUserName(id, userName);
+			if (infos.size() == 0) {
+				infos = this.layoutService
+						.getArchetypeTypeLatyoutByIdAndUserName(id,
+								DEFAULT_USER);
+			}
+			return infos;
 		} catch (LayoutException ex) {
 			return null;
 		}
@@ -64,7 +78,7 @@ public class LayoutController {
 		result.setSucceeded(true);
 		String userName = Optional.ofNullable(authentication)
 				.map(authen -> (UserDetails) authen.getPrincipal())
-				.map(principal -> principal.getUsername()).orElse("admin");
+				.map(principal -> principal.getUsername()).orElse(DEFAULT_USER);
 		try {
 			this.layoutService.updateClassificationLayoutByIdAndUserName(id,
 					userName, infos);
@@ -85,7 +99,7 @@ public class LayoutController {
 		result.setSucceeded(true);
 		String userName = Optional.ofNullable(authentication)
 				.map(authen -> (UserDetails) authen.getPrincipal())
-				.map(principal -> principal.getUsername()).orElse("admin");
+				.map(principal -> principal.getUsername()).orElse(DEFAULT_USER);
 		try {
 			this.layoutService.updateArchetypeTypeLatyoutByIdAndUserName(id,
 					userName, infos);

@@ -13,9 +13,14 @@ src="/clever-management-website/js/lib/angular-route.js"></script>
 src="/clever-management-website/js/lib/mxClient-src.js"></script>
 <script
 src="/clever-management-website/js/lib/ui-bootstrap-tpls-0.11.0.js"></script>
+<script
+src="/clever-management-website/js/lib/ui-utils.js"></script>
 
 <script
 src="/clever-management-website/js/pretty-filter.js"></script>
+<script
+src="/clever-management-website/js/unsafe-filter.js"></script>
+
 <script
 src="/clever-management-website/js/toggle-switch/angular-toggle-switch.js"></script>
 <script

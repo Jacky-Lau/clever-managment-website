@@ -11,7 +11,7 @@ uri="http://www.springframework.org/security/tags"%>
 		<!-- css init -->
 		<%@ include file="jspf/css-init.jspf"%>
 	</head>
-	<body ng-controller="AppCtrl" resizable>
+	<body ng-controller="appCtrl" resizable>
 
 		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
 			&nbsp;&nbsp;&nbsp;&nbsp;{{alert.msg}}
