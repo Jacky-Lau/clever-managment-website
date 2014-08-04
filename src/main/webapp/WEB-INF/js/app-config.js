@@ -10,11 +10,15 @@ var config = {
 	'LATEST_VERSION_ARCHETYPE_LIST_URL' : prefix + '/archetypes/latest',
 	'DEPLOYED_ARCHETYPE_LIST_URL' : prefix + '/archetypes/deployed',
 	'ARCHETYPE_DEPLOY_URL' : prefix + '/archetypes/actions/deploy',
-	'ARCHETYPE_BRIEF_INFO_URL' : prefix + '/archetypes/briefInfo',
+	'ARCHETYPES_BY_TYPE_ID_URL' : prefix + '/archetypes/type/id/',
 	'AUTHENTICATION_URL' : prefix + '/authentication',
 	'APPLICATION_BY_ID_URL' : prefix + '/application/id/',
 	'APPLICATIONS_URL' : prefix + '/applications',
 	'APPLICATION_UPLOAD_URL' : prefix + '/application',
+	'CLASSIFICATIONS_URL' : prefix + '/classifications',
+	'CLASSIFICATION_BY_ID_URL' : prefix + '/classification/id/',
+	'CLASSIFICATION_LAYOUT_BY_ID_URL' : prefix + '/classification/id/',
+	'ARCHETYPE_TYPE_LAYOUT_BY_ID_URL' : prefix + '/archetypeType/id/',
 	'TEMP_URL' : prefix + '/temp',
 };
 var configModel = angular.module('clever.management.config', []);

@@ -1,7 +1,6 @@
+<!-- js library -->
 <script
 src="/clever-management-website/js/lib/jquery-2.1.1.js"></script>
-<!-- <script
-src="/clever-management-website/js/lib/bootstrap.min.js"></script> -->
 <script
 src="/clever-management-website/js/lib/xml2json.js"></script>
 <script
@@ -14,10 +13,17 @@ src="/clever-management-website/js/lib/angular-route.js"></script>
 src="/clever-management-website/js/lib/mxClient-src.js"></script>
 <script
 src="/clever-management-website/js/lib/ui-bootstrap-tpls-0.11.0.js"></script>
-<!-- <script
-src="/clever-management-website/js/lib/angular-resource.js"></script> -->
+<script
+src="/clever-management-website/js/lib/ui-utils.js"></script>
+<script
+src="/clever-management-website/js/lib/ng-context-menu.js"></script>
+
+<!-- filter -->
 <script
 src="/clever-management-website/js/pretty-filter.js"></script>
+<script
+src="/clever-management-website/js/unsafe-filter.js"></script>
+
 <script
 src="/clever-management-website/js/toggle-switch/angular-toggle-switch.js"></script>
 <script
@@ -41,30 +47,49 @@ src="/clever-management-website/js/upload-modal/files-model-directive.js"></scri
 <script
 src="/clever-management-website/js/app-modal/file-model-directive.js"></script>
 <script
-src="/clever-management-website/js/app-modal/app-library-service.js"></script>
-<script
-src="/clever-management-website/js/upload-modal/file-upload-service.js"></script>
-<script
 src="/clever-management-website/js/app-modal/app-modal-controller.js"></script>
 <script
-src="/clever-management-website/js/archetype-retrieve-service.js"></script>
-<script
-src="/clever-management-website/js/msgbox-service.js"></script>
-<script
-src="/clever-management-website/js/archetype-parse-service.js"></script>
-<script
 src="/clever-management-website/js/archetype-display-controller.js"></script>
+<script
+src="/clever-management-website/js/classification-view/classification-view-directive.js"></script>
+
+<!-- services -->
+<script
+src="/clever-management-website/js/services/classification-service.js"></script>
+<script
+src="/clever-management-website/js/services/app-library-service.js"></script>
+<script
+src="/clever-management-website/js/services/archetype-parse-service.js"></script>
+<script
+src="/clever-management-website/js/services/archetype-retrieve-service.js"></script>
+<script
+src="/clever-management-website/js/services/file-upload-service.js"></script>
+<script
+src="/clever-management-website/js/services/layout-service.js"></script>
+<script
+src="/clever-management-website/js/services/msgbox-service.js"></script>
+
+
+<!-- app setup -->
 <script
 src="/clever-management-website/js/app-config.js"></script>
 <script
 src="/clever-management-website/js/app.js"></script>
 <script
-src="/clever-management-website/js/home-controller.js"></script>
-<script
-src="/clever-management-website/js/deploy-controller.js"></script>
-<script
-src="/clever-management-website/js/upload-controller.js"></script>
-<script
-src="/clever-management-website/js/app-library-controller.js"></script>
-<script
 src="/clever-management-website/js/app-controller.js"></script>
+
+<!-- page controller -->
+<script
+src="/clever-management-website/js/page-controllers/home-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/deploy-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/upload-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/app-library-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/archetype-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/login-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/classification-controller.js"></script>

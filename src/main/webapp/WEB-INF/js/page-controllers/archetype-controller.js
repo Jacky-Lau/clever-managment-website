@@ -1,4 +1,4 @@
-function HomeCtrl($scope, $modal, archetypeRetrieveService) {
+function ArchetypeCtrl($scope, $modal, $routeParams, archetypeRetrieveService) {
 
 	var undefined;
 
@@ -53,6 +53,16 @@ function HomeCtrl($scope, $modal, archetypeRetrieveService) {
 	$scope.selectTab = function(tab) {
 		$scope.selectedArchetypeId = tab.id;
 	};
+	
+	$scope.closeAllTabs = function(){
+		$scope.tabs = [];
+		$scope.selectedArchetypeId = 0;
+	};
+
+	$scope.closeOtherTabs = function(tab) {
+		$scope.tabs = [tab];
+		$scope.selectedArchetypeId = tab.id;
+	};
 
 	$scope.closeTab = function(tab) {
 		var index = $scope.tabs.indexOf(tab);
@@ -68,7 +78,7 @@ function HomeCtrl($scope, $modal, archetypeRetrieveService) {
 
 	function retrieveArchetypeFileList() {
 		$scope.archetypeList = [];
-		archetypeRetrieveService.getArchetypesBriefInfo().then(function(info) {
+		archetypeRetrieveService.getArchetypesBriefInfoByTypeId($routeParams.typeId).then(function(info) {
 			angular.forEach(info.archetypeHostInfos, function(host) {
 				angular.forEach(host.archetypeInfos, function(archetype) {
 					$scope.archetypeList.push(archetype);

@@ -5,11 +5,12 @@ import java.util.Set;
 
 import org.openehr.am.archetype.Archetype;
 
+import edu.zju.bme.clever.website.model.entity.ArchetypeTypeClassification;
 import edu.zju.bme.clever.website.view.entity.ArchetypeBriefInfo;
+import edu.zju.bme.clever.website.view.entity.ArchetypeTypeInfo;
+import edu.zju.bme.clever.website.view.entity.ClassificationBriefInfo;
 
 public interface ArchetypeProviderService {
-
-	public ArchetypeBriefInfo getArchetypeBriefInfo();
 
 	public String getArchetypeXmlByName(String name);
 
@@ -24,12 +25,17 @@ public interface ArchetypeProviderService {
 	public String getArchetypeAdlById(Integer id);
 
 	public List<String> getAllArchetypeAdls();
-	
+
 	public List<String> getAllLatestVersionArchetypeAdls();
 
 	public List<String> getAllArchetypeIds();
-	
+
 	public List<String> getAllLatestVersionArchetypeIds();
 
 	public List<String> getDeployedArchetypeIds();
+
+	public ArchetypeBriefInfo getArchetypeBriefInfoByTypeId(Integer typeId);
+
+	public ArchetypeBriefInfo getArchetypeBriefInfo();
+
 }

@@ -60,6 +60,16 @@ splitter {
 	padding: 0px 5px;
 }
 
+/* form validation */
+.ng-invalid:focus {
+	border-color: red;
+}
+
+/* high light */
+.ui-match {
+	background-color: yellow;
+}
+
 /* over view style */
 table.title {
 	border-color: black;

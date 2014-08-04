@@ -81,4 +81,11 @@ public class Application {
 		this.modifyTime = modifyTime;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Application) {
+			return ((Application) obj).getId() == this.id;
+		}
+		return false;
+	}
 }

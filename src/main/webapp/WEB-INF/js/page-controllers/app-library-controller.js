@@ -1,6 +1,5 @@
 function AppLibraryCtrl($scope, $modal, $timeout, appLibraryService, msgboxService, WEBSITE_DOMAIN) {
-
-	$scope.alerts = [];
+	
 	$scope.applications = [];
 	$scope.websiteDomain = WEBSITE_DOMAIN;
 
@@ -23,22 +22,16 @@ function AppLibraryCtrl($scope, $modal, $timeout, appLibraryService, msgboxServi
 		});
 		modalInstance.result.then(function(result) {
 			if (result.succeeded) {
-				$scope.alerts.push({
+				$scope.addAlert({
 					type : 'success',
 					msg : 'Add application succeeded.'
 				});
-				$timeout(function() {
-					$scope.alerts.shift();
-				}, 5000);
 				refreshData();
 			} else {
-				$scope.alerts.push({
+				$scope.addAlert({
 					type : 'danger',
 					msg : 'Add application failed.'
 				});
-				$timeout(function() {
-					$scope.alerts.shift();
-				}, 5000);
 			}
 		});
 	};
@@ -60,22 +53,16 @@ function AppLibraryCtrl($scope, $modal, $timeout, appLibraryService, msgboxServi
 		});
 		modalInstance.result.then(function(result) {
 			if (result.succeeded) {
-				$scope.alerts.push({
+				$scope.addAlert({
 					type : 'success',
 					msg : 'Edit application succeeded.'
 				});
-				$timeout(function() {
-					$scope.alerts.shift();
-				}, 5000);
 				refreshData();
 			} else {
-				$scope.alerts.push({
+				$scope.addAlert({
 					type : 'danger',
 					msg : 'Edit application failed.'
 				});
-				$timeout(function() {
-					$scope.alerts.shift();
-				}, 5000);
 			}
 		});
 	};
@@ -84,13 +71,10 @@ function AppLibraryCtrl($scope, $modal, $timeout, appLibraryService, msgboxServi
 		msgboxService('Delete Application', 'Are you sure you want to delete application ' + app.name + '?').result.then(function(confirm) {
 			if (confirm) {
 				appLibraryService.deleteApplication(app).then(function(result) {
-					$scope.alerts.push({
+					$scope.addAlert({
 						type : 'warning',
 						msg : 'Delete application ' + app.name + ' succeeded.'
 					});
-					$timeout(function() {
-						$scope.alerts.shift();
-					}, 5000);
 					refreshData();
 				});
 			}

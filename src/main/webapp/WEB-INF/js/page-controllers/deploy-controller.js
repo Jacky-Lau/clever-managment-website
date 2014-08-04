@@ -1,7 +1,6 @@
 function DeployCtrl($scope, $http, $timeout, archetypeRetrieveService, ARCHETYPE_DEPLOY_URL) {
 
 	$scope.latestVersionArchetypeIds = [];
-	$scope.alerts = [];
 	$scope.buttonTitle = "Deploy";
 
 	refreshData();
@@ -34,22 +33,10 @@ function DeployCtrl($scope, $http, $timeout, archetypeRetrieveService, ARCHETYPE
 		$scope.buttonTitle = "Deploying...";
 		$http.get(ARCHETYPE_DEPLOY_URL).then(function(response) {
 			if (response.data == 'true') {
-				$scope.alerts.push({
-					type : 'success',
-					msg : 'Deploy archetypes succeeded.'
-				});
-				$timeout(function() {
-					$scope.alerts.shift();
-				}, 5000);
+				msgboxService("Succeeded", "Deploy archetypes succeeded.");
 				refreshData();
 			} else {
-				$scope.alerts.push({
-					type : 'danger',
-					msg : 'Deploy archetypes failed.'
-				});
-				$timeout(function() {
-					$scope.alerts.shift();
-				}, 5000);
+				msgboxService("Failed", "Deploy archetypes failed.");
 			}
 			$scope.buttonTitle = "Deploy";
 		});

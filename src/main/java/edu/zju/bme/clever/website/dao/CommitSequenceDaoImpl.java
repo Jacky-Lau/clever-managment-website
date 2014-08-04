@@ -8,7 +8,7 @@ import edu.zju.bme.clever.website.model.entity.CommitSequence;
 
 @Repository("commitSequenceDao")
 public class CommitSequenceDaoImpl extends
-		GenericDaoImpl<CommitSequence, Integer> implements CommitSequenceDao {
+		AbstractGenericDao<CommitSequence, Integer> implements CommitSequenceDao {
 	@Override
 	public void save(CommitSequence entity) {
 		entity.setCommitTime(Calendar.getInstance());

@@ -11,6 +11,9 @@ import javax.servlet.ServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,6 +66,7 @@ public class AppLibraryServiceImpl implements AppLibraryService {
 	}
 
 	@Override
+	@CacheEvict(value = "appLibraryCache", key = "'applicationId:' + #id")
 	public void updateApplication(Integer id, String name, String description,
 			String url, MultipartFile img) throws AppLibraryPersistException {
 		Application application = this.applicationDao.findById(id);
@@ -88,12 +92,18 @@ public class AppLibraryServiceImpl implements AppLibraryService {
 	}
 
 	@Override
+	@Cacheable(value = "appLibraryCache", key = "'applicationId:' + #id")
 	public Application getApplicationById(Integer id) {
 		return this.applicationDao.findById(id);
 	}
-	
+
 	@Override
-	public void deleteApplicationById(Integer id){
-		this.applicationDao.delete(id);
+	@CacheEvict(value = "appLibraryCache", key = "'applicationId:' + #id")
+	public void deleteApplicationById(Integer id) {
+		Application application = this.applicationDao.findById(id);
+		File imgFile = new File(servletContext.getRealPath("/WEB-INF"
+				+ APP_FOLDER_PATH + application.getName()));
+		imgFile.delete();
+		this.applicationDao.delete(application);
 	}
 }

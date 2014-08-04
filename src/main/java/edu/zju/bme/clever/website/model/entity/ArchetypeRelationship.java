@@ -46,9 +46,13 @@ public class ArchetypeRelationship {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "SOURCE_ARCHETYPE_HOST_ID")
 	private ArchetypeHost sourceArchetypeHost;
+	@Column(name = "SOURCE_ARCHETYPE_HOST_ID", updatable = false, insertable = false)
+	private Integer sourceArchetypeHostId;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DESTINATION_ARCHETYPE_HOST_ID")
 	private ArchetypeHost destinationArchetypeHost;
+	@Column(name = "DESTINATION_ARCHETYPE_HOST_ID", updatable = false, insertable = false)
+	private Integer destinationArchetypeHostId;
 
 	public Integer getId() {
 		return id;
@@ -83,4 +87,19 @@ public class ArchetypeRelationship {
 		this.destinationArchetypeHost = destinationArchetypeHost;
 	}
 
+	public Integer getSourceArchetypeHostId() {
+		return sourceArchetypeHostId;
+	}
+
+	public Integer getDestinationArchetypeHostId() {
+		return destinationArchetypeHostId;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ArchetypeRelationship) {
+			return ((ArchetypeRelationship) obj).getId() == this.id;
+		}
+		return false;
+	}
 }

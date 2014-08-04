@@ -26,4 +26,10 @@ public interface GenericDao<T, ID extends Serializable> {
 	public List<T> selectAll();
 
 	public T findUniqueByProperty(String propertyName, Object value);
+
+	public List<T> selectAll(String[] fetchFields);
+
+	public List<T> selectAll(boolean fetchAll);
+
+	public List<T> findByProperty(Object... params);
 }

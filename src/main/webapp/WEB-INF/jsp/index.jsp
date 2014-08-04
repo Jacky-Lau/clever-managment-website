@@ -11,18 +11,25 @@ uri="http://www.springframework.org/security/tags"%>
 		<!-- css init -->
 		<%@ include file="jspf/css-init.jspf"%>
 	</head>
-	<body ng-controller="AppCtrl" resizable>
+	<body ng-controller="appCtrl" resizable>
+
+		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+			&nbsp;&nbsp;&nbsp;&nbsp;{{alert.msg}}
+		</alert>
 		<!-- header -->
 		<%@ include file="jspf/header.jspf"%>
-		<div class="container content-container" ng-style="{height: windowHeight - 100}" style="overflow: auto;" ng-view>
-			
+		<!-- content -->
+		<div class="container content-container">
+			<div class="col-sm-1 col-md-2 col-lg-2"></div>
+			<div class="col-sm-10 col-md-8 col-lg-8" ng-view></div>
+			<div class="col-sm-1 col-md-2 col-lg-2"></div>
 		</div>
-
 		<!-- footer -->
 		<%@ include file="jspf/footer.jspf"%>
+
 		<!-- js init -->
 		<%@ include file="jspf/js-init.jspf"%>
-		
+
 		<!-- partials -->
 		<!-- home -->
 		<script type="text/ng-template" id="home.html">
@@ -40,6 +47,26 @@ uri="http://www.springframework.org/security/tags"%>
 		<script type="text/ng-template" id="app-library.html">
 			<%@ include file="partials/app-library.html"%>
 		</script>
-			
+		<!-- archetype -->
+		<script type="text/ng-template" id="archetype.html">
+			<%@ include file="partials/archetype.html"%>
+		</script>
+		<!-- overview -->
+		<script type="text/ng-template" id="overview.html">
+			<%@ include file="partials/overview.html"%>
+		</script>
+		<!-- login -->
+		<script type="text/ng-template" id="login.html">
+			<%@ include file="partials/login.html"%>
+		</script>
+		<!-- classification -->
+		<script type="text/ng-template" id="classification.html">
+			<%@ include file="partials/classification.html"%>
+		</script>
+		<!-- classification view -->
+		<script type="text/ng-template" id="classification-view.html">
+			<%@ include file="partials/classification-view.html"%>
+		</script>
+
 	</body>
 </html>

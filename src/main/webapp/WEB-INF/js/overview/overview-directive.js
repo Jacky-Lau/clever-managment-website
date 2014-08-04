@@ -1,14 +1,14 @@
-angular.module('clever.management.directives.overview', []).directive('overview', [
-function() {
+angular.module('clever.management.directives.overview', []).directive('overview', ['$q', 'layoutService', 'msgboxService',
+function($q, layoutService, msgboxService) {
 	return {
 		restrict : 'EA',
 		scope : {
 			archetypesBriefInfo : '=',
 			selectArchetype : '&',
 			windowHeight: '=',
-			animation : '@'
+			addAlert: '&',
 		},
-		templateUrl : 'js/overview/overview.html',
+		templateUrl : 'overview.html',
 		transclude : true,
 		replace : true,
 		controller : function($scope, $element, $attrs){
@@ -22,48 +22,85 @@ function() {
 			$scope.zoomOut = function(){
 				$scope.graph.zoomOut();
 			};
-			
-			$scope.selectLayout = function(layout){
-				$scope.currentLayout = layout;
-				$scope.isDropdownOpened = false;
-			};
 		},
 		link : function(scope, element, attrs) {
-			
-			var animation = scope.animation || 'false';
 
 			// Checks if the browser is supported
 			if (!mxClient.isBrowserSupported()) {
 				
 				// Displays an error message if the browser is not supported.
-				mxUtils.error('Browser is not supported!', 200, false);
+				msgboxService('Error', 'Browser is not supported!');
 				
 			} else {
 				
 				var container = element.find('#overview-container')[0];
 				
+				var outlineContainer = element.find('#outline-container')[0];
+				
+				// Disables built-in context menu
+				mxEvent.disableContextMenu(container);
+				//mxEvent.disableContextMenu(outline);
+				
 				// Creates the graph inside the given container
 				scope.graph = new mxGraph(container);
 				
-				scope.graph.centerZoom = false;
+				//scope.graph.centerZoom = false;
 				
 				// Enables HTML markup in all labels
 				scope.graph.setHtmlLabels(true);
 				
+				// 图形窗口的右上角的周围创建导航提示。  
+                scope.outline = new mxOutline(scope.graph, outlineContainer); 
+                
+                // 要显示的图像的轮廓，去掉下面的代码  
+                scope.outline.outline.labelsVisible = true;  
+                scope.outline.outline.setHtmlLabels(true);
+                
+                scope.isOutlineHided = false;
+                
+                scope.outline.outline.view.canvas.viewportElement.height.baseVal.value = (scope.windowHeight - 190)/3;
+                
+                // Overrides getLabel to return empty labels for edges and
+				// short markup for collapsed cells.	
+				scope.graph.getLabel = getLabel;
+				scope.outline.outline.getLabel = getLabel;			
+				
 				// Override folding to allow for tables
-				scope.graph.isCellFoldable = function(cell, collapse) {
+				/*scope.graph.isCellFoldable = function(cell, collapse) {
 					return this.getModel().isVertex(cell);
-				};
+				};*/
 				
 				scope.graph.graphHandler.scaleGrid = true;
+				
+				// 显示导航线  
+                scope.graph.graphHandler.guidesEnabled = true;
 				
 				// Changes the default vertex style in-place
 				var style = scope.graph.getStylesheet().getDefaultVertexStyle();
 				style[mxConstants.STYLE_FILLCOLOR] = 'white';
 				style[mxConstants.STYLE_STROKECOLOR] = 'white';
+				style[mxConstants.CURSOR_MOVABLE_EDGE] = 'default';
 				
-				// Disables built-in context menu
-				//mxEvent.disableContextMenu(container);
+				// Disable cell resize
+				scope.graph.cellsResizable = false;
+				
+				// Override isCellSelectable
+				scope.graph.isCellSelectable = function(cell) {
+					if (cell.isEdge()) {
+						return false;
+					} else {
+						return true;
+					}
+				}; 
+				
+				// Override isCellMovable
+				scope.graph.isCellMovable = function(cell){
+					if (cell.isEdge()) {
+						return false;
+					} else {
+						return true;
+					}
+				};
 				
 				/*// Enables tooltips
 				scope.graph.setTooltips(true);
@@ -87,8 +124,7 @@ function() {
 				
 				// Enables panning
 				scope.graph.setPanning(true);
-				// Disables built-in context menu
-				mxEvent.disableContextMenu(container);
+		
 				// Configures automatic expand on mouseover
 				scope.graph.panningHandler.autoExpand = true;
 
@@ -110,7 +146,7 @@ function() {
 				
 				// Installs a handler for double click events in the graph
 				// that shows an alert box				
-				scope.graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
+				/*scope.graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
 					var cell = evt.getProperty('cell');
 					scope.graph.tooltipHandler.resetTimer();
 					if (cell != null) {
@@ -121,67 +157,142 @@ function() {
 						});				
 					}
 					evt.consume();
-				});		
+				});	*/
+				
+				// select all
+				var keyHandler = new mxKeyHandler(scope.graph);
+				keyHandler.bindControlKey(65, function(evt) {
+					var parent = scope.graph.getDefaultParent();
+					scope.graph.selectVertices(parent);
+				});
 
 				// Layouts
 				// Circle layout, too big
 				var circleLayout = {
 					name : 'Circle',
+					type : 'system',
 					layout : new mxCircleLayout(scope.graph)
 				};
 
 				// Compact tree layout, not work
 				var compactLayout = {
 					name : 'Compact tree',
+					type : 'system',
 					layout : new mxCompactTreeLayout(scope.graph)
 				};
 
 				// Edge label layout, not work
 				var edgeLayout = {
 					name : 'Edge',
+					type : 'system',
 					layout : new mxEdgeLabelLayout(scope.graph)
 				};
 
 				// Stack layout, work, but very simple
 				var stackLayout = {
 					name : 'Stack',
+					type : 'system',
 					layout : new mxStackLayout(scope.graph, true, 30, 10, 10)
 				};
+				stackLayout.layout.wrap = stackLayout.layout.getParentSize(scope.graph.getDefaultParent()).width;
 				
 				var organicLayout = {
 					name : 'Organic',
+					type : 'system',
 					layout : new mxFastOrganicLayout(scope.graph)
 				};
 				//organicLayout.layout.minDistanceLimit = 20;
 				//organicLayout.layout.allowedToRun = 20;
+							
+				scope.selectLayout = function(layout) {
+					scope.currentLayout = layout;
+					applyLayout(layout);
+					scope.isDropdownOpened = false;
+				}; 
 				
-				stackLayout.layout.wrap = stackLayout.layout.getParentSize(scope.graph.getDefaultParent()).width;
+				// Init layouts						
+				function initLayouts() {
+					var deferred = $q.defer();
+					scope.layouts = [];
+					layoutService.getArchetypeTypeLayoutById(scope.archetypesBriefInfo.archetypeTypeId).then(function(result) {
+						
+						var layout = {};
+						layout.name = 'Custom';
+						layout.type = 'custom';
+						layout.layout = result;
+						
+						scope.layouts.push(layout);
+						scope.layouts.push(stackLayout);
+						scope.layouts.push(circleLayout);
+						scope.layouts.push(organicLayout);
+						
+						scope.currentLayout = layout;
+						deferred.resolve();
+					});
+					return deferred.promise;
+				}
 
-				scope.layouts = [stackLayout, circleLayout, organicLayout];
-				
-				function applyLayout(layout){
-					scope.graph.getModel().beginUpdate();
+				scope.saveLayout = function() {
+					msgboxService('Save', 'Do you want to save layout "' + scope.currentLayout.name + '" ?').result.then(function(isOk) {
+						if (isOk) {
+							var parent = scope.graph.getDefaultParent();
+							var settings = [];
+							angular.forEach(scope.graph.getChildVertices(parent), function(cell) {
+								settings.push({
+									archetypeHostId : cell.value.id,
+									positionX : cell.geometry.x,
+									positionY : cell.geometry.y,
+								});
+							});
+							layoutService.updateArchetypeTypeLayoutById(scope.archetypesBriefInfo.archetypeTypeId, settings).then(function(result) {
+								if (result.succeeded) {
+									scope.currentLayout.layout = settings;
+									scope.addAlert({
+										alert : {
+											type : 'success',
+											msg : 'Save layout ' + scope.currentLayout.name + ' succeeded.',
+										}
+									});
+								}
+							});
+						}
+					});
+				};
+	
+				function applyLayout(layout) {
+					var model = scope.graph.getModel();
+					model.beginUpdate();
 					try {
-						layout.layout.execute(scope.graph.getDefaultParent());
+						if (layout.type == 'system') {
+							layout.layout.execute(scope.graph.getDefaultParent());
+						} else if (layout.type == 'custom') {
+							var parent = scope.graph.getDefaultParent();
+							var vertices = scope.graph.getChildVertices(parent);
+							angular.forEach(layout.layout, function(setting) {
+								var vertex = findVertexById(setting.archetypeHostId, vertices);
+								if(vertex){
+									var geo = model.getGeometry(vertex);
+									var dx = new Number(setting.positionX) - geo.x;
+									var dy = new Number(setting.positionY) - geo.y;
+									scope.graph.moveCells([vertex], dx, dy);
+								}				
+							});
+						}
 					} finally {
 						// Updates the display
-						if (animation == 'true') {
-							var morph = new mxMorphing(scope.graph);
-							morph.addListener(mxEvent.DONE, function() {
-								scope.graph.getModel().endUpdate();
-							});
-							morph.startAnimation();
-						} else {
-							scope.graph.getModel().endUpdate();
-						}					
+						model.endUpdate();
 					}
 				}
-		
-				scope.$watch('currentLayout', function(newLayout) {
-					if(newLayout){
-						applyLayout(newLayout);
-					}			
-				});
+
+				function findVertexById(id, vertices) {
+					for ( i = 0; i < vertices.length; i++) {
+						if (vertices[i].value.id == id) {
+							var result = vertices[i];
+							vertices.splice(i, 1);
+							return result;
+						}
+					}
+				}
 				
 				// Highlights the vertices when the mouse enters
 				// var highlight = new mxCellTracker(graph, '#00FF00');
@@ -214,7 +325,7 @@ function() {
 							// Updates the height of the cell (override width
 							// for table width is set to 100%)
 							scope.graph.updateCellSize(vertex);
-							vertex.geometry.width = cellWidth;
+							//vertex.geometry.width = cellWidth;
 							vertex.geometry.alternateBounds = new mxRectangle(0, 0, cellWidth, 27);
 							cells.push(vertex);
 						});
@@ -222,30 +333,25 @@ function() {
 							if (relationship.relationType == 'OneToMany') {
 								var sourceCell = getCellById(relationship.sourceArchetypeHostId, cells);
 								var destinationCell = getCellById(relationship.destinationArchetypeHostId, cells);
-								var edge = scope.graph.insertEdge(parent, null, '', sourceCell, destinationCell);
+								if (sourceCell && destinationCell) {
+									var edge = scope.graph.insertEdge(parent, null, '', sourceCell, destinationCell);
+								}
 							}
 						});
 					} finally {
 						// Updates the display
 						scope.graph.getModel().endUpdate();
 					}
-
-					if (scope.currentLayout == organicLayout) {
-						applyLayout(organicLayout);
-					} else {
-						scope.currentLayout = organicLayout;
-					}
-
+					applyLayout(scope.currentLayout);
 				}; 
-
-				
-				// Gets the default parent for inserting new cells. This
-				// is normally the first child of the root (ie. layer 0).
+			
 				scope.$watch('archetypesBriefInfo', function(archetypesBriefInfo) {
 					if (archetypesBriefInfo) {
-						scope.reset();
-					}				
-				});
+						initLayouts().then(function() {
+							scope.reset();
+						});
+					}
+				}); 
 				
 				function getFixedText(text, width, wordWidth, trimWordCount) {
 					wordWidth = wordWidth || 7;
@@ -303,11 +409,9 @@ function() {
 					}
 					return subTable;
 				}
-
-		
-				// Overrides getLabel to return empty labels for edges and
-				// short markup for collapsed cells.
-				scope.graph.getLabel = function(cell) {
+				
+				function getLabel(cell){
+					var tmp = mxGraph.prototype.getLabel.apply(this, arguments); // "supercall"  
 					if (this.getModel().isVertex(cell)) {
 						var archetypeName;
 						var geo = this.getCellGeometry(cell);
@@ -317,9 +421,9 @@ function() {
 										'<tr><th colspan="2" class="text-center" >' + archetypeName + '</th></tr>' + 
 									'</table>';
 							if (this.isCellCollapsed(cell)) {
-								return title;
+								temp = title;
 							} else {
-								return title + 
+								temp = title + 
 										'<div style="overflow:auto;" class="overview-' + cell.value.rmEntity.toLowerCase() + '">' + 
 											getVersionSubTable(cell.value.archetypeInfos, geo) +
 										'</div>';
@@ -327,9 +431,10 @@ function() {
 						}
 					    
 					} else {
-						return '';
-					}
-				};	
+						temp = '';
+					}			
+					return temp;
+				}
 			}
 		},
 	};

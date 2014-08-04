@@ -1,67 +1,53 @@
 <nav class="navbar navbar-default" role="navigation">
-	<div class="container-fluid">
-		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header">
-			<a class="navbar-brand" href="/clever-management-website">CLEVER Management</a>
-		</div>
+	<div class="container-fluid" >
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
+		<div class="col-sm-8 col-md-8 col-lg-8">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/clever-management-website"><img src="/clever-management-website/img/logo.png" style="height: 28px;margin-top: -5px;">&nbsp;CLEVER Management</a>
+			</div>
 
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse" id="clever-navbar-collapse-1">
-			<ul class="nav navbar-nav navbar-right">
-				<sec:authorize access="!isAuthenticated()">
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="clever-navbar-collapse-1">
+				<ul class="nav navbar-nav navbar-right">
 					<li>
-						<a href="/clever-management-website/#/home"><span class="glyphicon glyphicon-home"></span> Home</a>
+						<a href="/clever-management-website/#/"><span class="glyphicon glyphicon-home"></span> Home</a>
 					</li>
+					<sec:authorize access="!isAuthenticated()">
+						<li>
+							<a href="/clever-management-website/#/login"><span class="glyphicon glyphicon-log-in"></span> Log in</a>
+						</li>
+					</sec:authorize>
+					<sec:authorize access="isAuthenticated()">
+						<sec:authentication property="principal.username" var="userName" />
+						<li>
+							<p class="navbar-text">
+								Welcome,
+							</p>
+						</li>
+						<li class="dropdown">
+							<a href class="dropdown-toggle"
+							data-toggle="dropdown">${userName}<b class="caret"></b> </a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="/clever-management-website/#/upload"><span class="glyphicon glyphicon-upload"></span> Upload Archetypes</a>
+								</li>
+								<li>
+									<a href="/clever-management-website/#/deploy"><span class="glyphicon glyphicon-cog"></span> Deploy</a>
+								</li>
+								<li>
+									<a href="/clever-management-website/#/appLibrary"><span class="glyphicon glyphicon-shopping-cart"></span> Manage App Library</a>
+								</li>
+								<li>
+									<a href="/clever-management-website/logout"><span class="glyphicon glyphicon-log-in"></span> Log out</a>
+								</li>
+							</ul>
+						</li>
+					</sec:authorize>
 					<li>
-						<a href="/clever-management-website/#/appLibrary"><span class="glyphicon glyphicon-shopping-cart"></span> App Library</a>
-					</li>
-					<li>
-						<form class="navbar-form navbar-right"
-						action="j_spring_security_check" method="post" role="form">
-							<div class="form-group">
-								<input name="j_username" type="text" placeholder="User name"
-								class="form-control" required autofocus>
-								<input
-								name="j_password" type="password" placeholder="Password"
-								class="form-control" required>
-								<button type="submit" class="btn btn-success">
-									Log in
-								</button>
-							</div>
-						</form>
-					</li>
-				</sec:authorize>
-				<sec:authorize access="isAuthenticated()">
-					<sec:authentication property="principal.username" var="userName" />
-					<li>
-						<a href="/clever-management-website/#/home"><span class="glyphicon glyphicon-home"></span> Home</a>
-					</li>
-					<li>
-						<p class="navbar-text">
-							Welcome,
-						</p>
-					</li>
-					<li class="dropdown">
-						<a href class="dropdown-toggle"
-						data-toggle="dropdown">${userName}<b class="caret"></b> </a>
-						<ul class="dropdown-menu">
-							<li>
-								<a href="/clever-management-website/#/upload"><span class="glyphicon glyphicon-upload"></span> Upload Archetypes</a>
-							</li>
-							<li>
-								<a href="/clever-management-website/#/deploy"><span class="glyphicon glyphicon-cog"></span> Deploy</a>
-							</li>
-							<li>
-								<a href="/clever-management-website/#/appLibrary"><span class="glyphicon glyphicon-shopping-cart"></span> Manage App Library</a>
-							</li>
-							<li>
-								<a href="/clever-management-website/logout"><span class="glyphicon glyphicon-off"></span> Log out</a>
-							</li>
-						</ul>
-					</li>
-				</sec:authorize>
-				<li>
-			</ul>
-		</div><!-- /.navbar-collapse -->
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div>
+		<div class="col-sm-2 col-md-2 col-lg-2"></div>
 	</div><!-- /.container-fluid -->
 </nav>

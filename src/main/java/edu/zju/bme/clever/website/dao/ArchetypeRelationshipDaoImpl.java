@@ -6,7 +6,7 @@ import edu.zju.bme.clever.website.model.entity.ArchetypeRelationship;
 
 @Repository("archetypeRelationshipDao")
 public class ArchetypeRelationshipDaoImpl extends
-		GenericDaoImpl<ArchetypeRelationship, Integer> implements
+		AbstractGenericDao<ArchetypeRelationship, Integer> implements
 		ArchetypeRelationshipDao {
 
 }

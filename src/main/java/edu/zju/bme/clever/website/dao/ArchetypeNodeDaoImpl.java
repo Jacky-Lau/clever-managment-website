@@ -6,6 +6,6 @@ import edu.zju.bme.clever.website.model.entity.ArchetypeNode;
 
 @Repository("archetypeNodeDao")
 public class ArchetypeNodeDaoImpl extends
-		GenericDaoImpl<ArchetypeNode, Integer> implements ArchetypeNodeDao {
+		AbstractGenericDao<ArchetypeNode, Integer> implements ArchetypeNodeDao {
 
 }
