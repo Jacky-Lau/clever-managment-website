@@ -231,7 +231,7 @@ function($q, layoutService, msgboxService) {
 					});
 					return deferred.promise;
 				}
-
+						
 				scope.saveLayout = function() {
 					msgboxService('Save', 'Do you want to save layout "' + scope.currentLayout.name + '" ?').result.then(function(isOk) {
 						if (isOk) {
@@ -247,17 +247,39 @@ function($q, layoutService, msgboxService) {
 							layoutService.updateArchetypeTypeLayoutById(scope.archetypesBriefInfo.archetypeTypeId, settings).then(function(result) {
 								if (result.succeeded) {
 									scope.currentLayout.layout = settings;
-									scope.addAlert({
-										alert : {
-											type : 'success',
-											msg : 'Save layout ' + scope.currentLayout.name + ' succeeded.',
-										}
+									var container = element.find('#overview-container')[0];
+									var originalClass = container.className;
+									var originalScale = scope.graph.view.scale;											
+									html2canvas(container, {
+										//logging: true,
+						                profile: true,
+						                useCORS: true,
+						                allowTaint: true,
+										onpreloaded : function() {
+											scope.graph.zoomTo(1);
+											container.className += " html2canvasreset";
+										},
+										onrendered : function(canvas) {
+											// canvas is the final rendered <canvas> element
+											container.className = originalClass;
+											scope.graph.zoomTo(originalScale);
+											var dataUrl = canvas.toDataURL();
+											layoutService.updateArchetypeTypeOutlineById(scope.archetypesBriefInfo.archetypeTypeId, dataUrl).then(function(result) {
+												scope.addAlert({
+													alert : {
+														type : 'success',
+														msg : 'Save layout ' + scope.currentLayout.name + ' succeeded.',
+													}
+												});
+											});
+										},
 									});
+
 								}
 							});
 						}
 					});
-				};
+				}; 
 	
 				function applyLayout(layout) {
 					var model = scope.graph.getModel();
@@ -334,7 +356,7 @@ function($q, layoutService, msgboxService) {
 								var sourceCell = getCellById(relationship.sourceArchetypeHostId, cells);
 								var destinationCell = getCellById(relationship.destinationArchetypeHostId, cells);
 								if (sourceCell && destinationCell) {
-									var edge = scope.graph.insertEdge(parent, null, '', sourceCell, destinationCell);
+									var edge = scope.graph.insertEdge(parent, null, '', sourceCell, destinationCell, 'strokeWidth=2');
 								}
 							}
 						});

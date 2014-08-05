@@ -162,11 +162,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>jstl</groupId> -->
-<!-- 			<artifactId>jstl</artifactId> -->
-<!-- 			<version>1.2</version> -->
-<!-- 		</dependency> -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
@@ -177,6 +172,12 @@
 			<artifactId>sqljdbc4</artifactId>
 			<version>4.0</version>
 		</dependency>
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
 
 		<!-- hibernate -->
 		<dependency>
@@ -189,11 +190,11 @@
 			<artifactId>hibernate-c3p0</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>net.sourceforge.jtds</groupId> -->
-<!-- 			<artifactId>jtds</artifactId> -->
-<!-- 			<version>1.3.1</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>net.sourceforge.jtds</groupId> -->
+		<!-- <artifactId>jtds</artifactId> -->
+		<!-- <version>1.3.1</version> -->
+		<!-- </dependency> -->
 
 		<!-- spring -->
 		<dependency>
@@ -341,7 +342,7 @@
 			<version>${openEHR.version}</version>
 		</dependency>
 	</dependencies>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

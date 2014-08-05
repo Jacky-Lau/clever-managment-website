@@ -65,6 +65,15 @@ splitter {
 	border-color: red;
 }
 
+/* html2canvas */
+.html2canvasreset {
+	position: absolute !important;
+	overflow: visible !important;
+	width: auto !important;
+	height: auto !important;
+	max-height: auto !important;
+}
+
 /* high light */
 .ui-match {
 	background-color: yellow;

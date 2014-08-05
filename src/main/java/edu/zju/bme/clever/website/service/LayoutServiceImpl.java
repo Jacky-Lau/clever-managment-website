@@ -87,7 +87,7 @@ public class LayoutServiceImpl implements LayoutService {
 						classifcation)
 				.stream()
 				.collect(
-						Collectors.toMap(setting -> setting.getId(),
+						Collectors.toMap(setting -> setting.getArchetypeTypeId(),
 								setting -> setting));
 		for (ArchetypeTypeLayoutSettingInfo info : infos) {
 			ArchetypeTypeLayoutSetting setting = settings.get(info
@@ -151,7 +151,7 @@ public class LayoutServiceImpl implements LayoutService {
 				.findByProperty("user", user, "archetypeType", type)
 				.stream()
 				.collect(
-						Collectors.toMap(setting -> setting.getId(),
+						Collectors.toMap(setting -> setting.getArchetypeHostId(),
 								setting -> setting));
 		for (ArchetypeHostLayoutSettingInfo info : infos) {
 			ArchetypeHostLayoutSetting setting = settings.get(info

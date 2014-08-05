@@ -65,7 +65,6 @@ public class TemporaryResourceController {
 			uuid = UUID.randomUUID().toString();
 			imgFile = new File(userFolder, uuid);
 		}
-		imgFile = new File(userFolder, uuid);
 		try {
 			img.transferTo(imgFile);
 		} catch (IllegalStateException | IOException ex) {
