@@ -3,6 +3,7 @@ function ClassificationCtrl($scope, $location, layoutService, msgboxService, cla
 	$scope.classifications = classifications;
 	$scope.currentClassification = selectedClassification;
 	$scope.isDropdownOpened = false;
+	$scope.showDetails = false;
 
 	$scope.zoomIn = function() {
 		$scope.classificationViewControl.zoomIn();

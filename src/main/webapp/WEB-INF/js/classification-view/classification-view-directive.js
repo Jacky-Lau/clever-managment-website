@@ -1,5 +1,5 @@
-angular.module('clever.management.directives.classificationView', []).directive('classificationView', ['msgboxService',
-function(msgboxService) {
+angular.module('clever.management.directives.classificationView', []).directive('classificationView', ['$q', 'msgboxService', 'WEBSITE_DOMAIN',
+function($q, msgboxService, WEBSITE_DOMAIN) {
 	return {
 		restrict : 'EA',
 		scope : {
@@ -8,7 +8,7 @@ function(msgboxService) {
 			control: '=',
 			doubleClick: '&',
 			addAlert: '&',
-			showOutline: '=',
+			showDetails: '=',
 		},
 		templateUrl : 'classification-view.html',
 		transclude : true,
@@ -296,13 +296,38 @@ function(msgboxService) {
 						});
 					});
 					return settings;
-				}
-
+				}						
+						
 				scope.$watch('classificationBriefInfo', function(classificationBriefInfo) {
 					if (classificationBriefInfo) {
-						reset();
-					}				
+						scope.imageSources = {};
+						var promise = loadImageById(scope.classificationBriefInfo.archetypeTypeInfos[0].id);
+						for (var i = 1; i < scope.classificationBriefInfo.archetypeTypeInfos.length; i++) {
+							(function(index) {
+								promise = promise.then(function(result) {
+									scope.imageSources[result.id] = {
+										loaded : result.loaded,
+										src : result.src,
+									};
+									return loadImageById(scope.classificationBriefInfo.archetypeTypeInfos[index].id);
+								});
+							})(i);
+						};
+						promise.then(function(result) {
+							scope.imageSources[result.id] = {
+								loaded : result.loaded,
+								src : result.src,
+							};
+							reset();
+						});
+					}
 				});
+							
+				scope.$watch('showDetails', function(newValue, oldValue) {
+					if (newValue != oldValue) {
+						reset();
+					}
+				}); 
 				
 				function getFixedText(text, width, wordWidth, trimWordCount) {
 					wordWidth = wordWidth || 7;
@@ -344,6 +369,37 @@ function(msgboxService) {
 					subTable += '</table>';		
 					return subTable;
 				}
+													
+				function loadImageById(id) {
+					var deferred = $q.defer();
+					var img = new Image();
+					img.src = WEBSITE_DOMAIN + '/upload/img/outline/' + getUserName() + '/type-' + id + '.png?' + new Date();
+					img.onload = function() {
+						deferred.resolve({
+							id : id,
+							loaded : true,
+							src : img.src,
+						});
+					};
+					img.onerror = function() {
+						var secondImg = new Image();
+						secondImg.src = WEBSITE_DOMAIN + '/upload/img/outline/admin/type-' + id + '.png?' + new Date();
+						secondImg.onload = function() {
+							deferred.resolve({
+								id : id,
+								loaded : true,
+								src : secondImg.src,
+							});
+						};
+						secondImg.onerror = function() {
+							deferred.resolve({
+								id : id,
+								loaded : false,
+							});
+						};
+					};
+					return deferred.promise;
+				}
 				
 				function getLabel(cell){
 					var tmp = mxGraph.prototype.getLabel.apply(this, arguments); // "supercall"  
@@ -358,16 +414,16 @@ function(msgboxService) {
 							if (this.isCellCollapsed(cell)) {
 								temp = title;
 							} else {
-								if(scope.showOutline){
-									temp = title + 
-										'<table style="color: black;border:1px solid black;" width="' + geo.width + '" cellpadding="2">' + 
-											'<tr><td><img src="/clever-management-website/upload/img/outline/admin/type-3.png" style="width: ' + (geo.width - 10) + 'px;padding: 5px 5px;"/></td></tr>' +
-										'</table>';
-								}else{
+								if(scope.showDetails){
 									temp = title + 
 										'<div style="overflow:auto;">' + 
 											getTypeSubTable(cell.value.archetypeHostInfos, geo) +
 										'</div>';
+								}else{						
+									temp = title + 
+										'<table style="color: black;border:1px solid black;" width="' + geo.width + '" cellpadding="2">' + 
+											'<tr><td><img src="' + scope.imageSources[cell.value.id].src + '" style="width: ' + (geo.width - 10) + 'px;padding: 5px 5px;"/></td></tr>' +
+										'</table>';
 								}						
 							}
 						}

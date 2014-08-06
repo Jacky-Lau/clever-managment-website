@@ -13,6 +13,8 @@
 					</li>
 				</ul>
 			</div>
+			<span style="margin-left: 20px;"><b>Show Details:&nbsp;&nbsp;&nbsp;</b></span>
+			<toggle-switch model="showDetails"></toggle-switch>
 			<div class="btn-group pull-right">
 				<button type="button" class="btn btn-default" ng-click="zoomIn()" tooltip-placement="top" tooltip="Zoom in" tooltip-popup-delay="500">
 					<span class="glyphicon glyphicon-zoom-in"></span>
@@ -34,12 +36,12 @@
 </div>
 <div class="row">
 	<div class="col-xs-12 col-md-12 col-lg-12">
-		<div classification-view 
-			window-height="windowHeight" 
-			double-click="selectType(selectedValue)" 
-			classification-brief-info="currentClassification" 
-			add-alert="addAlert(alert)"
-			control="classificationViewControl"
-			show-outline="true"></div>
+		<div classification-view
+		window-height="windowHeight"
+		double-click="selectType(selectedValue)"
+		classification-brief-info="currentClassification"
+		add-alert="addAlert(alert)"
+		control="classificationViewControl"
+		show-details="showDetails"></div>
 	</div>
 </div>

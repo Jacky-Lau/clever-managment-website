@@ -28,6 +28,15 @@ uri="http://www.springframework.org/security/tags"%>
 		<%@ include file="jspf/footer.jspf"%>
 
 		<!-- js init -->
+		<script type="text/javascript">
+			function getUserName() {
+				var userName = '${userName}';
+				if (userName == '') {
+					userName = 'admin';
+				}
+				return userName;
+			}
+		</script>
 		<%@ include file="jspf/js-init.jspf"%>
 
 		<!-- partials -->
