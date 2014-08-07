@@ -4,7 +4,7 @@ function HomeCtrl($scope) {
 	$scope.interval = 5000;
 	$scope.slides.push({
 		image : '/clever-management-website/img/slide-1.png',
-		text : ''
+		text : 'Clinical Large Easy Variety Elastic Repository'
 	});
 	$scope.slides.push({
 		image : '/clever-management-website/img/Letter-A-icon.png',
