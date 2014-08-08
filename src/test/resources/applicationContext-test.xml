@@ -21,61 +21,48 @@
 	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
 	<context:annotation-config />
-	<context:component-scan base-package="edu.zju.bme.clever.website">
-		<context:exclude-filter type="regex"
-			expression="edu.zju.bme.clever.webisite.controller.*" />
-	</context:component-scan>
-
-	<jaxws:client id="cleverClient"
-		serviceClass="edu.zju.bme.clever.service.CleverService" address="http://172.16.100.63:9091/clever-service-orm/CleverService?wsdl">
-	</jaxws:client>
-
-	<jaxws:client id="cleverValidationClient"
-		serviceClass="edu.zju.bme.clever.service.CleverService" address="http://172.16.100.63:9091/clever-service-orm-validate/CleverService?wsdl">
-	</jaxws:client>
+<!-- 	<context:component-scan base-package="edu.zju.bme.clever.website"> -->
+<!-- 		<context:exclude-filter type="regex" -->
+<!-- 			expression="edu.zju.bme.clever.webisite.controller.*" /> -->
+<!-- 	</context:component-scan> -->
 
 	<!-- hibernate start -->
-	<bean id="c3p0DataSource" destroy-method="close"
-		class="com.mchange.v2.c3p0.ComboPooledDataSource">
-		<property name="driverClass" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
-		<property name="jdbcUrl" value="jdbc:sqlserver://172.16.100.33;instanceName=SXDYY;databaseName=CLEVER_MANAGEMENT_WEBSITE_DEV" />
-		<property name="user" value="sa" />
-		<property name="password" value="@Sxdyy0808" />
-		<property name="initialPoolSize" value="5" />
-		<property name="minPoolSize" value="5" />
-		<property name="maxPoolSize" value="20" />
-		<property name="maxIdleTime" value="100" />
-		<property name="acquireIncrement" value="5" />
-	</bean>
-
-	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	<bean id="c3p0DataSource" destroy-method="close" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+        <property name="jdbcUrl" value="jdbc:sqlserver://172.16.100.33;instanceName=CDR;databaseName=CLEVER_MANAGEMENT_WEBSITE_DEV" />
+        <property name="user" value="sa" />
+        <property name="password" value="@Sxdyy0808" />
+        <property name="initialPoolSize" value="5" />
+        <property name="minPoolSize" value="5" />
+        <property name="maxPoolSize" value="20" />
+        <property name="maxIdleTime" value="100" />
+        <property name="acquireIncrement" value="5" />
+    </bean> 
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="c3p0DataSource" />
-		<property name="packagesToScan">
-			<list>
-				<value>edu.zju.bme.clever.website.model.entity</value>
-			</list>
-		</property>
+        <property name="packagesToScan">  
+            <list>  
+                <value>edu.zju.bme.clever.website.model.entity</value>  
+            </list>  
+        </property> 
 		<property name="hibernateProperties">
 			<props>
-				<prop key="hibernate.dialect">edu.zju.bme.clever.website.util.UnicodeSQLServerDialect
-				</prop>
+				<prop key="hibernate.dialect">edu.zju.bme.clever.website.util.UnicodeSQLServerDialect</prop>
 				<prop key="hibernate.connection.autocommit">false</prop>
 				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.format_sql">true</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext
-				</prop>
+				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
 			</props>
 		</property>
 	</bean>
 
-	<tx:annotation-driven transaction-manager="transactionManager" />
-	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
+	</bean>	
+	
 	<!-- hibernate end -->
 
 </beans>
