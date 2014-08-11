@@ -4,7 +4,7 @@
 <div class="modal-body">
 	<div class="content-container" ng-style="{height: windowHeight - 260}" style="overflow: auto;">
 		<div class="row">
-			<div class="col-sm-4 col-md-3 col-lg-3" ng-repeat="application in applications">
+			<div class="col-sm-4 col-md-3 col-lg-3" style="min-width: 250px;" ng-repeat="application in applications">
 				<div class="thumbnail" style="height: 420px;">
 					<sec:authorize access="isAuthenticated()">
 						<div class="row">
@@ -33,7 +33,7 @@
 						<p style="height: 90px;overflow: auto;">
 							<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>{{application.description}}
 						</p>
-						<a href="{{application.url}}" class="pull-right" style="position: absolute;bottom: 0px;right: 0px;margin-bottom: 25px;margin-right: 25px;">{{application.url}}</a>
+						<a href="{{application.url}}" class="pull-right" style="position: absolute;bottom: 0px;right: 0px;margin-bottom: 25px;margin-right: 25px;">{{getFixedText(application.url,215)}}</a>
 						<br />
 					</div>
 				</div>

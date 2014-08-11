@@ -1,5 +1,5 @@
 function AppLibraryCtrl($scope, $modal, $timeout, appLibraryService, msgboxService, WEBSITE_DOMAIN) {
-	
+
 	$scope.applications = [];
 	$scope.websiteDomain = WEBSITE_DOMAIN;
 
@@ -79,6 +79,17 @@ function AppLibraryCtrl($scope, $modal, $timeout, appLibraryService, msgboxServi
 				});
 			}
 		});
+	};
+
+	$scope.getFixedText = function(text, width, wordWidth, trimWordCount) {
+		wordWidth = wordWidth || 7;
+		trimWordCount = trimWordCount || 3;
+		var max = parseInt(width / wordWidth);
+		var fixedText = text;
+		if (text && text.length > max) {
+			fixedText = text.substring(0, max - trimWordCount) + '...';
+		}
+		return fixedText;
 	};
 
 	function refreshData() {
