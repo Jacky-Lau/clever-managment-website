@@ -1,4 +1,4 @@
-function DeployCtrl($scope, $http, $timeout, archetypeRetrieveService, ARCHETYPE_DEPLOY_URL) {
+function DeployCtrl($scope, $http, $timeout, msgboxService, archetypeRetrieveService, ARCHETYPE_DEPLOY_URL) {
 
 	$scope.latestVersionArchetypeIds = [];
 	$scope.buttonTitle = "Deploy";

@@ -4,9 +4,9 @@
 <div class="modal-body">
 	<div class="content-container">
 		<div class="row">
-			<div class="col-xs-5 col-md-5 col-lg-5" ng-style="{height: windowHeight - 260}" style="padding: 0% 5%;overflow: auto;">
+			<div class="col-xs-5 col-md-5 col-lg-5">
 				<h4 class="text-center">Latest version Archetypes</h5>
-				<ul class="list-group">
+				<ul class="list-group" ng-style="{height: windowHeight - 300}" style="padding: 0% 1%;overflow: auto;">
 					<li class="list-group-item" ng-repeat="id in latestVersionArchetypeIds | orderBy: deployed" ng-class="{true: 'list-group-item-success', false: 'list-group-item-warning'}[id.deployed]">
 						<span style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;cursor: default;">{{id.name}}</span>
 					</li>
@@ -17,9 +17,9 @@
 					{{buttonTitle}}
 				</button>
 			</div>
-			<div class="col-xs-5 col-md-5 col-lg-5" ng-style="{height: windowHeight - 260}" style="padding: 0% 5%;overflow: auto;">
+			<div class="col-xs-5 col-md-5 col-lg-5">
 				<h4 class="text-center">Deployed Archetypes</h5>
-				<ul class="list-group">
+				<ul class="list-group" ng-style="{height: windowHeight - 300}" style="padding: 0% 1%;overflow: auto;">
 					<li class="list-group-item list-group-item-success" ng-repeat="id in deployedArchetypeIds">
 						<span style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;cursor: default;">{{id}}</span>
 					</li>

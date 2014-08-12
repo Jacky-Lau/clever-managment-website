@@ -21,7 +21,7 @@
 					<sec:authorize access="isAuthenticated()">
 						<sec:authentication property="principal.username" var="userName" />
 						<li>
-							<p class="navbar-text">
+							<p class="navbar-text" style="margin-right: 0px;">
 								Welcome,
 							</p>
 						</li>

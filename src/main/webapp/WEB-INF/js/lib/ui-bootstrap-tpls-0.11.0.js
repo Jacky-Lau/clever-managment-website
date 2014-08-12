@@ -4008,7 +4008,7 @@ angular.module("template/popover/popover.html", []).run(["$templateCache", funct
     "\n" +
     "  <div class=\"popover-inner\">\n" +
     "      <h3 class=\"popover-title\" ng-bind=\"title\" ng-show=\"title\"></h3>\n" +
-    "      <div class=\"popover-content\" ng-bind=\"content\" style=\"word-wrap: break-word;word-break: break-all;white-space: pre-wrap;\"></div>\n" +
+    "      <div class=\"popover-content\" ng-bind-html=\"content | unsafe\" style=\"word-wrap: break-word;word-break: break-all;white-space: pre-wrap;\"></div>\n" +
     "  </div>\n" +
     "</div>\n" +
     "");

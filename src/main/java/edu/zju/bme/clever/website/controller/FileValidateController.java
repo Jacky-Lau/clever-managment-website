@@ -58,7 +58,7 @@ public class FileValidateController {
 										.getValue(), archetype);
 								results.put(archetype.getArchetypeId()
 										.getValue(), result);
-							} catch (Exception ex) {
+							} catch (Throwable ex) {
 								this.logger.debug("Parse file {} failed.",
 										file.getOriginalFilename(), ex);
 								result.setStatus(FileProcessResult.FileStatusConstant.INVALID);
