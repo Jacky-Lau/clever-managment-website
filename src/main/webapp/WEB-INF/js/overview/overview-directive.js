@@ -122,6 +122,7 @@ function($q, layoutService, msgboxService) {
 					return cell.value.name;
 				};
 				
+				/*
 				// Enables panning
 				scope.graph.setPanning(true);
 		
@@ -142,22 +143,33 @@ function($q, layoutService, msgboxService) {
 							}, submenu);
 						});
 					}
-				}; 
+				}; */
 				
 				// Installs a handler for double click events in the graph
-				// that shows an alert box				
-				/*scope.graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
+				// that shows an alert box							
+				scope.graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt) {
 					var cell = evt.getProperty('cell');
 					scope.graph.tooltipHandler.resetTimer();
 					if (cell != null) {
-						scope.$apply(function(){
-							scope.doubleClick({
-								selectedArchetype : cell.value
+						var latestVersion = 1;
+						var latestVersionArchetypeInfo;
+						angular.forEach(cell.value.archetypeInfos, function(info) {
+							if (new Number(info.version.replace('v','')) >= latestVersion) {
+								latestVersion = info.version;
+								latestVersionArchetypeInfo = info;
+							}
+						});
+						scope.$apply(function() {
+							scope.selectArchetype({
+								selectedArchetype : {
+									id : latestVersionArchetypeInfo.id,
+									name : latestVersionArchetypeInfo.name,
+								}
 							});
-						});				
+						});
 					}
 					evt.consume();
-				});	*/
+				}); 
 				
 				// select all
 				var keyHandler = new mxKeyHandler(scope.graph);

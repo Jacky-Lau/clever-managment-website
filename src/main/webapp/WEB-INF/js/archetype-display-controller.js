@@ -1,5 +1,5 @@
-angular.module('clever.management.controllers.archetypeDisplayCtrl', []).controller('archetypeDisplayCtrl', ['$scope', 'archetypeParseService',
-function archetypeDisplayCtrl($scope, archetypeParseService) {
+angular.module('clever.management.controllers.archetypeDisplayCtrl', []).controller('archetypeDisplayCtrl', ['$scope', 'archetypeParseService', 'ARCHETYPE_BY_ID_URL',
+function archetypeDisplayCtrl($scope, archetypeParseService, ARCHETYPE_BY_ID_URL) {
 
 	$scope.selectedTab = 'Header';
 
@@ -15,6 +15,8 @@ function archetypeDisplayCtrl($scope, archetypeParseService) {
 
 	$scope.init = function(tab) {
 		$scope.title = tab.title;
+		$scope.adlDownloadUrl = ARCHETYPE_BY_ID_URL + tab.id + '.adl';
+		$scope.xmlDownloadUrl = ARCHETYPE_BY_ID_URL + tab.id + '.xml';
 
 		tab.xmlPromise.then(function(xml) {
 			$scope.xmlText = xml;
