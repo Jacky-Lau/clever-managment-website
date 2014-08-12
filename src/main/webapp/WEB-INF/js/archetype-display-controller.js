@@ -8,7 +8,10 @@ function archetypeDisplayCtrl($scope, archetypeParseService) {
 	};
 
 	$scope.languages = [];
-	$scope.definition = [];
+	$scope.definition = {
+		treeItems : [],
+		tableItems : [],
+	};
 
 	$scope.init = function(tab) {
 		$scope.title = tab.title;

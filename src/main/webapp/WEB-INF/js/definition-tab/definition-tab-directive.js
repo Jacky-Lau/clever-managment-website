@@ -10,6 +10,8 @@ function() {
 		templateUrl : 'js/definition-tab/definition-tab.html',
 		controller : function($scope, $element, $attrs) {
 			$scope.treeControl = {};
+			$scope.selectedView = "Table";
+			$scope.isDropdownOpened = false;
 
 			$scope.isExpandedAll = false;
 			$scope.$watch('isExpandedAll', function(newValue, oldValue) {

@@ -89,19 +89,22 @@ function() {
 						items : []
 					};
 					angular.forEach(termDefinition.items, function(definition) {
-						var code, text, description;
+						var code, text, description, comment;
 						code = definition._code;
 						angular.forEach(definition.items, function(value) {
 							if (value._id == 'text') {
 								text = value.__text;
 							} else if (value._id == 'description') {
 								description = value.__text;
+							} else if (value._id == 'comment') {
+								comment = value.__text;
 							}
 						});
 						term.items.push({
 							code : code,
 							text : text,
 							description : description,
+							comment : comment,
 						});
 					});
 					terms.push(term);
@@ -189,10 +192,50 @@ function() {
 
 
 	this.parseDefinition = function(archetype) {
-		var definitions = [];
-		processNode(archetype.definition, definitions);
+		var definitions = {};
+		definitions.tableItems = [];
+		definitions.treeItems = [];
+		processNode(archetype.definition, undefined, definitions.treeItems, definitions.tableItems);
 		return definitions;
 	};
+
+	function processNode(node, parent, treeItems, tableItems) {
+		if (angular.isArray(node)) {
+			angular.forEach(node, function(value) {
+				var extractedNode = extractNode(value);
+				value.parent = parent;
+				if (value.attributes) {
+					extractedNode.children = [];
+					processNode(value.attributes, value, extractedNode.children, tableItems);
+				} else if (value.children) {
+					extractedNode.children = [];
+					processNode(value.children, value, extractedNode.children, tableItems);
+				} else {
+					var leafNode = extractLeafNode(value);
+					if (leafNode) {
+						tableItems.push(leafNode);
+					}
+				}
+				treeItems.push(extractedNode);
+			});
+		} else {
+			var extractedNode = extractNode(node);
+			node.parent = parent;
+			if (node.attributes) {
+				extractedNode.children = [];
+				processNode(node.attributes, node, extractedNode.children, tableItems);
+			} else if (node.children) {
+				extractedNode.children = [];
+				processNode(node.children, node, extractedNode.children, tableItems);
+			} else {
+				var leafNode = extractLeafNode(node);
+				if (leafNode) {
+					tableItems.push(leafNode);
+				}
+			}
+			treeItems.push(extractedNode);
+		}
+	}
 
 	function extractNode(node) {
 		var type, attribute, code, occurrences, existence, cardinality;
@@ -204,19 +247,19 @@ function() {
 		var label, labelType;
 		if (type) {
 			labelType = 'type';
-			label = type;		
+			label = type;
 		}
 		if (attribute) {
 			labelType = 'attribute';
-			label = attribute;		
+			label = attribute;
 		}
-		if(node.occurrences){
+		if (node.occurrences) {
 			occurrences = node.occurrences;
 		}
-		if(node.existence){
+		if (node.existence) {
 			existence = node.existence;
 		}
-		if(node.cardinality){
+		if (node.cardinality) {
 			cardinality = node.cardinality;
 		}
 		return {
@@ -234,10 +277,10 @@ function() {
 	function processCodePhrase(codePhraseNode, nodes) {
 		var labelType = 'codePhrase';
 		var codeList;
-		if(codePhraseNode.code_list){
+		if (codePhraseNode.code_list) {
 			codeList = codePhraseNode.code_list;
 		}
-		if(codePhraseNode.reference){
+		if (codePhraseNode.reference) {
 			codeList = codePhraseNode.reference;
 		}
 		if (angular.isArray(codeList)) {
@@ -261,39 +304,20 @@ function() {
 		}
 	}
 
-	function processNode(node, nodes) {
-		if (angular.isArray(node)) {
-			angular.forEach(node, function(value) {
-				var extractedNode = extractNode(value);
-				if (value.attributes) {
-					extractedNode.children = [];
-					processNode(value.attributes, extractedNode.children);
-				}
-				if (value.children) {
-					extractedNode.children = [];
-					processNode(value.children, extractedNode.children);
-				}
-				if (extractedNode.label.type == 'type' && extractedNode.label.text == 'CODE_PHRASE') {
-					extractedNode.children = [];
-					processCodePhrase(value.code_list, extractedNode.children);
-				}
-				nodes.push(extractedNode);
-			});
-		} else {
-			var extractedNode = extractNode(node);
-			if (node.attributes) {
-				extractedNode.children = [];
-				processNode(node.attributes, extractedNode.children);
+	var typeList = ['DV_COUNT', 'DV_TEXT', 'DV_DATE_TIME', 'DV_QUANTITY'];
+	var attributeList = ['value', 'magnitude'];
+
+	function extractLeafNode(node) {
+		var type = node.rm_type_name;
+		var attribute = node.parent.rm_attribute_name;
+		if (typeList.indexOf(type) != -1) {
+			if (attributeList.indexOf(attribute) != -1) {
+				return {
+					type : type,
+					code : node.parent.parent.node_id,
+					occurrences : node.parent.parent.occurrences,
+				};
 			}
-			if (node.children) {
-				extractedNode.children = [];
-				processNode(node.children, extractedNode.children);
-			}
-			if (extractedNode.label.type == 'type' && extractedNode.label.text == 'CODE_PHRASE') {
-				extractedNode.children = [];
-				processCodePhrase(node, extractedNode.children);
-			}
-			nodes.push(extractedNode);
 		}
 	}
 
