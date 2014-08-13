@@ -51,7 +51,7 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
                 
                 scope.outline.outline.view.canvas.viewportElement.height.baseVal.value = (scope.windowHeight - 190)/3;
                 
-                scope.isOutlineHided = false;
+                scope.isOutlineHided = true;
                 
                 // Overrides getLabel to return empty labels for edges and
 				// short markup for collapsed cells.	

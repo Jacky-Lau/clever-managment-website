@@ -56,7 +56,7 @@ function($q, layoutService, msgboxService) {
                 scope.outline.outline.labelsVisible = true;  
                 scope.outline.outline.setHtmlLabels(true);
                 
-                scope.isOutlineHided = false;
+                scope.isOutlineHided = true;
                 
                 scope.outline.outline.view.canvas.viewportElement.height.baseVal.value = (scope.windowHeight - 190)/3;
                 
