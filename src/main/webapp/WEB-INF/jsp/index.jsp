@@ -53,6 +53,10 @@ uri="http://www.springframework.org/security/tags"%>
 		<script type="text/ng-template" id="deploy.html">
 			<%@ include file="partials/deploy.html"%>
 		</script>
+		<!-- about -->
+		<script type="text/ng-template" id="about.html">
+			<%@ include file="partials/about.html"%>
+		</script>
 		<!-- app library -->
 		<script type="text/ng-template" id="app-library.html">
 			<%@ include file="partials/app-library.html"%>

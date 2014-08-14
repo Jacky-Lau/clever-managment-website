@@ -22,6 +22,8 @@ function($routeProvider) {
 	}).when("/login", {
 		templateUrl : 'login.html',
 		controller : LoginCtrl
+	}).when("/about", {
+		templateUrl : 'about.html',
 	}).when("/classification/id/:classificationId", {
 		templateUrl : 'classification.html',
 		controller : ClassificationCtrl,
@@ -44,7 +46,7 @@ function($routeProvider) {
 	// register listener to watch route changes
 	$rootScope.$on("$routeChangeStart", function(event, next, current) {
 		var classificationReg = new RegExp('/classification/id/.*');
-		if (next.originalPath != '/' && next.originalPath != '/appLibrary' && !classificationReg.test(next.originalPath) && next.originalPath != '' && next.originalPath != '/archetype') {
+		if (next.originalPath != '/' && next.originalPath != '/appLibrary' && !classificationReg.test(next.originalPath) && next.originalPath != '' && next.originalPath != '/archetype' && next.originalPath != '/about') {
 			$http.get(AUTHENTICATION_URL).then(function(response) {
 				if (response.data != 'true') {
 					$location.path("/login");
