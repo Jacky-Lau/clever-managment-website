@@ -1,6 +1,5 @@
 function UploadCtrl($scope, $modal, fileUploadService, msgboxService) {
-
-	$scope.title = "Upload Archetypes";
+	
 	$scope.fileList = [];
 	$scope.status = "AddingFile";
 

@@ -4,25 +4,47 @@
 		<div class="col-sm-10 col-md-8 col-lg-8" style="margin-left: -3%;margin-right: -3%;width: 72.7%;">
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
-				<a class="navbar-brand" href="/clever-management-website"><img src="/clever-management-website/img/logo.png" style="height: 28px;margin-top: -5px;">&nbsp;CLEVER Management</a>
+				<a class="navbar-brand" href="/clever-management-website"><img src="/clever-management-website/img/logo.png" style="height: 28px;margin-top: -5px;">&nbsp;{{'iTitle' | translate}}</a>
 			</div>
+			<ul class="nav navbar-nav navbar-left">
+				<li>
+					<p class="navbar-text" style="margin-right: 0px;">
+						{{'iLanguage' | translate}}</span>:
+					</p>
+				</li>
+				<li class="dropdown">
+					<a href class="dropdown-toggle"
+					data-toggle="dropdown">
+					<img ng-show="getCurrentLanguage() == 'zh'" src="/clever-management-website/img/zh.png" style="height: 18px;">
+					<img ng-show="getCurrentLanguage() == 'en'" src="/clever-management-website/img/en.png" style="height: 20px;">
+					{{getCurrentLanguage() | translate}}<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li ng-click="changeLanguage('zh')" style="cursor: pointer;">
+							&nbsp;&nbsp;&nbsp;&nbsp;<img src="/clever-management-website/img/zh.png" style="height: 20px;">&nbsp;&nbsp;{{'zh' | translate}}</span>
+						</li>
+						<li ng-click="changeLanguage('en')" style="cursor: pointer;">
+							&nbsp;&nbsp;&nbsp;&nbsp;<img src="/clever-management-website/img/en.png" style="height: 20px;">&nbsp;&nbsp;{{'en' | translate}}</span>
+						</li>
+					</ul>
+				</li>
+			</ul>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="clever-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
 					<li>
-						<a href="/clever-management-website/#/"><span class="glyphicon glyphicon-home"></span> Home</a>
+						<a href="/clever-management-website/#/"><span class="glyphicon glyphicon-home"></span> {{'iHome' | translate}}</a>
 					</li>
 					<sec:authorize access="!isAuthenticated()">
 						<li>
-							<a href="/clever-management-website/#/login"><span class="glyphicon glyphicon-log-in"></span> Log in</a>
+							<a href="/clever-management-website/#/login"><span class="glyphicon glyphicon-log-in"></span> {{'iLogIn' | translate}}</a>
 						</li>
 					</sec:authorize>
 					<sec:authorize access="isAuthenticated()">
 						<sec:authentication property="principal.username" var="userName" />
 						<li>
 							<p class="navbar-text" style="margin-right: 0px;">
-								Welcome,
+								<span translate="iWelcome"></span>
 							</p>
 						</li>
 						<li class="dropdown">
@@ -30,16 +52,16 @@
 							data-toggle="dropdown">${userName}<b class="caret"></b> </a>
 							<ul class="dropdown-menu">
 								<li>
-									<a href="/clever-management-website/#/upload"><span class="glyphicon glyphicon-upload"></span> Upload Archetypes</a>
+									<a href="/clever-management-website/#/upload"><span class="glyphicon glyphicon-upload"></span> {{'iUpload' | translate}}</a>
 								</li>
 								<li>
-									<a href="/clever-management-website/#/deploy"><span class="glyphicon glyphicon-cog"></span> Deploy</a>
+									<a href="/clever-management-website/#/deploy"><span class="glyphicon glyphicon-cog"></span> {{'iDeploy' | translate}}</a>
 								</li>
 								<li>
-									<a href="/clever-management-website/#/appLibrary"><span class="glyphicon glyphicon-shopping-cart"></span> Manage App Library</a>
+									<a href="/clever-management-website/#/appLibrary"><span class="glyphicon glyphicon-shopping-cart"></span> {{'iManageApp' | translate}}</a>
 								</li>
 								<li>
-									<a href="/clever-management-website/logout"><span class="glyphicon glyphicon-log-in"></span> Log out</a>
+									<a href="/clever-management-website/logout"><span class="glyphicon glyphicon-log-in"></span> {{'iLogOut' | translate}}</a>
 								</li>
 							</ul>
 						</li>

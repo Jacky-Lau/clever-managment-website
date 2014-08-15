@@ -1,7 +1,7 @@
 function DeployCtrl($scope, $http, $timeout, msgboxService, archetypeRetrieveService, ARCHETYPE_DEPLOY_URL) {
 
 	$scope.latestVersionArchetypeIds = [];
-	$scope.buttonTitle = "Deploy";
+	$scope.buttonTitle = "iDeployDeploy";
 
 	refreshData();
 
@@ -30,7 +30,7 @@ function DeployCtrl($scope, $http, $timeout, msgboxService, archetypeRetrieveSer
 
 
 	$scope.deploy = function() {
-		$scope.buttonTitle = "Deploying...";
+		$scope.buttonTitle = "iDeployDeploying";
 		$http.get(ARCHETYPE_DEPLOY_URL).then(function(response) {
 			if (response.data == 'true') {
 				msgboxService("Succeeded", "Deploy archetypes succeeded.");

@@ -20,7 +20,7 @@ src="/clever-management-website/js/lib/ui-utils.js"></script>
 <script
 src="/clever-management-website/js/lib/ng-context-menu.js"></script>
 <script
-src="/clever-management-website/js/lib/canvg.js"></script>
+src="/clever-management-website/js/lib/angular-translate.js"></script>
 
 <!-- filter -->
 <script

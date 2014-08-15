@@ -9,6 +9,19 @@
 	-ms-flex-direction: row;
 }
 
+.hbox.center-box {
+	/* Firefox */
+	-moz-box-pack: center;
+	-moz-box-align: center;
+	/* Safari、Opera 以及 Chrome */
+	-webkit-box-pack: center;
+	-webkit-box-align: center;
+	/* W3C */
+	display: box;
+	box-pack: center;
+	box-align: center;
+}
+
 .vbox {
 	height: 100%;
 	display: -webkit-box;
@@ -40,9 +53,9 @@
 }
 
 .vcenter {
-    display: inline-block;
-    vertical-align: middle;
-    float: none;
+	display: inline-block;
+	vertical-align: middle;
+	float: none;
 }
 
 .fileinput-button {
@@ -64,6 +77,11 @@
 
 splitter {
 	padding: 0px 5px;
+}
+
+.item-title {
+	font-size: 1.5em;
+	font-family: Microsoft YaHei;
 }
 
 /* form validation */

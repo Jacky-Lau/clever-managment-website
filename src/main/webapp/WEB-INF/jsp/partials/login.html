@@ -3,23 +3,23 @@
 	<div class="col-md-6">
 		<form name="loginForm" class="form-horizontal" action="j_spring_security_check"
 		method="post" role="form">
-			<h2 class="form-signin-heading">Please log in</h2>
-			<br>
-			<span ng-if="error" style="color: red">User name or password is not correct.</span>
+			<h2 class="form-signin-heading">{{'iLoginTitle' | translate}}</h2>
+			<div ng-if="error" style="color: red">{{'iLoginInvalid' | translate}}</div>
+			<br />
 			<div class="form-group">
-				<label class="col-sm-2 control-label">User name</label>
+				<label class="col-sm-2 control-label">{{'iLoginUserName' | translate}}</label>
 				<div class="col-sm-9">
 					<input type="text" name="username" ng-model="userName" class="form-control"
-					placeholder="User name" required autofocus>
+					placeholder="{{'iLoginUserName' | translate}}" required autofocus>
 				</div>
 				<label ng-show="loginForm.username.$error.required" class="col-sm-1 control-label" style="color: red;margin-left: -30px;"><b>*</b></label>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-2 control-label">Password</label>
+				<label class="col-sm-2 control-label">{{'iLoginPassword' | translate}}</label>
 				<div class="col-sm-9">
 					<input
 					type="password" name="password" ng-model="password" class="form-control"
-					placeholder="Password" required>
+					placeholder="{{'iLoginPassword' | translate}}" required>
 				</div>
 				<label ng-show="loginForm.password.$error.required" class="col-sm-1 control-label" style="color: red;margin-left: -30px;"><b>*</b></label>
 			</div>
@@ -28,14 +28,14 @@
 					<div class="checkbox">
 						<label>
 							<input type="checkbox" name="remember-me">
-							Remember me </label>
+							{{'iLoginRememberMe' | translate}}</label>
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
 					<button type="submit" ng-disabled="loginForm.$invalid" class="btn btn-success" style="width: 33%;">
-						Log in
+						{{'iLoginLogin' | translate}}
 					</button>
 				</div>
 			</div>

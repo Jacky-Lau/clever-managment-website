@@ -9,20 +9,20 @@
 		<div class="row">
 			<div class="col-lg-6 col-md-6 col-sm-6">
 				<div class="input-group">
-					<span class="input-group-addon">Name: </span>
-					<input type="text" class="form-control" placeholder="Name" ng-model="application.name">
+					<span class="input-group-addon"><span translate="iAppName"></span>: </span>
+					<input type="text" class="form-control" placeholder="{{'iAppName' | translate}}" ng-model="application.name">
 				</div>
 				<span style="color: red;" ng-show="!nameValidation.validated">{{nameValidation.msg}}</span>
 				<br />
 				<div class="input-group">
-					<span class="input-group-addon">Description: </span>
-					<textarea class="form-control" placeholder="Description (Less than 200 words)" rows=10 ng-model="application.description"></textarea>
+					<span class="input-group-addon"><span translate="iAppDescription"></span>: </span>
+					<textarea class="form-control" placeholder="{{'iAppDescriptionPlaceHolder' | translate}}" rows=10 ng-model="application.description"></textarea>
 				</div>
 				<span style="color: red;" ng-show="!descriptionValidation.validated">{{descriptionValidation.msg}}</span>
 				<br />
 				<div class="input-group">
-					<span class="input-group-addon">URL: </span>
-					<input type="text" class="form-control" placeholder="URL" ng-model="application.url">
+					<span class="input-group-addon"><span translate="iAppUrl"></span>: </span>
+					<input type="text" class="form-control" placeholder="{{'iAppUrl' | translate}}" ng-model="application.url">
 				</div>
 				<span style="color: red;" ng-show="!urlValidation.validated">{{urlValidation.msg}}</span>
 			</div>
@@ -41,7 +41,7 @@
 							<input class="form-control" type="text" value="{{application.img.path}}" disabled="true" style="cursor: default;"/>
 							<span class="input-group-btn">
 								<button class="btn btn-success fileinput-button" type="button">
-									Choose a file...
+									<span translate="iAppChooseFile"></span>
 									<input type="file" file-model file="application.img" on-change="previewImg(file)">
 								</button> </span>
 						</div>
@@ -53,10 +53,8 @@
 	</div>
 </div>
 <div class="modal-footer">
-	<button class="btn btn-primary" ng-click="confirm()">
-		Confirm
+	<button class="btn btn-primary" ng-click="confirm()" translate="iConfirm">
 	</button>
-	<button class="btn btn-warning" ng-click="cancel()">
-		Cancel
+	<button class="btn btn-warning" ng-click="cancel()" translate="iCancel">
 	</button>
 </div>

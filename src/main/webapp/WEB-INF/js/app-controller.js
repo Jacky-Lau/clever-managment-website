@@ -1,5 +1,4 @@
-angular.module('clever.management.controllers.app', []).controller('appCtrl', ['$scope', '$timeout',
-function($scope, $timeout) {
+angular.module('clever.management.controllers.app', []).controller('appCtrl', function($scope, $translate, $timeout) {
 
 	$scope.windowHeight
 
@@ -19,4 +18,12 @@ function($scope, $timeout) {
 	$scope.closeAlert = function(index) {
 		$scope.alerts.splice(index, 1);
 	};
-}]); 
+
+	$scope.changeLanguage = function(key) {
+		$translate.use(key);
+	};
+	
+	$scope.getCurrentLanguage = function(){
+		return $translate.use();
+	};
+});
