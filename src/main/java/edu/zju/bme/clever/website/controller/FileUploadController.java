@@ -101,9 +101,9 @@ public class FileUploadController {
 				.getAllArchetypeAdls());
 		if (!this.archetypeValidationService
 				.validateFeasibility(archetypeContents)) {
-			this.logger.debug("Update schema on CLEVER failed");
+			this.logger.debug("Validate schema on CLEVER failed");
 			result.setSucceeded(false);
-			result.setMessage("Update schema on CLEVER failed");
+			result.setMessage("Validate schema on CLEVER failed");
 			return result;
 		}
 		try {

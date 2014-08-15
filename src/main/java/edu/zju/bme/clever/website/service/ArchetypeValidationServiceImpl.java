@@ -48,26 +48,33 @@ public class ArchetypeValidationServiceImpl implements
 
 	@Override
 	public boolean validateFeasibility(List<String> archetypes) {
-		int stopResult = cleverValidationClient.stop();
-		if (stopResult != 0) {
-			this.logger.trace(
-					"Archetype validation client stop failed, result: {}.",
-					stopResult);
-			return false;
-		}
-		int reconfigureResult = cleverValidationClient.reconfigure(archetypes,
-				null);
-		if (reconfigureResult != 0) {
-			this.logger
-					.trace("Archetype validation client reconfigure failed, result: {}.",
-							reconfigureResult);
-			return false;
-		}
-		int startResult = cleverValidationClient.start();
-		if (startResult != 0) {
-			this.logger.trace(
-					"Archetype validation client start failed, result: {}.",
-					startResult);
+		try {
+			int stopResult = cleverValidationClient.stop();
+			if (stopResult != 0) {
+				this.logger.trace(
+						"Archetype validation client stop failed, result: {}.",
+						stopResult);
+				return false;
+			}
+			int reconfigureResult = cleverValidationClient.reconfigure(
+					archetypes, null);
+			if (reconfigureResult != 0) {
+				this.logger
+						.trace("Archetype validation client reconfigure failed, result: {}.",
+								reconfigureResult);
+				return false;
+			}
+			int startResult = cleverValidationClient.start();
+			if (startResult != 0) {
+				this.logger
+						.trace("Archetype validation client start failed, result: {}.",
+								startResult);
+				return false;
+			}
+		} catch (Throwable ex) {
+			this.logger.info(
+					"Invoke clever validate servcie failed, error:{}.",
+					ex.getMessage(), ex);
 			return false;
 		}
 		return true;
@@ -155,7 +162,7 @@ public class ArchetypeValidationServiceImpl implements
 											+ "Column name for " + node.path()
 											+ " is empty. ");
 
-								} else if (columnName != null){
+								} else if (columnName != null) {
 									if (existedNodes.containsKey(node.path())) {
 										// Node already exists
 										ArchetypeNode existedNode = existedNodes

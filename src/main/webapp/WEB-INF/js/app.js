@@ -1,6 +1,6 @@
 angular.module('clever.management.directives', ['clever.management.directives.splitter', 'clever.management.directives.overview', 'clever.management.directives.classificationView', 'clever.management.directives.filesModel', 'clever.management.directives.fileModel', 'clever.management.directives.headerTab', 'clever.management.directives.terminologyTab', 'clever.management.directives.definitionTab', 'clever.management.directives.resizable', 'angularBootstrapNavTree', 'toggle-switch']);
 angular.module('clever.management.services', ['clever.management.services.fileUpload', 'clever.management.services.archetypeRetrieve', 'clever.management.services.archetypeParse', 'clever.management.services.appLibrary', 'clever.management.services.layout', 'clever.management.services.classification', 'clever.management.services.msgbox']);
-angular.module('clever.management.filters', ['clever.management.filters.pretty', 'clever.management.filters.unsafe']);
+angular.module('clever.management.filters', ['clever.management.filters.pretty', 'clever.management.filters.unsafe', 'clever.management.filters.timestamp']);
 angular.module('clever.management.controllers', ['clever.management.controllers.app', 'clever.management.controllers.archetypeDisplayCtrl']);
 angular.module('cleverManagementApp', ['ngRoute', 'ui.bootstrap', 'ui.utils', 'ng-context-menu', 'clever.management.directives', 'clever.management.controllers', 'clever.management.services', 'clever.management.filters', 'clever.management.config']).config(['$routeProvider',
 function($routeProvider) {

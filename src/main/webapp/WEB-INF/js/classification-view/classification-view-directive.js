@@ -372,8 +372,9 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 													
 				function loadImageById(id) {
 					var deferred = $q.defer();
+					var date = new Date();
 					var img = new Image();
-					img.src = WEBSITE_DOMAIN + '/upload/img/outline/' + getUserName() + '/type-' + id + '.png?' + new Date();
+					img.src = WEBSITE_DOMAIN + '/upload/img/outline/' + getUserName() + '/type-' + id + '.png?' + date.getTime();
 					img.onload = function() {
 						deferred.resolve({
 							id : id,
@@ -383,7 +384,7 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 					};
 					img.onerror = function() {
 						var secondImg = new Image();
-						secondImg.src = WEBSITE_DOMAIN + '/upload/img/outline/admin/type-' + id + '.png?' + new Date();
+						secondImg.src = WEBSITE_DOMAIN + '/upload/img/outline/admin/type-' + id + '.png?' + date.getTime();
 						secondImg.onload = function() {
 							deferred.resolve({
 								id : id,
