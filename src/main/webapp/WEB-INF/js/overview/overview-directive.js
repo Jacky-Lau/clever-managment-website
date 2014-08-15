@@ -22,6 +22,11 @@ function($q, layoutService, msgboxService) {
 			$scope.zoomOut = function(){
 				$scope.graph.zoomOut();
 			};
+			
+			$scope.isOutlineHided = true;
+			$scope.reverseIsOutlineHided = function() {
+				$scope.isOutlineHided = !$scope.isOutlineHided;
+			}; 
 		},
 		link : function(scope, element, attrs) {
 
@@ -181,7 +186,7 @@ function($q, layoutService, msgboxService) {
 				// Layouts
 				// Circle layout, too big
 				var circleLayout = {
-					name : 'Circle',
+					name : 'iCircle',
 					type : 'system',
 					layout : new mxCircleLayout(scope.graph)
 				};
@@ -202,14 +207,14 @@ function($q, layoutService, msgboxService) {
 
 				// Stack layout, work, but very simple
 				var stackLayout = {
-					name : 'Stack',
+					name : 'iStack',
 					type : 'system',
 					layout : new mxStackLayout(scope.graph, true, 30, 10, 10)
 				};
 				stackLayout.layout.wrap = stackLayout.layout.getParentSize(scope.graph.getDefaultParent()).width;
 				
 				var organicLayout = {
-					name : 'Organic',
+					name : 'iOrganic',
 					type : 'system',
 					layout : new mxFastOrganicLayout(scope.graph)
 				};
@@ -229,7 +234,7 @@ function($q, layoutService, msgboxService) {
 					layoutService.getArchetypeTypeLayoutById(scope.archetypesBriefInfo.archetypeTypeId).then(function(result) {
 						
 						var layout = {};
-						layout.name = 'Custom';
+						layout.name = 'iCustom';
 						layout.type = 'custom';
 						layout.layout = result;
 						

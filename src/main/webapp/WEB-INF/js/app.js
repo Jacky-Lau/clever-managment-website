@@ -1,5 +1,5 @@
 angular.module('clever.management.directives', ['clever.management.directives.splitter', 'clever.management.directives.overview', 'clever.management.directives.classificationView', 'clever.management.directives.filesModel', 'clever.management.directives.fileModel', 'clever.management.directives.headerTab', 'clever.management.directives.terminologyTab', 'clever.management.directives.definitionTab', 'clever.management.directives.resizable', 'angularBootstrapNavTree', 'toggle-switch']);
-angular.module('clever.management.services', ['clever.management.services.fileUpload', 'clever.management.services.archetypeRetrieve', 'clever.management.services.archetypeParse', 'clever.management.services.appLibrary', 'clever.management.services.layout', 'clever.management.services.classification', 'clever.management.services.msgbox']);
+angular.module('clever.management.services', ['clever.management.services.fileUpload', 'clever.management.services.archetypeRetrieve', 'clever.management.services.archetypeParse', 'clever.management.services.appLibrary', 'clever.management.services.layout', 'clever.management.services.classification', 'clever.management.services.msgbox', 'clever.management.services.loading']);
 angular.module('clever.management.filters', ['clever.management.filters.pretty', 'clever.management.filters.unsafe', 'clever.management.filters.timestamp']);
 angular.module('clever.management.controllers', ['clever.management.controllers.app', 'clever.management.controllers.archetypeDisplayCtrl']);
 angular.module('cleverManagementApp', ['ngRoute', 'ui.bootstrap', 'ui.utils', 'ng-context-menu', 'pascalprecht.translate', 'clever.management.directives', 'clever.management.controllers', 'clever.management.services', 'clever.management.filters', 'clever.management.config']).config(function($routeProvider, $translateProvider) {
@@ -47,6 +47,19 @@ angular.module('cleverManagementApp', ['ngRoute', 'ui.bootstrap', 'ui.utils', 'n
 		iTitle : 'Integration Platform',
 		iConfirm : 'Confirm',
 		iCancel : 'Cancel',
+		iZoomIn : 'Zoom in',
+		iZoomOut : 'Zoom out',
+		iReset : 'Reset',
+		iSave : 'Save',
+		iShowOutline : 'Show outline',
+		iHideOutline : 'Hide outline',
+		iLegend : 'Legend',
+		iObservation : 'Observation',
+		iInstruction : 'Instruction',
+		iAction : 'Action',
+		iEvaluation : 'Evaluation',
+		iDemographic : 'Demographic',
+		iLoading : 'Loading...',
 		
 		iLanguage : 'Language',
 		zh : 'Chinese',
@@ -91,8 +104,7 @@ angular.module('cleverManagementApp', ['ngRoute', 'ui.bootstrap', 'ui.utils', 'n
 		iLoginUserName : 'User name',
 		iLoginPassword : 'Password',
 		iLoginRememberMe : 'Remember me',
-		iLoginInvalid : 'User name or password is not correct.',
-		iLoginLogin : 'Log in',		
+		iLoginInvalid : 'User name or password is not correct.',	
 		// Home page
 		iAbout : 'About',
 		iArchetypeView : 'Archetype View',
@@ -104,12 +116,35 @@ angular.module('cleverManagementApp', ['ngRoute', 'ui.bootstrap', 'ui.utils', 'n
 		iDeployDeployedArchetypes : 'Deployed archetypes',
 		iDeployDeploy : 'Deploy',
 		iDeployDeploying : 'Deploying...',
-		
+		// Classification page
+		iClsClassification : 'Clasification',
+		iClsShowDetails : 'Show Details',
+		// Archetype page
+		iOverview : 'Overview',
+		iLayout : 'Layout',
+		iStack : 'Stack',
+		iCircle : 'Circle',
+		iOrganic : 'Organic',
+		iCustom : 'Custom',
+		iFilter : 'Filter by name',
 	});
 	$translateProvider.translations('zh', {
 		iTitle : '数据集成平台',
 		iConfirm : '确定',
 		iCancel : '取消',
+		iZoomIn : '放大',
+		iZoomOut : '缩小',
+		iReset : '重置',
+		iSave : '保存',
+		iShowOutline : '显示缩略图',
+		iHideOutline : '隐藏缩略图',
+		iLegend : '图例',
+		iObservation : '观察',
+		iInstruction : '指示',
+		iAction : '活动',
+		iEvaluation : '评估',
+		iDemographic : '人口统计学',
+		iLoading : '加载中...',
 		
 		iLanguage : '语言',
 		zh : '中文',
@@ -154,7 +189,6 @@ angular.module('cleverManagementApp', ['ngRoute', 'ui.bootstrap', 'ui.utils', 'n
 		iLoginPassword : '密码',
 		iLoginRememberMe : '记住我',
 		iLoginInvalid : '用户名或密码错误',
-		iLoginLogin : '登录',
 		// Home page
 		iAbout : '关于',
 		iArchetypeView : 'Archetype视图',
@@ -166,12 +200,23 @@ angular.module('cleverManagementApp', ['ngRoute', 'ui.bootstrap', 'ui.utils', 'n
 		iDeployDeployedArchetypes : '已部署的Archetypes',
 		iDeployDeploy : '部署',
 		iDeployDeploying : '正在部署...',
-		
+		// Classification page
+		iClsClassification : '类别',
+		iClsShowDetails : '显示Archetype',
+		// Overview page
+		iOverview : '总览',
+		iLayout : '布局',
+		iStack : '顺序排列',
+		iCircle : '环形排列',
+		iOrganic : '有机排列',
+		iCustom : '自定义',
+		iFilter : '关键字',
 	});
 	$translateProvider.preferredLanguage('zh');
-}).run(function($rootScope, $location, $http, AUTHENTICATION_URL) {
+}).run(function($rootScope, $location, $http, loadingService, AUTHENTICATION_URL) {
 	// register listener to watch route changes
 	$rootScope.$on("$routeChangeStart", function(event, next, current) {
+		loadingService.setLoading(true);
 		var classificationReg = new RegExp('/classification/id/.*');
 		if (next.originalPath != '/' && next.originalPath != '/appLibrary' && !classificationReg.test(next.originalPath) && next.originalPath != '' && next.originalPath != '/archetype' && next.originalPath != '/about') {
 			$http.get(AUTHENTICATION_URL).then(function(response) {
@@ -182,5 +227,8 @@ angular.module('cleverManagementApp', ['ngRoute', 'ui.bootstrap', 'ui.utils', 'n
 				}
 			});
 		}
+	});
+	$rootScope.$on("$routeChangeSuccess", function(event, next, current) {
+		loadingService.setLoading(false);
 	});
 });

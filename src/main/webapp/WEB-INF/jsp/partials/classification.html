@@ -2,7 +2,7 @@
 	<div class="col-xs-12 col-md-12 col-lg-12" style="padding: 5px 0px;">
 		<!-- Single button -->
 		<div class="input-group">
-			<span class="input-group-addon">Classification: </span>
+			<span class="input-group-addon">{{'iClsClassification' | translate}}: </span>
 			<div class="btn-group pull-left" dropdown is-open="isDropdownOpened">
 				<button type="button" class="btn btn-default dropdown-toggle" style="width: 160px;">
 					{{currentClassification.name}}<span class="pull-right"><span class="caret"></span></span>
@@ -13,20 +13,20 @@
 					</li>
 				</ul>
 			</div>
-			<span style="margin-left: 20px;"><b>Show Details:&nbsp;&nbsp;&nbsp;</b></span>
+			<span style="margin-left: 20px;"><b>{{'iClsShowDetails' | translate}}:&nbsp;&nbsp;&nbsp;</b></span>
 			<toggle-switch model="showDetails"></toggle-switch>
 			<div class="btn-group pull-right">
-				<button type="button" class="btn btn-default" ng-click="zoomIn()" tooltip-placement="top" tooltip="Zoom in" tooltip-popup-delay="500">
+				<button type="button" class="btn btn-default" ng-click="zoomIn()" tooltip-placement="top" tooltip="{{'iZoomIn' | translate}}" tooltip-popup-delay="500">
 					<span class="glyphicon glyphicon-zoom-in"></span>
 				</button>
-				<button type="button" class="btn btn-default" ng-click="zoomOut()" tooltip-placement="top" tooltip="Zoom out" tooltip-popup-delay="500">
+				<button type="button" class="btn btn-default" ng-click="zoomOut()" tooltip-placement="top" tooltip="{{'iZoomOut' | translate}}" tooltip-popup-delay="500">
 					<span class="glyphicon glyphicon-zoom-out"></span>
 				</button>
-				<button type="button" class="btn btn-default" ng-click="reset()" tooltip-placement="top" tooltip="Reset" tooltip-popup-delay="500">
+				<button type="button" class="btn btn-default" ng-click="reset()" tooltip-placement="top" tooltip="{{'iReset' | translate}}" tooltip-popup-delay="500">
 					<span class="glyphicon glyphicon-refresh"></span>
 				</button>
 				<sec:authorize access="isAuthenticated()">
-					<button type="button" class="btn btn-default" ng-click="saveLayout()" tooltip-placement="top" tooltip="Save layout" tooltip-popup-delay="500">
+					<button type="button" class="btn btn-default" ng-click="saveLayout()" tooltip-placement="top" tooltip="{{'iSave' | translate}}" tooltip-popup-delay="500">
 						<span class="glyphicon glyphicon-floppy-disk"></span>
 					</button>
 				</sec:authorize>
@@ -37,26 +37,22 @@
 						<table width='200'>
 							<tbody>
 								<tr>
-									<td><span style='width: 50px;height: 100%;display:inline-block;' class='overview-observation'>&nbsp;</span></td>
-									<td><b>: Observation</b></td>
+									<td style='width: 55px;'><span style='width: 50px;height: 100%;display:inline-block;' class='overview-observation'>&nbsp;</span></td>
+									<td><b>: {{'iObservation' | translate}}</b></td>
 								</tr>
 								<tr>
-									<td><span style='width: 50px;height: 100%;display:inline-block;' class='overview-instruction'>&nbsp;</span></td>
-									<td><b>: Instruction</b></td>
+									<td style='width: 55px;'><span style='width: 50px;height: 100%;display:inline-block;' class='overview-instruction'>&nbsp;</span></td>
+									<td><b>: {{'iInstruction' | translate}}</b></td>
 								</tr>
 								<tr>
-									<td><span style='width: 50px;height: 100%;display:inline-block;' class='overview-action'>&nbsp;</span></td>
-									<td><b>: Action</b></td>
-								</tr>
-								<tr>
-									<td><span style='width: 50px;height: 100%;display:inline-block;' class='overview-admin_entry'>&nbsp;</span></td>
-									<td><b>: Admin</b></td>
+									<td style='width: 55px;'><span style='width: 50px;height: 100%;display:inline-block;' class='overview-action'>&nbsp;</span></td>
+									<td><b>: {{'iAction' | translate}}</b></td>
 								</tr>
 							</tbody>
 						</table>">
-						Legend
+						{{'iLegend' | translate}}
 					</button>
-				</div>
+			</div>
 		</div>
 	</div>
 </div>

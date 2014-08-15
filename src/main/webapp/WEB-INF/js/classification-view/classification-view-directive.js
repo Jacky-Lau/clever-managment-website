@@ -13,8 +13,11 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 		templateUrl : 'classification-view.html',
 		transclude : true,
 		replace : true,
-		controller : function($scope, $element, $attrs){
-			
+		controller : function($scope, $element, $attrs){			
+			$scope.isOutlineHided = true;
+			$scope.reverseIsOutlineHided = function() {
+				$scope.isOutlineHided = !$scope.isOutlineHided;
+			}; 
 		},
 		link : function(scope, element, attrs) {
 
@@ -50,8 +53,6 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
                 scope.outline.outline.setHtmlLabels(true);
                 
                 scope.outline.outline.view.canvas.viewportElement.height.baseVal.value = (scope.windowHeight - 190)/3;
-                
-                scope.isOutlineHided = true;
                 
                 // Overrides getLabel to return empty labels for edges and
 				// short markup for collapsed cells.	

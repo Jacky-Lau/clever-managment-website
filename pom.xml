@@ -35,8 +35,8 @@
 				<database.url>jdbc:sqlserver://${server.host};databaseName=CLEVER_MANAGEMENT_WEBSITE_DEV</database.url>
 				<database.username>sa</database.username>
 				<database.password>sa</database.password>
-				<service.url>http://${server.host}:9097/clever-service-orm/CleverService</service.url>
-				<validation.url>http://${server.host}:9097/clever-service-orm-validate/CleverService</validation.url>
+				<service.url>http://${server.host}:9091/clever-service-orm/CleverService</service.url>
+				<validation.url>http://${server.host}:9093/clever-service-orm-validate/CleverService</validation.url>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>

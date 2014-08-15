@@ -14,6 +14,11 @@ uri="http://www.springframework.org/security/tags"%>
 	</head>
 	<body ng-controller="appCtrl" resizable style="font-family: Microsoft YaHei;">
 
+		<!-- loading -->
+		<div ng-show="isLoading" class="vbox" ng-style="{'height': windowHeight, 'width' : windowWidth}" style="position: absolute;top: 0;left: 0;background-color: grey;opacity: 0.7;z-index: 1000;">
+			<span style="position: absolute;color: black;font-size: 2em;" ng-style="{'top' : windowHeight/2, 'left' : windowWidth/2}"><img src="/clever-management-website/img/loading.gif" style="max-height: 30px;"></img> {{'iLoading' | translate}}</span>
+		</div>
+		
 		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
 			&nbsp;&nbsp;&nbsp;&nbsp;{{alert.msg}}
 		</alert>
