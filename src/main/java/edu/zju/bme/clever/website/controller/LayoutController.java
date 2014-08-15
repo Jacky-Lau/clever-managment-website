@@ -1,5 +1,10 @@
 package edu.zju.bme.clever.website.controller;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -12,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 
 import org.apache.xerces.impl.dv.util.Base64;
@@ -179,9 +185,24 @@ public class LayoutController {
 			return result;
 		}
 		byte[] data = Base64.decode(code);
-		try (OutputStream stream = new FileOutputStream(outlineFile)) {
-			stream.write(data);
-			stream.close();
+
+		try {
+			ByteArrayInputStream bis = new ByteArrayInputStream(data);
+			BufferedImage bi = ImageIO.read(bis);
+			float width = 300;
+			float height = width / bi.getWidth() * bi.getHeight();
+			BufferedImage to = new BufferedImage(Math.round(width), Math.round(height),
+					BufferedImage.TYPE_INT_BGR);
+			Graphics2D g2d = to.createGraphics();
+			to = g2d.getDeviceConfiguration().createCompatibleImage(Math.round(width),
+					Math.round(height), Transparency.TRANSLUCENT);
+			g2d.dispose();
+			g2d = to.createGraphics();
+			Image from = bi.getScaledInstance(Math.round(width), Math.round(height),
+					BufferedImage.SCALE_AREA_AVERAGING);
+			g2d.drawImage(from, 0, 0, null);
+			g2d.dispose();
+			ImageIO.write(to, "png", outlineFile);
 		} catch (IOException ex) {
 			result.setSucceeded(false);
 			result.setMessage("Save image failed, error: " + ex.getMessage());

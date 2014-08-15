@@ -35,25 +35,31 @@ public class ArchetypeDeployController {
 		this.logger.info("Deploy called by user {}.", userName);
 		List<String> archetypes = this.archetypeProviderService
 				.getAllLatestVersionArchetypeAdls();
-		int stopResult = cleverClient.stop();
-		if (stopResult != 0) {
-			this.logger.trace(
-					"Archetype clever client stop failed, result: {}.",
-					stopResult);
-			return false;
-		}
-		int reconfigureResult = cleverClient.reconfigure(archetypes, null);
-		if (reconfigureResult != 0) {
-			this.logger
-					.trace("Archetype clever client reconfigure failed, result: {}.",
-							reconfigureResult);
-			return false;
-		}
-		int startResult = cleverClient.start();
-		if (startResult != 0) {
-			this.logger.trace(
-					"Archetype clever client start failed, result: {}.",
-					startResult);
+		try {
+			int stopResult = cleverClient.stop();
+			if (stopResult != 0) {
+				this.logger.trace(
+						"Archetype clever client stop failed, result: {}.",
+						stopResult);
+				return false;
+			}
+			int reconfigureResult = cleverClient.reconfigure(archetypes, null);
+			if (reconfigureResult != 0) {
+				this.logger
+						.trace("Archetype clever client reconfigure failed, result: {}.",
+								reconfigureResult);
+				return false;
+			}
+			int startResult = cleverClient.start();
+			if (startResult != 0) {
+				this.logger.trace(
+						"Archetype clever client start failed, result: {}.",
+						startResult);
+				return false;
+			}
+		} catch (Throwable ex) {
+			this.logger.info("Invoke clever service failed, error:{}.",
+					ex.getMessage(), ex);
 			return false;
 		}
 		return true;
