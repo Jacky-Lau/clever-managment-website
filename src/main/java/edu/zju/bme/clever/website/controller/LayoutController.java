@@ -155,9 +155,13 @@ public class LayoutController {
 			result.setMessage("You have not logged in.");
 			return result;
 		}
-		String tempFolderUrl = servletContext.getRealPath("/WEB-INF"
+		String outlineFolderUrl = servletContext.getRealPath("/WEB-INF"
 				+ OUTLINE_FOLDER_PATH);
-		File userFolder = new File(tempFolderUrl + "/" + userName);
+		File outlineFolder = new File(outlineFolderUrl);
+		if (!outlineFolder.exists()) {
+			outlineFolder.mkdir();
+		}
+		File userFolder = new File(outlineFolderUrl + "/" + userName);
 		// create user folder if not exists
 		if (!userFolder.exists()) {
 			userFolder.mkdir();

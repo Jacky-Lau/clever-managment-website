@@ -49,6 +49,10 @@ public class AppLibraryServiceImpl implements AppLibraryService {
 		}
 		String appFolderUrl = servletContext.getRealPath("/WEB-INF"
 				+ APP_FOLDER_PATH);
+		File appFolder = new File(appFolderUrl);
+		if (!appFolder.exists()) {
+			appFolder.mkdir();
+		}
 		File imgFile = new File(appFolderUrl + "/" + name);
 		try {
 			img.transferTo(imgFile);

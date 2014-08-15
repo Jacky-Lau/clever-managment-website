@@ -54,6 +54,10 @@ public class TemporaryResourceController {
 				.getUsername();
 		String tempFolderUrl = servletContext.getRealPath("/WEB-INF"
 				+ TEMP_FOLDER_PATH);
+		File tempFolder = new File(tempFolderUrl);
+		if(!tempFolder.exists()){
+			tempFolder.mkdir();
+		}
 		String uuid = UUID.randomUUID().toString();
 		File userFolder = new File(tempFolderUrl + "/" + userName);
 		// create user folder if not exists
