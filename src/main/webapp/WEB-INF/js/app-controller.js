@@ -1,10 +1,12 @@
-angular.module('clever.management.controllers.app', []).controller('appCtrl', function($scope, $translate, $timeout) {
+angular.module('clever.management.controllers.app', []).controller('appCtrl', function($scope, $translate, $timeout, loadingService) {
 
 	$scope.windowHeight
 
 	$scope.windowWidth
 
 	$scope.alerts = [];
+
+	$scope.isLoading = false;
 
 	$scope.addAlert = function(alert) {
 		$scope.alerts.push(alert);
@@ -22,8 +24,12 @@ angular.module('clever.management.controllers.app', []).controller('appCtrl', fu
 	$scope.changeLanguage = function(key) {
 		$translate.use(key);
 	};
-	
-	$scope.getCurrentLanguage = function(){
+
+	$scope.getCurrentLanguage = function() {
 		return $translate.use();
 	};
+
+	loadingService.observeIsLoading().then(null, null, function(isLoading) {
+		$scope.isLoading = isLoading;
+	});
 });

@@ -74,7 +74,8 @@ src="/clever-management-website/js/services/file-upload-service.js"></script>
 src="/clever-management-website/js/services/layout-service.js"></script>
 <script
 src="/clever-management-website/js/services/msgbox-service.js"></script>
-
+<script
+src="/clever-management-website/js/services/loading-service.js"></script>
 
 <!-- app setup -->
 <script
