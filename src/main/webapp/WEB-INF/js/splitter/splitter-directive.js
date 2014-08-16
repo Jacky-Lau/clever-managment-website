@@ -15,8 +15,8 @@ function($document) {
 
 			var resizeEl = null;
 			var direction = attrs.direction || 'left';
-			var minWidth = attrs.minWidth || 335;
-			var maxWidth = attrs.maxWidth || 966;
+			var minWidth = attrs.minWidth || 234;
+			var maxWidth = attrs.maxWidth || 400;
 			var startX = 0;
 			var startWidth = 0;
 			element.prev().width(minWidth);

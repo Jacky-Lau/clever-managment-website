@@ -1,4 +1,4 @@
-function ClassificationCtrl($scope, $location, layoutService, msgboxService, classifications, selectedClassification) {
+function ClassificationCtrl($scope, $location, layoutService, busyService, msgboxService, classifications, selectedClassification) {
 
 	$scope.classifications = classifications;
 	$scope.currentClassification = selectedClassification;
@@ -26,17 +26,19 @@ function ClassificationCtrl($scope, $location, layoutService, msgboxService, cla
 	};
 
 	$scope.saveLayout = function() {
-		msgboxService('Save', 'Do you want to save classification "' + $scope.currentClassification.name + '" ?').result.then(function(isOk) {
+		msgboxService('iSave', 'iSaveLayoutQuiz').result.then(function(isOk) {
 			if (isOk) {
+				busyService.setBusy(true, 'iSaving');
 				var settings = $scope.classificationViewControl.getCurrentLayout();
 				layoutService.updateClassificationLayouById($scope.currentClassification.id, settings).then(function(result) {
 					if (result.succeeded) {
 						$scope.currentClassification.layout = settings;
 						$scope.addAlert({
 							type : 'success',
-							msg : 'Save classification "' + $scope.currentClassification.name + '" succeeded.',
+							msg : 'iSaveLayoutSucceeded',
 						});
 					}
+					busyService.setBusy(false);
 				});
 			}
 		});

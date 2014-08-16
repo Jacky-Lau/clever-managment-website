@@ -31,10 +31,10 @@ function UploadCtrl($scope, $modal, fileUploadService, msgboxService) {
 		$scope.status = 'Uploading';
 		fileUploadService.uploadFiles($scope.fileList).then(function(result) {
 			if (result.succeeded) {
-				msgboxService("Succeeded", "Upload archetypes succeeded.");
+				msgboxService("iSucceeded", "iManagementUploadSucceeded");
 				$scope.status = 'UploadSucceeded';
 			} else {
-				msgboxService("Failed", "Upload archetypes failed, error: " + result.message);
+				msgboxService("iFailed", "iManagementUploadFailed");
 				$scope.status = 'UploadFailed';
 			}
 		});

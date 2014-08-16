@@ -1,4 +1,4 @@
-function ArchetypeCtrl($scope, $modal, $routeParams, archetypeRetrieveService) {
+function ArchetypeCtrl($scope, $modal, $routeParams, busyService, archetypeRetrieveService) {
 
 	var undefined;
 
@@ -78,6 +78,7 @@ function ArchetypeCtrl($scope, $modal, $routeParams, archetypeRetrieveService) {
 
 	function retrieveArchetypeFileList() {
 		$scope.archetypeList = [];
+		busyService.setBusy(true);
 		archetypeRetrieveService.getArchetypesBriefInfoByTypeId($routeParams.typeId).then(function(info) {
 			angular.forEach(info.archetypeHostInfos, function(host) {
 				angular.forEach(host.archetypeInfos, function(archetype) {
@@ -85,6 +86,7 @@ function ArchetypeCtrl($scope, $modal, $routeParams, archetypeRetrieveService) {
 				});
 			});
 			$scope.archetypesBriefInfo = info;
+			busyService.setBusy(false);
 		});
 	}
 

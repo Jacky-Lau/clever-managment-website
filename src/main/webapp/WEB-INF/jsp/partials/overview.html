@@ -58,10 +58,10 @@
 	</div>
 	<div class="row">
 		<div class="col-xs-12 col-md-12 col-lg-12">
-			<button class="btn btn-sm btn-default" ng-click="reverseIsOutlineHided()" style="position: absolute;top: 0;right: 40px;z-index: 101;"  tooltip-placement="right" tooltip="{{isOutlineHided ? 'iShowOutline' : 'iHideOutline' | translate}}" tooltip-popup-delay="500">
+			<!--<button class="btn btn-sm btn-default" ng-click="reverseIsOutlineHided()" style="position: absolute;top: 0;right: 40px;z-index: 101;"  tooltip-placement="right" tooltip="{{isOutlineHided ? 'iShowOutline' : 'iHideOutline' | translate}}" tooltip-popup-delay="500">
 				<span ng-show="isOutlineHided" class="glyphicon glyphicon-plus" style="font-size: 6pt;"></span>
 				<span ng-show="!isOutlineHided" class="glyphicon glyphicon-minus" style="font-size: 6pt;"></span>
-			</button>
+			</button>-->
 			<div id="outline-container" ng-style="{height: (windowHeight - 190)/3, 'z-index': isOutlineHided ? 98 : 100}" style="position: absolute;top: 0;right: 30px;"></div>
 			<div id="overview-container" class="text-center" ng-style="{height: windowHeight - 190}" style="overflow: auto;padding-left: -15px;width: 100%;z-index: 99;background-color: white;" ng-transclude></div>
 		</div>

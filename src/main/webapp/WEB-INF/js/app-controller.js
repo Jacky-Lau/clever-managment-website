@@ -1,4 +1,4 @@
-angular.module('clever.management.controllers.app', []).controller('appCtrl', function($scope, $translate, $timeout, loadingService) {
+angular.module('clever.management.controllers.app', []).controller('appCtrl', function($scope, $translate, $timeout, busyService) {
 
 	$scope.windowHeight
 
@@ -6,7 +6,7 @@ angular.module('clever.management.controllers.app', []).controller('appCtrl', fu
 
 	$scope.alerts = [];
 
-	$scope.isLoading = false;
+	$scope.isBusy = false;
 
 	$scope.addAlert = function(alert) {
 		$scope.alerts.push(alert);
@@ -29,7 +29,8 @@ angular.module('clever.management.controllers.app', []).controller('appCtrl', fu
 		return $translate.use();
 	};
 
-	loadingService.observeIsLoading().then(null, null, function(isLoading) {
-		$scope.isLoading = isLoading;
+	busyService.observeIsBusy().then(null, null, function(value) {
+		$scope.isBusy = value.isBusy;
+		$scope.busyHint = value.busyHint;
 	});
 });

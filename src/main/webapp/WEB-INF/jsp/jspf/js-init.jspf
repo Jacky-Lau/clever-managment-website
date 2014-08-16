@@ -75,7 +75,7 @@ src="/clever-management-website/js/services/layout-service.js"></script>
 <script
 src="/clever-management-website/js/services/msgbox-service.js"></script>
 <script
-src="/clever-management-website/js/services/loading-service.js"></script>
+src="/clever-management-website/js/services/busy-service.js"></script>
 
 <!-- app setup -->
 <script
@@ -89,7 +89,7 @@ src="/clever-management-website/js/app-controller.js"></script>
 <script
 src="/clever-management-website/js/page-controllers/home-controller.js"></script>
 <script
-src="/clever-management-website/js/page-controllers/deploy-controller.js"></script>
+src="/clever-management-website/js/page-controllers/management-controller.js"></script>
 <script
 src="/clever-management-website/js/page-controllers/upload-controller.js"></script>
 <script

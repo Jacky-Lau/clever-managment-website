@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.zju.bme.clever.website.dao.ArchetypeHostDao;
 import edu.zju.bme.clever.website.dao.ArchetypeHostLayoutSettingDao;
 import edu.zju.bme.clever.website.dao.ArchetypeTypeClassificationDao;
+import edu.zju.bme.clever.website.dao.ArchetypeTypeClassificationLayoutScaleDao;
 import edu.zju.bme.clever.website.dao.ArchetypeTypeDao;
+import edu.zju.bme.clever.website.dao.ArchetypeTypeLayoutScaleDao;
 import edu.zju.bme.clever.website.dao.ArchetypeTypeLayoutSettingDao;
 import edu.zju.bme.clever.website.dao.UserDao;
 import edu.zju.bme.clever.website.exception.LayoutException;
@@ -20,9 +22,13 @@ import edu.zju.bme.clever.website.model.entity.ArchetypeHost;
 import edu.zju.bme.clever.website.model.entity.ArchetypeHostLayoutSetting;
 import edu.zju.bme.clever.website.model.entity.ArchetypeType;
 import edu.zju.bme.clever.website.model.entity.ArchetypeTypeClassification;
+import edu.zju.bme.clever.website.model.entity.ArchetypeTypeClassificationLayoutScale;
+import edu.zju.bme.clever.website.model.entity.ArchetypeTypeLayoutScale;
 import edu.zju.bme.clever.website.model.entity.ArchetypeTypeLayoutSetting;
 import edu.zju.bme.clever.website.model.entity.User;
 import edu.zju.bme.clever.website.view.entity.ArchetypeHostLayoutSettingInfo;
+import edu.zju.bme.clever.website.view.entity.ArchetypeTypeClassificationLayoutInfo;
+import edu.zju.bme.clever.website.view.entity.ArchetypeTypeLayoutInfo;
 import edu.zju.bme.clever.website.view.entity.ArchetypeTypeLayoutSettingInfo;
 
 @Service("layoutService")
@@ -39,11 +45,15 @@ public class LayoutServiceImpl implements LayoutService {
 	private UserDao userDao;
 	@Resource(name = "archetypeTypeDao")
 	private ArchetypeTypeDao archetypeTypeDao;
+	@Resource(name = "archetypeTypeLayoutScaleDao")
+	private ArchetypeTypeLayoutScaleDao typeLayoutScaleDao;
 	@Resource(name = "archetypeTypeClassificationDao")
 	private ArchetypeTypeClassificationDao archetypeTypeClassificationDao;
+	@Resource(name = "archetypeTypeClassificationLayoutScaleDao")
+	private ArchetypeTypeClassificationLayoutScaleDao classificationLayoutScaleDao;
 
 	@Override
-	public List<ArchetypeTypeLayoutSettingInfo> getClassificationLayoutByIdAndUserName(
+	public ArchetypeTypeClassificationLayoutInfo getClassificationLayoutByIdAndUserName(
 			Integer classifcationId, String userName) throws LayoutException {
 		User user = this.userDao.findUniqueByProperty("userName", userName);
 		if (user == null) {
@@ -55,7 +65,7 @@ public class LayoutServiceImpl implements LayoutService {
 			throw new LayoutException("Classifcation with id '"
 					+ classifcationId + "' does not exist.");
 		}
-		return this.archetypeTypeLayoutSettingDao
+		List<ArchetypeTypeLayoutSettingInfo> settings = this.archetypeTypeLayoutSettingDao
 				.findByProperty("user", user, "archetypeTypeClassification",
 						classifcation)
 				.stream()
@@ -66,6 +76,19 @@ public class LayoutServiceImpl implements LayoutService {
 					info.setPositionY(setting.getPositionY());
 					return info;
 				}).collect(Collectors.toList());
+		List<ArchetypeTypeClassificationLayoutScale> scales = this.classificationLayoutScaleDao
+				.findByProperty("user", user, "archetypeTypeClassification",
+						classifcation);
+		float scale;
+		if (scales.size() >= 1) {
+			throw new LayoutException(
+					"More than one archetype type layout scale have found.");
+		} else if (scales.size() == 0) {
+			scale = 1;
+		} else {
+			scale = scales.get(0).getScale();
+		}
+		return new ArchetypeTypeClassificationLayoutInfo(settings,scale);
 	}
 
 	@Override
@@ -87,7 +110,8 @@ public class LayoutServiceImpl implements LayoutService {
 						classifcation)
 				.stream()
 				.collect(
-						Collectors.toMap(setting -> setting.getArchetypeTypeId(),
+						Collectors.toMap(
+								setting -> setting.getArchetypeTypeId(),
 								setting -> setting));
 		for (ArchetypeTypeLayoutSettingInfo info : infos) {
 			ArchetypeTypeLayoutSetting setting = settings.get(info
@@ -111,7 +135,7 @@ public class LayoutServiceImpl implements LayoutService {
 	}
 
 	@Override
-	public List<ArchetypeHostLayoutSettingInfo> getArchetypeTypeLatyoutByIdAndUserName(
+	public ArchetypeTypeLayoutInfo getArchetypeTypeLatyoutByIdAndUserName(
 			Integer typeId, String userName) throws LayoutException {
 		User user = this.userDao.findUniqueByProperty("userName", userName);
 		if (user == null) {
@@ -122,7 +146,7 @@ public class LayoutServiceImpl implements LayoutService {
 			throw new LayoutException("Archetype type with id '" + typeId
 					+ "' does not exist.");
 		}
-		return this.archetypeHostLayoutSettingDao
+		List<ArchetypeHostLayoutSettingInfo> settings = this.archetypeHostLayoutSettingDao
 				.findByProperty("user", user, "archetypeType", type)
 				.stream()
 				.map(setting -> {
@@ -132,6 +156,18 @@ public class LayoutServiceImpl implements LayoutService {
 					info.setPositionY(setting.getPositionY());
 					return info;
 				}).collect(Collectors.toList());
+		List<ArchetypeTypeLayoutScale> scales = this.typeLayoutScaleDao
+				.findByProperty("user", user, "archetypeType", type);
+		float scale;
+		if (scales.size() >= 1) {
+			throw new LayoutException(
+					"More than one archetype type layout scale have found.");
+		} else if (scales.size() == 0) {
+			scale = 1;
+		} else {
+			scale = scales.get(0).getScale();
+		}
+		return new ArchetypeTypeLayoutInfo(settings, scale);
 	}
 
 	@Override
@@ -151,7 +187,8 @@ public class LayoutServiceImpl implements LayoutService {
 				.findByProperty("user", user, "archetypeType", type)
 				.stream()
 				.collect(
-						Collectors.toMap(setting -> setting.getArchetypeHostId(),
+						Collectors.toMap(
+								setting -> setting.getArchetypeHostId(),
 								setting -> setting));
 		for (ArchetypeHostLayoutSettingInfo info : infos) {
 			ArchetypeHostLayoutSetting setting = settings.get(info

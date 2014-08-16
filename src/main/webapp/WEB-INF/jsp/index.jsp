@@ -14,21 +14,19 @@ uri="http://www.springframework.org/security/tags"%>
 	</head>
 	<body ng-controller="appCtrl" resizable style="font-family: Microsoft YaHei;">
 
-		<!-- loading -->
-		<div ng-show="isLoading" class="vbox" ng-style="{'height': windowHeight, 'width' : windowWidth}" style="position: absolute;top: 0;left: 0;background-color: grey;opacity: 0.7;z-index: 1000;">
-			<span style="position: absolute;color: black;font-size: 2em;" ng-style="{'top' : windowHeight/2, 'left' : windowWidth/2}"><img src="/clever-management-website/img/loading.gif" style="max-height: 30px;"></img> {{'iLoading' | translate}}</span>
+		<!-- Busy -->
+		<div ng-show="isBusy" class="vbox" ng-style="{'height': windowHeight, 'width' : windowWidth}" style="position: absolute;top: 0;left: 0;background-color: grey;opacity: 0.7;z-index: 1000;">
+			<span style="position: absolute;color: black;font-size: 2em;" ng-style="{'top' : windowHeight/2, 'left' : windowWidth/2}"><img src="/clever-management-website/img/loading.gif" style="max-height: 30px;"></img> {{busyHint | translate}}</span>
 		</div>
 		
 		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-			&nbsp;&nbsp;&nbsp;&nbsp;{{alert.msg}}
+			&nbsp;&nbsp;&nbsp;&nbsp;{{alert.msg | translate}}
 		</alert>
 		<!-- header -->
 		<%@ include file="jspf/header.jspf"%>
 		<!-- content -->
-		<div class="container content-container">
-			<div class="col-sm-1 col-md-2 col-lg-2"></div>
-			<div class="col-sm-10 col-md-8 col-lg-8" ng-view></div>
-			<div class="col-sm-1 col-md-2 col-lg-2"></div>
+		<div class="hbox center-box" >
+			<div class="container content-container" style="width: 1200px;" ng-view>
 		</div>
 		<!-- footer -->
 		<%@ include file="jspf/footer.jspf"%>
@@ -54,9 +52,9 @@ uri="http://www.springframework.org/security/tags"%>
 		<script type="text/ng-template" id="upload.html">
 			<%@ include file="partials/upload.html"%>
 		</script>
-		<!-- deploy -->
-		<script type="text/ng-template" id="deploy.html">
-			<%@ include file="partials/deploy.html"%>
+		<!-- management -->
+		<script type="text/ng-template" id="management.html">
+			<%@ include file="partials/management.html"%>
 		</script>
 		<!-- about -->
 		<script type="text/ng-template" id="about.html">

@@ -32,10 +32,10 @@ function AppModalCtrl($scope, $modalInstance, type, app, appLibraryService, WEBS
 
 	if (type == 'add') {
 		$scope.editMode = false;
-		$scope.title = 'Add new application';
+		$scope.title = 'iAppAdd';
 	} else if (type == 'edit') {
 		$scope.editMode = true;
-		$scope.title = 'Edit application';
+		$scope.title = 'iAppEdit';
 		$scope.application.id = app.id;
 		$scope.application.name = app.name;
 		$scope.application.description = app.description;

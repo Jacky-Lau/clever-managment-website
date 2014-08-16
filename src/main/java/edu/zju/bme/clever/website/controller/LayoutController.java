@@ -37,6 +37,8 @@ import org.springframework.web.multipart.MultipartFile;
 import edu.zju.bme.clever.website.exception.LayoutException;
 import edu.zju.bme.clever.website.service.LayoutService;
 import edu.zju.bme.clever.website.view.entity.ArchetypeHostLayoutSettingInfo;
+import edu.zju.bme.clever.website.view.entity.ArchetypeTypeClassificationLayoutInfo;
+import edu.zju.bme.clever.website.view.entity.ArchetypeTypeLayoutInfo;
 import edu.zju.bme.clever.website.view.entity.ArchetypeTypeLayoutSettingInfo;
 
 @Controller
@@ -54,20 +56,20 @@ public class LayoutController {
 
 	@RequestMapping(value = "/classification/id/{id}/layout", method = RequestMethod.GET)
 	@ResponseBody
-	public List<ArchetypeTypeLayoutSettingInfo> getClassificationLayoutById(
+	public ArchetypeTypeClassificationLayoutInfo getClassificationLayoutById(
 			@PathVariable Integer id, Authentication authentication) {
 		String userName = Optional.ofNullable(authentication)
 				.map(authen -> (UserDetails) authen.getPrincipal())
 				.map(principal -> principal.getUsername()).orElse(DEFAULT_USER);
 		try {
-			List<ArchetypeTypeLayoutSettingInfo> infos = this.layoutService
+			ArchetypeTypeClassificationLayoutInfo info = this.layoutService
 					.getClassificationLayoutByIdAndUserName(id, userName);
-			if (infos.size() == 0) {
-				infos = this.layoutService
+			if (info.getSettings().size() == 0) {
+				info = this.layoutService
 						.getClassificationLayoutByIdAndUserName(id,
 								DEFAULT_USER);
 			}
-			return infos;
+			return info;
 		} catch (LayoutException ex) {
 			return null;
 		}
@@ -75,20 +77,20 @@ public class LayoutController {
 
 	@RequestMapping(value = "/archetypeType/id/{id}/layout", method = RequestMethod.GET)
 	@ResponseBody
-	public List<ArchetypeHostLayoutSettingInfo> getArchetypeTypeLayoutById(
+	public ArchetypeTypeLayoutInfo getArchetypeTypeLayoutById(
 			@PathVariable Integer id, Authentication authentication) {
 		String userName = Optional.ofNullable(authentication)
 				.map(authen -> (UserDetails) authen.getPrincipal())
 				.map(principal -> principal.getUsername()).orElse(DEFAULT_USER);
 		try {
-			List<ArchetypeHostLayoutSettingInfo> infos = this.layoutService
+			ArchetypeTypeLayoutInfo info = this.layoutService
 					.getArchetypeTypeLatyoutByIdAndUserName(id, userName);
-			if (infos.size() == 0) {
-				infos = this.layoutService
+			if (info.getSettings().size() == 0) {
+				info = this.layoutService
 						.getArchetypeTypeLatyoutByIdAndUserName(id,
 								DEFAULT_USER);
 			}
-			return infos;
+			return info;
 		} catch (LayoutException ex) {
 			return null;
 		}
@@ -191,18 +193,23 @@ public class LayoutController {
 			BufferedImage bi = ImageIO.read(bis);
 			float width = 300;
 			float height = width / bi.getWidth() * bi.getHeight();
-			BufferedImage to = new BufferedImage(Math.round(width), Math.round(height),
+			BufferedImage resizedImage = new BufferedImage(Math.round(width), Math.round(height),
 					BufferedImage.TYPE_INT_BGR);
-			Graphics2D g2d = to.createGraphics();
-			to = g2d.getDeviceConfiguration().createCompatibleImage(Math.round(width),
-					Math.round(height), Transparency.TRANSLUCENT);
-			g2d.dispose();
-			g2d = to.createGraphics();
-			Image from = bi.getScaledInstance(Math.round(width), Math.round(height),
-					BufferedImage.SCALE_AREA_AVERAGING);
-			g2d.drawImage(from, 0, 0, null);
-			g2d.dispose();
-			ImageIO.write(to, "png", outlineFile);
+			Graphics2D g = resizedImage.createGraphics();
+			g.drawImage(bi, 0, 0, Math.round(width), Math.round(height), null);
+			g.dispose();
+//			BufferedImage to = new BufferedImage(Math.round(width), Math.round(height),
+//					BufferedImage.TYPE_INT_BGR);
+//			Graphics2D g2d = to.createGraphics();
+//			to = g2d.getDeviceConfiguration().createCompatibleImage(Math.round(width),
+//					Math.round(height), Transparency.TRANSLUCENT);
+//			g2d.dispose();
+//			g2d = to.createGraphics();
+//			Image from = bi.getScaledInstance(Math.round(width), Math.round(height),
+//					BufferedImage.SCALE_AREA_AVERAGING);
+//			g2d.drawImage(from, 0, 0, null);
+//			g2d.dispose();
+			ImageIO.write(resizedImage, "png", outlineFile);
 		} catch (IOException ex) {
 			result.setSucceeded(false);
 			result.setMessage("Save image failed, error: " + ex.getMessage());

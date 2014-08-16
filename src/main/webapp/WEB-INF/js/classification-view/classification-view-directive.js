@@ -156,7 +156,7 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 					evt.consume();
 				});
 			
-				// Select all
+				// select all
 				var keyHandler = new mxKeyHandler(scope.graph);
 				keyHandler.bindControlKey(65, function(evt) {
 					var parent = scope.graph.getDefaultParent();
@@ -268,10 +268,9 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 					var model = scope.graph.getModel();
 					model.beginUpdate();
 					try {
-
 						var parent = scope.graph.getDefaultParent();
 						var vertices = scope.graph.getChildVertices(parent);
-						angular.forEach(layout, function(setting) {
+						angular.forEach(layout.settings, function(setting) {
 							var vertex = findVertexById(setting.archetypeTypeId, vertices);
 							if (vertex) {
 								var geo = model.getGeometry(vertex);
@@ -280,6 +279,7 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 								scope.graph.moveCells([vertex], dx, dy);
 							}
 						});
+						scope.graph.zoomTo(layout.scale);
 					} finally {
 						// Updates the display
 						model.endUpdate();

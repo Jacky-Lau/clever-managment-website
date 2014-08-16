@@ -3,12 +3,12 @@ function($modal) {
 		return function(title, content){
 			return msgBoxInstance = $modal.open({
 				template : '<div class="modal-header">' +
-								'<h3 class="modal-title">{{title}}</h3>' +
+								'<h3 class="modal-title">{{title | translate}}</h3>' +
 							'</div>' +
 							'<div class="modal-body">' +
 								'<div class="content-container">' +
 									'<div class="row">' +
-										'{{content}}' +
+										'{{content | translate}}' +
 									'</div>' +
 								'</div>' +
 							'</div>' +

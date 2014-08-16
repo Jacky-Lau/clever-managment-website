@@ -1,5 +1,5 @@
-angular.module('clever.management.directives.overview', []).directive('overview', ['$q', 'layoutService', 'msgboxService',
-function($q, layoutService, msgboxService) {
+angular.module('clever.management.directives.overview', []).directive('overview',
+function($q, layoutService, busyService, msgboxService) {
 	return {
 		restrict : 'EA',
 		scope : {
@@ -55,20 +55,20 @@ function($q, layoutService, msgboxService) {
 				scope.graph.setHtmlLabels(true);
 				
 				// 图形窗口的右上角的周围创建导航提示。  
-                scope.outline = new mxOutline(scope.graph, outlineContainer); 
+                //scope.outline = new mxOutline(scope.graph, outlineContainer);			
                 
                 // 要显示的图像的轮廓，去掉下面的代码  
-                scope.outline.outline.labelsVisible = true;  
-                scope.outline.outline.setHtmlLabels(true);
+                //scope.outline.outline.labelsVisible = true;  
+                //scope.outline.outline.setHtmlLabels(true);
                 
-                scope.isOutlineHided = true;
+                //scope.isOutlineHided = true;
                 
-                scope.outline.outline.view.canvas.viewportElement.height.baseVal.value = (scope.windowHeight - 190)/3;
+                //scope.outline.outline.view.canvas.viewportElement.height.baseVal.value = (scope.windowHeight - 190)/3;
                 
                 // Overrides getLabel to return empty labels for edges and
 				// short markup for collapsed cells.	
 				scope.graph.getLabel = getLabel;
-				scope.outline.outline.getLabel = getLabel;			
+				//scope.outline.outline.getLabel = getLabel;			
 				
 				// Override folding to allow for tables
 				/*scope.graph.isCellFoldable = function(cell, collapse) {
@@ -250,8 +250,9 @@ function($q, layoutService, msgboxService) {
 				}
 						
 				scope.saveLayout = function() {
-					msgboxService('Save', 'Do you want to save layout "' + scope.currentLayout.name + '" ?').result.then(function(isOk) {
+					msgboxService('iSave', 'iSaveLayoutQuiz').result.then(function(isOk) {
 						if (isOk) {
+							busyService.setBusy(true, 'iSaving');
 							var parent = scope.graph.getDefaultParent();
 							var settings = [];
 							angular.forEach(scope.graph.getChildVertices(parent), function(cell) {
@@ -281,17 +282,17 @@ function($q, layoutService, msgboxService) {
 											container.className = originalClass;
 											scope.graph.zoomTo(originalScale);
 											var dataUrl = canvas.toDataURL();
-											layoutService.updateArchetypeTypeOutlineById(scope.archetypesBriefInfo.archetypeTypeId, dataUrl).then(function(result) {
+											layoutService.updateArchetypeTypeOutlineById(scope.archetypesBriefInfo.archetypeTypeId, dataUrl).then(function(outlineResult) {
 												scope.addAlert({
 													alert : {
 														type : 'success',
-														msg : 'Save layout ' + scope.currentLayout.name + ' succeeded.',
+														msg : 'iSaveLayoutSucceeded',
 													}
 												});
+												busyService.setBusy(false);
 											});
 										},
 									});
-
 								}
 							});
 						}
@@ -307,7 +308,7 @@ function($q, layoutService, msgboxService) {
 						} else if (layout.type == 'custom') {
 							var parent = scope.graph.getDefaultParent();
 							var vertices = scope.graph.getChildVertices(parent);
-							angular.forEach(layout.layout, function(setting) {
+							angular.forEach(layout.layout.settings, function(setting) {
 								var vertex = findVertexById(setting.archetypeHostId, vertices);
 								if(vertex){
 									var geo = model.getGeometry(vertex);
@@ -316,6 +317,7 @@ function($q, layoutService, msgboxService) {
 									scope.graph.moveCells([vertex], dx, dy);
 								}				
 							});
+							scope.graph.zoomTo(layout.layout.scale);
 						}
 					} finally {
 						// Updates the display
@@ -477,6 +479,6 @@ function($q, layoutService, msgboxService) {
 			}
 		},
 	};
-}]);
+});
 
 // MxGraph useful examples: graphlayout, codec, layers, scrollbars, tree, userobject
