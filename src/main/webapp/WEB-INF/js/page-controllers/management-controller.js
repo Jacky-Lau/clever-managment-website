@@ -1,8 +1,12 @@
-function ManagementCtrl($scope, $http, $timeout, busyService, msgboxService, archetypeRetrieveService, ARCHETYPE_DEPLOY_URL) {
+function ManagementCtrl($scope, $http, $timeout, busyService, msgboxService, archetypeRetrieveService, ARCHETYPE_DEPLOY_URL, AUTHENTICATION_URL) {
 
 	$scope.latestVersionArchetypeIds = [];
 
-	refreshData();
+	$http.get(AUTHENTICATION_URL).then(function(response) {
+		if (response.data == 'true') {
+			refreshData();
+		}
+	});
 
 	function refreshData() {
 		$scope.allLatestArchetypeIds = [];

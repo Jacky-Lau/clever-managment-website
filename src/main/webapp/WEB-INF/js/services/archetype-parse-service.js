@@ -211,6 +211,12 @@ function() {
 					extractedNode.children = [];
 					processNode(value.children, value, extractedNode.children, tableItems);
 				} else {
+					/*var leafNode = extractLeafNode(value);
+					if (leafNode) {
+						tableItems.push(leafNode);
+					}*/
+				}
+				if (value.parent && value.parent.parent && value.parent.parent.rm_type_name == 'ELEMENT'){
 					var leafNode = extractLeafNode(value);
 					if (leafNode) {
 						tableItems.push(leafNode);
@@ -228,6 +234,12 @@ function() {
 				extractedNode.children = [];
 				processNode(node.children, node, extractedNode.children, tableItems);
 			} else {
+				/*var leafNode = extractLeafNode(value);
+				if (leafNode) {
+					tableItems.push(leafNode);
+				}*/
+			}
+			if (node.parent && node.parent.parent && node.parent.parent.rm_type_name == 'ELEMENT'){
 				var leafNode = extractLeafNode(node);
 				if (leafNode) {
 					tableItems.push(leafNode);
@@ -304,7 +316,7 @@ function() {
 		}
 	}
 
-	var typeList = ['DV_COUNT', 'DV_TEXT', 'DV_DATE_TIME', 'DV_QUANTITY'];
+	var typeList = ['DV_COUNT', 'DV_TEXT', 'DV_DATE_TIME', 'DV_QUANTITY', 'DV_BOOLEAN'];
 	var attributeList = ['value', 'magnitude'];
 
 	function extractLeafNode(node) {

@@ -152,6 +152,8 @@
 							</sapn>
 							<sapn ng-if="item.type == 'DV_DATE_TIME'"><img style="vertical-align:text-bottom;" src="img/datetime.png">&nbsp;Date/Time&nbsp;
 							</sapn>
+							<sapn ng-if="item.type == 'DV_BOOLEAN'"><img style="vertical-align:text-bottom;" src="img/boolean.png">&nbsp;Boolean&nbsp;
+							</sapn>
 							<br />
 							<span ng-if="item.occurrences.lower == 0">Optional&nbsp;</span> <span ng-if="item.occurrences.lower == 1">Mandatory&nbsp;</span> ({{item.occurrences.lower}}..{{item.occurrences.upper}}) </font></td>
 						<td>

@@ -7,6 +7,7 @@ angular.module('clever.management.i18n.en', ['pascalprecht.translate']).config(f
 		iZoomOut : 'Zoom out',
 		iReset : 'Reset',
 		iSave : 'Save',
+		iEnter : 'Enter',
 		iShowOutline : 'Show outline',
 		iHideOutline : 'Hide outline',
 		iLegend : 'Legend',

@@ -7,6 +7,7 @@ angular.module('clever.management.i18n.zh', ['pascalprecht.translate']).config(f
 		iZoomOut : '缩小',
 		iReset : '重置',
 		iSave : '保存',
+		iEnter : '进入',
 		iShowOutline : '显示缩略图',
 		iHideOutline : '隐藏缩略图',
 		iLegend : '图例',
@@ -83,7 +84,7 @@ angular.module('clever.management.i18n.zh', ['pascalprecht.translate']).config(f
 		iAppLibrary : '应用',
 		iAppLibraryBrief : '基于CLEVER中标准化结构化的医疗数据可以方便地构建各类医疗软件，并且避免了复杂的医疗信息集成工作，使开发人员集中于功能的设计和开发，易于医疗人员使用，有效促进医疗软件的发展。',
 		iArchetypeManagement : 'Archetype管理',
-		iArchetypeManagementBrief : '通过委员会集中管理Archetype，能够有效构建和维护一个独立全面高质量的医疗信息模型，并且更易于采用一致的标准医学术语和本体对信息进行标注，能够有效促进医疗信息的标准化和互操作。',
+		iArchetypeManagementBrief : '通过委员会集中管理Archetype，能够有效构建和维护一个独立全面高质量的医疗信息模型，并且更易于采用一致的标准医学术语和本体对信息进行标注，有效促进医疗信息的标准化和互操作。',
 		// Management page
 		iManagementAllArchetypes : '所有Archetypes',
 		iManagementDeployedArchetypes : '已部署的Archetypes',
