@@ -29,10 +29,10 @@ function ClassificationCtrl($scope, $location, layoutService, busyService, msgbo
 		msgboxService('iSave', 'iSaveLayoutQuiz').result.then(function(isOk) {
 			if (isOk) {
 				busyService.setBusy(true, 'iSaving');
-				var settings = $scope.classificationViewControl.getCurrentLayout();
-				layoutService.updateClassificationLayouById($scope.currentClassification.id, settings).then(function(result) {
+				var layout = $scope.classificationViewControl.getCurrentLayout();
+				layoutService.updateClassificationLayouById($scope.currentClassification.id, layout).then(function(result) {
 					if (result.succeeded) {
-						$scope.currentClassification.layout = settings;
+						$scope.currentClassification.layout = layout;
 						$scope.addAlert({
 							type : 'success',
 							msg : 'iSaveLayoutSucceeded',

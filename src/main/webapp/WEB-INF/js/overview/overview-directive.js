@@ -177,8 +177,8 @@ function($q, layoutService, busyService, msgboxService) {
 				}); 
 				
 				// select all
-				var keyHandler = new mxKeyHandler(scope.graph);
-				keyHandler.bindControlKey(65, function(evt) {
+				scope.keyHandler = new mxKeyHandler(scope.graph);
+				scope.keyHandler.bindControlKey(65, function(evt) {
 					var parent = scope.graph.getDefaultParent();
 					scope.graph.selectVertices(parent);
 				});
@@ -262,25 +262,29 @@ function($q, layoutService, busyService, msgboxService) {
 									positionY : cell.geometry.y,
 								});
 							});
-							layoutService.updateArchetypeTypeLayoutById(scope.archetypesBriefInfo.archetypeTypeId, settings).then(function(result) {
+							var layout = {
+								settings : settings,
+								scale : scope.graph.view.scale,
+							};
+							layoutService.updateArchetypeTypeLayoutById(scope.archetypesBriefInfo.archetypeTypeId, layout).then(function(result) {
 								if (result.succeeded) {
-									scope.currentLayout.layout = settings;
+									scope.currentLayout.layout = layout;
 									var container = element.find('#overview-container')[0];
-									var originalClass = container.className;
-									var originalScale = scope.graph.view.scale;											
+									//var originalClass = container.className;
+									//var originalScale = scope.graph.view.scale;											
 									html2canvas(container, {
 										//logging: true,
 						                profile: true,
 						                useCORS: true,
 						                allowTaint: true,
 										onpreloaded : function() {
-											scope.graph.zoomTo(1);
-											container.className += " html2canvasreset";
+											//scope.graph.zoomTo(1);
+											//container.className += " html2canvasreset";
 										},
 										onrendered : function(canvas) {
 											// canvas is the final rendered <canvas> element
-											container.className = originalClass;
-											scope.graph.zoomTo(originalScale);
+											//container.className = originalClass;
+											//scope.graph.zoomTo(originalScale);
 											var dataUrl = canvas.toDataURL();
 											layoutService.updateArchetypeTypeOutlineById(scope.archetypesBriefInfo.archetypeTypeId, dataUrl).then(function(outlineResult) {
 												scope.addAlert({
@@ -476,6 +480,10 @@ function($q, layoutService, busyService, msgboxService) {
 					}			
 					return temp;
 				}
+				
+				scope.$on('$destroy', function() {
+					scope.keyHandler.destroy();
+				}); 
 			}
 		},
 	};

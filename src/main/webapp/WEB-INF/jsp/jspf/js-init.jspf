@@ -30,6 +30,12 @@ src="/clever-management-website/js/filters/unsafe-filter.js"></script>
 <script
 src="/clever-management-website/js/filters/timestamp-filter.js"></script>
 
+<!-- i18n -->
+<script
+src="/clever-management-website/js/i18n/i18n-zh.js"></script>
+<script
+src="/clever-management-website/js/i18n/i18n-en.js"></script>
+
 <script
 src="/clever-management-website/js/toggle-switch/angular-toggle-switch.js"></script>
 <script

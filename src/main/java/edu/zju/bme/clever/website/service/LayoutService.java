@@ -15,13 +15,13 @@ public interface LayoutService {
 
 	public void updateClassificationLayoutByIdAndUserName(
 			Integer classifcationId, String userName,
-			List<ArchetypeTypeLayoutSettingInfo> infos) throws LayoutException;
+			ArchetypeTypeClassificationLayoutInfo layout) throws LayoutException;
 
 	public ArchetypeTypeLayoutInfo getArchetypeTypeLatyoutByIdAndUserName(
 			Integer typeId, String userName) throws LayoutException;
 
 	public void updateArchetypeTypeLatyoutByIdAndUserName(Integer typeId,
-			String userName, List<ArchetypeHostLayoutSettingInfo> infos)
+			String userName, ArchetypeTypeLayoutInfo layout)
 			throws LayoutException;
 
 }

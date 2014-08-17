@@ -157,8 +157,8 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 				});
 			
 				// select all
-				var keyHandler = new mxKeyHandler(scope.graph);
-				keyHandler.bindControlKey(65, function(evt) {
+				scope.keyHandler = new mxKeyHandler(scope.graph);
+				scope.keyHandler.bindControlKey(65, function(evt) {
 					var parent = scope.graph.getDefaultParent();
 					scope.graph.selectVertices(parent);
 				});
@@ -285,7 +285,7 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 						model.endUpdate();
 					}
 				}
-				
+							
 				function getCurrentLayout() {
 					var parent = scope.graph.getDefaultParent();
 					var settings = [];
@@ -296,8 +296,12 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 							positionY : cell.geometry.y,
 						});
 					});
-					return settings;
-				}						
+					var scale = scope.graph.view.scale;
+					return {
+						settings : settings,
+						scale : scale,
+					};
+				}							
 						
 				scope.$watch('classificationBriefInfo', function(classificationBriefInfo) {
 					if (classificationBriefInfo) {
@@ -436,6 +440,10 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 					}
 					return temp;
 				}
+				
+				scope.$on('$destroy', function() {
+					scope.keyHandler.destroy();
+				}); 
 			}
 		},
 	};

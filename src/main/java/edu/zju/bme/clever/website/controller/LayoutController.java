@@ -100,7 +100,7 @@ public class LayoutController {
 	@ResponseBody
 	public FileUploadResult updateClassificationLayoutById(
 			@PathVariable Integer id, Authentication authentication,
-			@RequestBody List<ArchetypeTypeLayoutSettingInfo> infos) {
+			@RequestBody ArchetypeTypeClassificationLayoutInfo layout) {
 		FileUploadResult result = new FileUploadResult();
 		result.setSucceeded(true);
 		String userName = Optional.ofNullable(authentication)
@@ -113,7 +113,7 @@ public class LayoutController {
 		}
 		try {
 			this.layoutService.updateClassificationLayoutByIdAndUserName(id,
-					userName, infos);
+					userName, layout);
 		} catch (LayoutException ex) {
 			result.setSucceeded(false);
 			result.setMessage(ex.getMessage());
@@ -126,7 +126,7 @@ public class LayoutController {
 	@ResponseBody
 	public FileUploadResult updateArchetypeTypeLayoutById(
 			@PathVariable Integer id, Authentication authentication,
-			@RequestBody List<ArchetypeHostLayoutSettingInfo> infos) {
+			@RequestBody ArchetypeTypeLayoutInfo layout) {
 		FileUploadResult result = new FileUploadResult();
 		result.setSucceeded(true);
 		String userName = Optional.ofNullable(authentication)
@@ -139,7 +139,7 @@ public class LayoutController {
 		}
 		try {
 			this.layoutService.updateArchetypeTypeLatyoutByIdAndUserName(id,
-					userName, infos);
+					userName, layout);
 		} catch (LayoutException ex) {
 			result.setSucceeded(false);
 			result.setMessage(ex.getMessage());

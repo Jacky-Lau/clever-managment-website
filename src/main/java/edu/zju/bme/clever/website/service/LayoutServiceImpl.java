@@ -80,7 +80,7 @@ public class LayoutServiceImpl implements LayoutService {
 				.findByProperty("user", user, "archetypeTypeClassification",
 						classifcation);
 		float scale;
-		if (scales.size() >= 1) {
+		if (scales.size() > 1) {
 			throw new LayoutException(
 					"More than one archetype type layout scale have found.");
 		} else if (scales.size() == 0) {
@@ -88,13 +88,14 @@ public class LayoutServiceImpl implements LayoutService {
 		} else {
 			scale = scales.get(0).getScale();
 		}
-		return new ArchetypeTypeClassificationLayoutInfo(settings,scale);
+		return new ArchetypeTypeClassificationLayoutInfo(settings, scale);
 	}
 
 	@Override
 	public void updateClassificationLayoutByIdAndUserName(
 			Integer classifcationId, String userName,
-			List<ArchetypeTypeLayoutSettingInfo> infos) throws LayoutException {
+			ArchetypeTypeClassificationLayoutInfo layout)
+			throws LayoutException {
 		User user = this.userDao.findUniqueByProperty("userName", userName);
 		if (user == null) {
 			throw new LayoutException("User '" + userName + "' does not exist.");
@@ -105,6 +106,24 @@ public class LayoutServiceImpl implements LayoutService {
 			throw new LayoutException("Classifcation with id '"
 					+ classifcationId + "' does not exist.");
 		}
+		// Persist scale
+		List<ArchetypeTypeClassificationLayoutScale> scales = this.classificationLayoutScaleDao
+				.findByProperty("user", user, "archetypeTypeClassification",
+						classifcation);
+		ArchetypeTypeClassificationLayoutScale scale = null;
+		if (scales.size() > 1) {
+			throw new LayoutException(
+					"More than one archetype type layout scale have found.");
+		} else if (scales.size() == 0) {
+			scale = new ArchetypeTypeClassificationLayoutScale();
+			scale.setUser(user);
+			scale.setArchetypeTypeClassification(classifcation);
+		} else if (scales.size() == 1) {
+			scale = scales.get(0);
+		}
+		scale.setScale(layout.getScale());
+		this.classificationLayoutScaleDao.saveOrUpdate(scale);
+		// Persist settings
 		Map<Integer, ArchetypeTypeLayoutSetting> settings = this.archetypeTypeLayoutSettingDao
 				.findByProperty("user", user, "archetypeTypeClassification",
 						classifcation)
@@ -113,7 +132,7 @@ public class LayoutServiceImpl implements LayoutService {
 						Collectors.toMap(
 								setting -> setting.getArchetypeTypeId(),
 								setting -> setting));
-		for (ArchetypeTypeLayoutSettingInfo info : infos) {
+		for (ArchetypeTypeLayoutSettingInfo info : layout.getSettings()) {
 			ArchetypeTypeLayoutSetting setting = settings.get(info
 					.getArchetypeTypeId());
 			if (setting == null) {
@@ -159,7 +178,7 @@ public class LayoutServiceImpl implements LayoutService {
 		List<ArchetypeTypeLayoutScale> scales = this.typeLayoutScaleDao
 				.findByProperty("user", user, "archetypeType", type);
 		float scale;
-		if (scales.size() >= 1) {
+		if (scales.size() > 1) {
 			throw new LayoutException(
 					"More than one archetype type layout scale have found.");
 		} else if (scales.size() == 0) {
@@ -172,7 +191,7 @@ public class LayoutServiceImpl implements LayoutService {
 
 	@Override
 	public void updateArchetypeTypeLatyoutByIdAndUserName(Integer typeId,
-			String userName, List<ArchetypeHostLayoutSettingInfo> infos)
+			String userName, ArchetypeTypeLayoutInfo layout)
 			throws LayoutException {
 		User user = this.userDao.findUniqueByProperty("userName", userName);
 		if (user == null) {
@@ -183,6 +202,24 @@ public class LayoutServiceImpl implements LayoutService {
 			throw new LayoutException("Archetype type with id '" + typeId
 					+ "' does not exist.");
 		}
+		// Persist scale
+		List<ArchetypeTypeLayoutScale> scales = this.typeLayoutScaleDao
+				.findByProperty("user", user, "archetypeType",
+						type);
+		ArchetypeTypeLayoutScale scale = null;
+		if (scales.size() > 1) {
+			throw new LayoutException(
+					"More than one archetype type layout scale have found.");
+		} else if (scales.size() == 0) {
+			scale = new ArchetypeTypeLayoutScale();
+			scale.setUser(user);
+			scale.setArchetypeType(type);
+		} else if (scales.size() == 1) {
+			scale = scales.get(0);
+		}
+		scale.setScale(layout.getScale());
+		this.typeLayoutScaleDao.saveOrUpdate(scale);
+		// Persist settings
 		Map<Integer, ArchetypeHostLayoutSetting> settings = this.archetypeHostLayoutSettingDao
 				.findByProperty("user", user, "archetypeType", type)
 				.stream()
@@ -190,7 +227,7 @@ public class LayoutServiceImpl implements LayoutService {
 						Collectors.toMap(
 								setting -> setting.getArchetypeHostId(),
 								setting -> setting));
-		for (ArchetypeHostLayoutSettingInfo info : infos) {
+		for (ArchetypeHostLayoutSettingInfo info : layout.getSettings()) {
 			ArchetypeHostLayoutSetting setting = settings.get(info
 					.getArchetypeHostId());
 			if (setting == null) {
