@@ -14,7 +14,6 @@
 						</li>
 					</ul>
 				</div>
-
 				<div class="btn-group pull-right">
 					<button type="button" class="btn btn-default" ng-click="zoomIn()" tooltip-placement="top" tooltip="{{'iZoomIn' | translate}}" tooltip-popup-delay="500">
 						<span class="glyphicon glyphicon-zoom-in"></span>
@@ -31,7 +30,7 @@
 						</button>
 					</sec:authorize>
 				</div>
-				<div class="btn-group pull-right" style="padding-right: 30px;">
+			<!--<div class="btn-group pull-right" style="padding-right: 30px;">
 					<button type="button" class="btn btn-default" popover-placement="bottom"
 					popover="
 					<table width='200'>
@@ -52,7 +51,7 @@
 					</table>">
 						{{'iLegend' | translate}}
 					</button>
-				</div>
+				</div>-->
 			</div>
 		</div>
 	</div>
@@ -62,6 +61,14 @@
 				<span ng-show="isOutlineHided" class="glyphicon glyphicon-plus" style="font-size: 6pt;"></span>
 				<span ng-show="!isOutlineHided" class="glyphicon glyphicon-minus" style="font-size: 6pt;"></span>
 			</button>-->
+			<span class="pull-left" style="font-size: 13pt;"> 
+					<span class="overview-person legend">&nbsp;{{'iDemographic' | translate}}&nbsp;</span>:&nbsp;{{statistics.demographicCount}}&nbsp; 
+					<span class="overview-admin_entry legend">&nbsp;{{'iAdminEntry' | translate}}&nbsp;</span>:&nbsp;{{statistics.adminEntryCount}}&nbsp; 
+					<span class="overview-observation legend">&nbsp;{{'iObservation' | translate}}&nbsp;</span>:&nbsp;{{statistics.obersvationCount}}&nbsp; 
+					<span class="overview-evaluation legend">&nbsp;{{'iEvaluation' | translate}}&nbsp;</span>:&nbsp;{{statistics.evaluationCount}}&nbsp; 
+					<span class="overview-instruction legend">&nbsp;{{'iInstruction' | translate}}&nbsp;</span>:&nbsp;{{statistics.instructionCount}}&nbsp; 
+					<span class="overview-action legend">&nbsp;{{'iAction' | translate}}&nbsp;</span>:&nbsp;{{statistics.actionCount}}&nbsp; 
+			</span>
 			<div id="outline-container" ng-style="{height: (windowHeight - 190)/3, 'z-index': isOutlineHided ? 98 : 100}" style="position: absolute;top: 0;right: 30px;"></div>
 			<div id="overview-container" class="text-center" ng-style="{height: windowHeight - 190}" style="overflow: auto;padding-left: -15px;width: 100%;z-index: 99;background-color: white;" ng-transclude></div>
 		</div>

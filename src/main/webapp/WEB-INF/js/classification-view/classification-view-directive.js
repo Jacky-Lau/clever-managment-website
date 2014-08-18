@@ -14,7 +14,7 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 		transclude : true,
 		replace : true,
 		controller : function($scope, $element, $attrs){			
-			$scope.isOutlineHided = true;
+			$scope.isOutlineHided = true;			
 			$scope.reverseIsOutlineHided = function() {
 				$scope.isOutlineHided = !$scope.isOutlineHided;
 			}; 
@@ -216,8 +216,8 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 						}
 					});
 					return selectedSetting;
-				}
-																				
+				}																	
+				
 				function reset() {
 					scope.graph.getModel().beginUpdate();
 					var parent = scope.graph.getDefaultParent();
@@ -227,7 +227,6 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 						var cells = [];
 						angular.forEach(scope.classificationBriefInfo.archetypeTypeInfos, function(value, index) {
 							var vertex = scope.graph.insertVertex(parent, null, value, 0, 0, cellWidth, 0);
-
 							// Updates the height of the cell (override width
 							// for table width is set to 100%)
 							scope.graph.updateCellSize(vertex);
@@ -262,7 +261,6 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 					}
 					applyLayout(scope.classificationBriefInfo.layout);
 				}
-
 						
 				function applyLayout(layout) {
 					var model = scope.graph.getModel();
@@ -306,6 +304,7 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 				scope.$watch('classificationBriefInfo', function(classificationBriefInfo) {
 					if (classificationBriefInfo) {
 						scope.imageSources = {};
+						// First image
 						var promise = loadImageById(scope.classificationBriefInfo.archetypeTypeInfos[0].id);
 						for (var i = 1; i < scope.classificationBriefInfo.archetypeTypeInfos.length; i++) {
 							(function(index) {
@@ -318,6 +317,7 @@ function($q, msgboxService, WEBSITE_DOMAIN) {
 								});
 							})(i);
 						};
+						// last image and reset
 						promise.then(function(result) {
 							scope.imageSources[result.id] = {
 								loaded : result.loaded,

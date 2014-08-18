@@ -143,7 +143,7 @@ table.title th {
 .overview-person {
 	background: LightBlue;
 }
-.overview-composition {
+.overview-evaluation {
 	background: LightGreen;
 }
 .overview-observation {
@@ -157,4 +157,8 @@ table.title th {
 }
 .overview-admin_entry {
 	background: Khaki;
+}
+.legend {
+	border-radius: 4px;
+	z-index: 100;
 }

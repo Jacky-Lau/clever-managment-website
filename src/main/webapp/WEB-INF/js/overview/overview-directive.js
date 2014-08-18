@@ -358,8 +358,16 @@ function($q, layoutService, busyService, msgboxService) {
 					});
 					return selectedCell;
 				}
-				
+							
 				scope.reset = function() {
+					scope.statistics = {
+						demographicCount : 0,
+						adminEntryCount : 0,
+						obersvationCount : 0,
+						evaluationCount : 0,
+						instructionCount : 0,
+						actionCount : 0,
+					}; 
 					scope.graph.getModel().beginUpdate();
 					var parent = scope.graph.getDefaultParent();
 					scope.graph.view.scale = 1;
@@ -368,6 +376,20 @@ function($q, layoutService, busyService, msgboxService) {
 						var cells = [];
 						angular.forEach(scope.archetypesBriefInfo.archetypeHostInfos, function(value, index) {
 							var vertex = scope.graph.insertVertex(parent, null, value, 0, 0, cellWidth, 0);
+							// Statistics
+							if (value.rmEntity == 'PERSON') {
+								scope.statistics.demographicCount++;
+							} else if (value.rmEntity == 'EVALUATION') {
+								scope.statistics.evaluationCount++;
+							} else if (value.rmEntity == 'OBSERVATION') {
+								scope.statistics.obersvationCount++;
+							} else if (value.rmEntity == 'ACTION') {
+								scope.statistics.actionCount++;
+							} else if (value.rmEntity == 'INSTRUCTION') {
+								scope.statistics.instructionCount++;
+							} else if (value.rmEntity == 'ADMIN_ENTRY') {
+								scope.statistics.adminEntryCount++;
+							}
 							// Updates the height of the cell (override width
 							// for table width is set to 100%)
 							scope.graph.updateCellSize(vertex);

@@ -2,6 +2,32 @@ function ClassificationCtrl($scope, $location, layoutService, busyService, msgbo
 
 	$scope.classifications = classifications;
 	$scope.currentClassification = selectedClassification;
+	$scope.statistics = {
+		demographicCount : 0,
+		adminEntryCount : 0,
+		obersvationCount : 0,
+		evaluationCount : 0,
+		instructionCount : 0,
+		actionCount : 0,
+	};
+	// Statistics
+	angular.forEach(selectedClassification.archetypeTypeInfos, function(type) {
+		angular.forEach(type.archetypeHostInfos, function(host) {
+			if (host.rmEntity == 'PERSON') {
+				$scope.statistics.demographicCount++;
+			} else if (host.rmEntity == 'EVALUATION') {
+				$scope.statistics.evaluationCount++;
+			} else if (host.rmEntity == 'OBSERVATION') {
+				$scope.statistics.obersvationCount++;
+			} else if (host.rmEntity == 'ACTION') {
+				$scope.statistics.actionCount++;
+			} else if (host.rmEntity == 'INSTRUCTION') {
+				$scope.statistics.instructionCount++;
+			} else if (host.rmEntity == 'ADMIN_ENTRY') {
+				$scope.statistics.adminEntryCount++;
+			}
+		});
+	});
 	$scope.isDropdownOpened = false;
 	$scope.showDetails = false;
 
@@ -20,8 +46,8 @@ function ClassificationCtrl($scope, $location, layoutService, busyService, msgbo
 	$scope.selectType = function(selectedType) {
 		$location.path('/classification/id/' + $scope.currentClassification.id + '/type/id/' + selectedType.id);
 	};
-	
-	$scope.selectClassification = function(classification){
+
+	$scope.selectClassification = function(classification) {
 		$location.path('/classification/id/' + classification.id);
 	};
 
