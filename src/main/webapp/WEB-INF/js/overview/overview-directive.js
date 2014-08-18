@@ -268,23 +268,24 @@ function($q, layoutService, busyService, msgboxService) {
 							};
 							layoutService.updateArchetypeTypeLayoutById(scope.archetypesBriefInfo.archetypeTypeId, layout).then(function(result) {
 								if (result.succeeded) {
-									scope.currentLayout.layout = layout;
+									scope.layouts[0].layout = layout;
+									scope.selectLayout(scope.layouts[0]);
 									var container = element.find('#overview-container')[0];
-									//var originalClass = container.className;
-									//var originalScale = scope.graph.view.scale;											
+									var originalClass = container.className;
+									var originalScale = scope.graph.view.scale;											
 									html2canvas(container, {
 										//logging: true,
-						                profile: true,
-						                useCORS: true,
-						                allowTaint: true,
+						                //profile: true,
+						                //useCORS: true,
+						                //allowTaint: true,
 										onpreloaded : function() {
-											//scope.graph.zoomTo(1);
-											//container.className += " html2canvasreset";
+											scope.graph.zoomTo(1);
+											container.className += " html2canvasreset";
 										},
 										onrendered : function(canvas) {
 											// canvas is the final rendered <canvas> element
-											//container.className = originalClass;
-											//scope.graph.zoomTo(originalScale);
+											container.className = originalClass;
+											scope.graph.zoomTo(originalScale);
 											var dataUrl = canvas.toDataURL();
 											layoutService.updateArchetypeTypeOutlineById(scope.archetypesBriefInfo.archetypeTypeId, dataUrl).then(function(outlineResult) {
 												scope.addAlert({

@@ -43,6 +43,8 @@ public class ArchetypeHost {
 	private String rmEntity;
 	@Column(name = "CONCEPT_NAME")
 	private String conceptName;
+	@Column(name = "LIFE_CYCLE")
+	private String lifeCycle;
 	@Column(name = "LATEST_VERSION")
 	private String latestVersion;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -104,6 +106,14 @@ public class ArchetypeHost {
 
 	public void setConceptName(String conceptName) {
 		this.conceptName = conceptName;
+	}
+
+	public String getLifeCycle() {
+		return lifeCycle;
+	}
+
+	public void setLifeCycle(String lifeCycle) {
+		this.lifeCycle = lifeCycle;
 	}
 
 	public String getLatestVersion() {

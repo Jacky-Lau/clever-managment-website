@@ -92,6 +92,23 @@ splitter {
 	font-size: 1.4em;
 }
 
+/* archetype life cycyle */
+.lifecycle-draft {
+	color: #00b8bf;
+}
+
+.lifecycle-teamreview {
+	color: #ffa928;
+}
+
+.lifecycle-published {
+	color: #d00050;
+}
+
+.lifecycle-deprecated {
+	color: #c6c6c6;
+}
+
 /* form validation */
 .ng-invalid:focus {
 	border-color: red;

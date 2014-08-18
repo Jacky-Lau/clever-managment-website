@@ -84,6 +84,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 							hostInfo.setRmEntity(host.getRmEntity());
 							hostInfo.setRmName(host.getRmName());
 							hostInfo.setRmOriginator(host.getRmOriginator());
+							hostInfo.setLifeCycle(host.getLifeCycle());
 							hostInfo.setId(host.getId());
 							host.getArchetypeFiles()
 									.forEach(
@@ -193,6 +194,7 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 							hostInfo.setRmEntity(host.getRmEntity());
 							hostInfo.setRmName(host.getRmName());
 							hostInfo.setRmOriginator(host.getRmOriginator());
+							hostInfo.setLifeCycle(host.getLifeCycle());
 							hostInfo.setId(host.getId());
 							host.getArchetypeFiles()
 									.forEach(
@@ -352,6 +354,22 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 	}
 
 	@Override
+	public List<String> getAllPublishedLatestVersionArchetypeAdls() {
+		return this.archetypeHostDao
+				.selectAll()
+				.stream()
+				.filter(host -> host.getLifeCycle().equals("Published"))
+				.map(host -> {
+					return host
+							.getArchetypeFiles()
+							.stream()
+							.filter(file -> file.getVersion().equals(
+									host.getLatestVersion())).findFirst().get()
+							.getContent();
+				}).collect(Collectors.toList());
+	}
+
+	@Override
 	public List<String> getAllArchetypeIds() {
 		return this.archetypeFileDao.selectAll().stream().map(file -> {
 			return file.getName();
@@ -374,9 +392,20 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 	}
 
 	@Override
+	public List<ArchetypeHostInfo> getAllArchetypeHosts() {
+		return this.archetypeHostDao.selectAll().stream().map(host -> {
+			ArchetypeHostInfo info = new ArchetypeHostInfo();
+			info.setId(host.getId());
+			info.setName(host.getName());
+			info.setLifeCycle(host.getLifeCycle());
+			info.setLatestVersion(host.getLatestVersion());
+			return info;
+		}).collect(Collectors.toList());
+	}
+
+	@Override
 	public List<String> getDeployedArchetypeIds() {
 		return this.cleverClient.getArchetypeIds();
 	}
 
-	
 }

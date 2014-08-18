@@ -9,24 +9,36 @@ function ManagementCtrl($scope, $http, $timeout, busyService, msgboxService, arc
 	});
 
 	function refreshData() {
-		$scope.allLatestArchetypeIds = [];
+		$scope.allHosts = [];
 		$scope.deployedArchetypeIds = [];
+		$scope.draftCount = 0;
+		$scope.teamReviewCount = 0;
+		$scope.publishedCount = 0;
+		$scope.deprecatedCount = 0;
 		busyService.setBusy(true);
 		archetypeRetrieveService.getDeployedArchetypeIds().then(function(deployedArchetypeIds) {
 			$scope.deployedArchetypeIds = deployedArchetypeIds;
 			$scope.deployedArchetypesCount = deployedArchetypeIds.length;
 			archetypeRetrieveService.getLatestVersionArchetypeIds().then(function(result) {
-				$scope.allArchetypesCount = result.length;
-				angular.forEach(result, function(id) {
+				$scope.allHostsCount = result.length;
+				angular.forEach(result, function(host) {
 					var isDeployed = false;
-					for (var i = 0; i < $scope.deployedArchetypeIds.length; i++) {
-						if (id == $scope.deployedArchetypeIds[i]) {
-							isDeployed = true;
-							break;
-						}
+					var name = host.name + '.' + host.latestVersion;
+					if ($scope.deployedArchetypeIds.indexOf(name) != -1) {
+						isDeployed = true;
 					}
-					$scope.latestVersionArchetypeIds.push({
-						name : id,
+					if (host.lifeCycle == 'Draft') {
+						$scope.draftCount++;
+					} else if (host.lifeCycle == 'TeamReview') {
+						$scope.teamReviewCount++;
+					} else if (host.lifeCycle == 'Published') {
+						$scope.publishedCount++;
+					} else if (host.lifeCycle == 'Deprecated') {
+						$scope.deprecatedCount++;
+					}
+					$scope.allHosts.push({
+						name : name,
+						lifeCycle : host.lifeCycle,
 						deployed : isDeployed,
 					});
 				});

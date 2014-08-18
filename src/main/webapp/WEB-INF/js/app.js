@@ -3,7 +3,10 @@ angular.module('clever.management.services', ['clever.management.services.fileUp
 angular.module('clever.management.filters', ['clever.management.filters.pretty', 'clever.management.filters.unsafe', 'clever.management.filters.timestamp']);
 angular.module('clever.management.controllers', ['clever.management.controllers.app', 'clever.management.controllers.archetypeDisplayCtrl']);
 angular.module('clever.management.i18n', ['clever.management.i18n.zh', 'clever.management.i18n.en']);
-angular.module('cleverManagementApp', ['ngRoute', 'ui.bootstrap', 'ui.utils', 'ng-context-menu', 'pascalprecht.translate', 'clever.management.i18n', 'clever.management.directives', 'clever.management.controllers', 'clever.management.services', 'clever.management.filters', 'clever.management.config']).config(function($routeProvider, $translateProvider) {
+angular.module('cleverManagementApp', ['ngRoute', 'ui.bootstrap', 'ui.utils', 'ng-context-menu', 'pascalprecht.translate', 'clever.management.i18n', 'clever.management.directives', 'clever.management.controllers', 'clever.management.services', 'clever.management.filters', 'clever.management.config']).config(function($routeProvider, $translateProvider, $compileProvider) {
+	
+	$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|mias-iv|mias-cpoe):/);
+	
 	// route config
 	$routeProvider.when("/", {
 		templateUrl : 'home.html',

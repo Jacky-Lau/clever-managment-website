@@ -34,7 +34,7 @@ public class ArchetypeDeployController {
 				.getUsername();
 		this.logger.info("Deploy called by user {}.", userName);
 		List<String> archetypes = this.archetypeProviderService
-				.getAllLatestVersionArchetypeAdls();
+				.getAllPublishedLatestVersionArchetypeAdls();
 		try {
 			int stopResult = cleverClient.stop();
 			if (stopResult != 0) {

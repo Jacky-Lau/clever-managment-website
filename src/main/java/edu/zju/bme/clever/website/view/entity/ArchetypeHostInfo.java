@@ -10,7 +10,9 @@ public class ArchetypeHostInfo {
 	private String rmOriginator;
 	private String rmName;
 	private String rmEntity;
+	private String lifeCycle;
 	private String conceptName;
+	private String latestVersion;
 	private List<ArchetypeInfo> archetypeInfos = new ArrayList<ArchetypeInfo>();
 
 	public Integer getId() {
@@ -51,6 +53,22 @@ public class ArchetypeHostInfo {
 
 	public void setRmEntity(String rmEntity) {
 		this.rmEntity = rmEntity;
+	}
+
+	public String getLifeCycle() {
+		return lifeCycle;
+	}
+
+	public void setLifeCycle(String lifeCycle) {
+		this.lifeCycle = lifeCycle;
+	}
+
+	public String getLatestVersion() {
+		return latestVersion;
+	}
+
+	public void setLatestVersion(String latestVersion) {
+		this.latestVersion = latestVersion;
 	}
 
 	public String getConceptName() {

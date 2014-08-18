@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.zju.bme.clever.website.service.ArchetypeProviderService;
 import edu.zju.bme.clever.website.view.entity.ArchetypeBriefInfo;
+import edu.zju.bme.clever.website.view.entity.ArchetypeHostInfo;
 import edu.zju.bme.clever.website.view.entity.ClassificationBriefInfo;
 
 @Controller
@@ -78,8 +79,8 @@ public class ArchetypeProviderController {
 
 	@RequestMapping(value = "/archetypes/latest", method = RequestMethod.GET)
 	@ResponseBody
-	public List<String> getAllLatestVersionArchetypeIds() {
-		return this.archetypeProviderService.getAllLatestVersionArchetypeIds();
+	public List<ArchetypeHostInfo> getAllArchetypeHosts() {
+		return this.archetypeProviderService.getAllArchetypeHosts();
 	}
 	
 	@RequestMapping(value = "/archetypes/type/id/{id}", method = RequestMethod.GET)

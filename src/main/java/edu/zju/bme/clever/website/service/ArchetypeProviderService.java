@@ -7,6 +7,7 @@ import org.openehr.am.archetype.Archetype;
 
 import edu.zju.bme.clever.website.model.entity.ArchetypeTypeClassification;
 import edu.zju.bme.clever.website.view.entity.ArchetypeBriefInfo;
+import edu.zju.bme.clever.website.view.entity.ArchetypeHostInfo;
 import edu.zju.bme.clever.website.view.entity.ArchetypeTypeInfo;
 import edu.zju.bme.clever.website.view.entity.ClassificationBriefInfo;
 
@@ -37,5 +38,9 @@ public interface ArchetypeProviderService {
 	public ArchetypeBriefInfo getArchetypeBriefInfoByTypeId(Integer typeId);
 
 	public ArchetypeBriefInfo getArchetypeBriefInfo();
+
+	public List<String> getAllPublishedLatestVersionArchetypeAdls();
+
+	public List<ArchetypeHostInfo> getAllArchetypeHosts();
 
 }

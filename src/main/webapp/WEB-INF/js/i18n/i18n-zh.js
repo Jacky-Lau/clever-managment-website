@@ -94,6 +94,13 @@ angular.module('clever.management.i18n.zh', ['pascalprecht.translate']).config(f
 		iManagementDeploy : '部署',
 		iManagementDeploySucceeded : '部署成功。',
 		iManagementDeployFailed : '部署失败。',
+		iManagementDraft : '草稿',
+		iManagementTeamReview : '审核',
+		iManagementPublished : '发布',
+		iManagementDeprecated : '弃用',
+		iManagementTotal : '全部',
+		iManagementDeployed : '已部署',
+		iManagementUndeployed : '未部署',
 		// Classification page
 		iClsClassification : '类别',
 		iClsShowDetails : '显示Archetype',

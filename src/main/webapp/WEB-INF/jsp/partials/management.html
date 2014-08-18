@@ -1,5 +1,5 @@
 <div class="modal-header">
-	<h3 class="modal-title">
+	<div class="modal-title">
 		<span class="btn-group">
 			<a class="btn btn-default" href="/clever-management-website/#/upload">
 				<span class="glyphicon glyphicon-cloud-upload"></span> {{'iManagementUpload' | translate}}
@@ -8,8 +8,18 @@
 				<span class="glyphicon glyphicon-cloud-download"></span> {{'iManagementDeploy' | translate}}
 			</a>
 		</span>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<span style="font-size: 13pt;">
+			<span>{{'iManagementTotal' | translate}}</span>:&nbsp;{{allHostsCount}}&nbsp;
+			<span class="lifecycle-draft">{{'iManagementDraft' | translate}}</span>:&nbsp;{{draftCount}}&nbsp;
+			<span class="lifecycle-teamreview">{{'iManagementTeamReview' | translate}}</span>:&nbsp;{{teamReviewCount}}&nbsp;
+			<span class="lifecycle-published">{{'iManagementPublished' | translate}}</span>:&nbsp;{{publishedCount}}&nbsp;
+			<span class="lifecycle-deprecated">{{'iManagementDeprecated' | translate}}</span>:&nbsp;{{deprecatedCount}}&nbsp;
+			<span style="border: 1px solid #ddd;border-radius: 4px;" class="list-group-item-success">{{'iManagementDeployed' | translate}}</span>:&nbsp;{{deployedArchetypesCount}}&nbsp;
+			<span style="border: 1px solid #ddd;border-radius: 4px;" class="list-group-item-warning">{{'iManagementUndeployed' | translate}}</span>:&nbsp;{{allHostsCount - deployedArchetypesCount}}&nbsp;
+		</span>
 		<a class="btn btn-success pull-right" href="/clever-management-website/#/">{{'iReturn' | translate}} </a>
-	</h3>
+	</div>
 </div>
 <div class="modal-body">
 	<div class="content-container">
@@ -17,8 +27,17 @@
 			<div class="col-xs-6 col-md-6 col-lg-6">
 				<h4 class="text-center">{{'iManagementAllArchetypes' | translate}}<span class="badge pull-right">{{allArchetypesCount}}</span></h4>
 				<ul class="list-group" ng-style="{height: windowHeight - 300}" style="padding: 0% 1%;overflow: auto;">
-					<li class="list-group-item" ng-repeat="id in latestVersionArchetypeIds | orderBy: deployed" ng-class="{true: 'list-group-item-success', false: 'list-group-item-warning'}[id.deployed]">
-						<span style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;cursor: default;">{{id.name}}</span>
+					<li class="list-group-item" ng-repeat="host in allHosts | orderBy: name | filter: {lifeCycle: 'Published'}" ng-class="{true: 'list-group-item-success', false: 'list-group-item-warning'}[host.deployed]">
+						<span style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;cursor: default;" class="{{'lifecycle-' + host.lifeCycle | lowercase}}">{{host.name}}</span>
+					</li>
+					<li class="list-group-item" ng-repeat="host in allHosts | orderBy: name | filter: {lifeCycle: 'TeamReview'}" ng-class="{true: 'list-group-item-success', false: 'list-group-item-warning'}[host.deployed]">
+						<span style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;cursor: default;" class="{{'lifecycle-' + host.lifeCycle | lowercase}}">{{host.name}}</span>
+					</li>
+					<li class="list-group-item" ng-repeat="host in allHosts | orderBy: name | filter: {lifeCycle: 'Draft'}" ng-class="{true: 'list-group-item-success', false: 'list-group-item-warning'}[host.deployed]">
+						<span style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;cursor: default;" class="{{'lifecycle-' + host.lifeCycle | lowercase}}">{{host.name}}</span>
+					</li>
+					<li class="list-group-item" ng-repeat="host in allHosts | orderBy: name | filter: {lifeCycle: 'Deprecated'}" ng-class="{true: 'list-group-item-success', false: 'list-group-item-warning'}[host.deployed]">
+						<span style="word-wrap: break-word;word-break: break-all;white-space: pre-wrap;cursor: default;" class="{{'lifecycle-' + host.lifeCycle | lowercase}}">{{host.name}}</span>
 					</li>
 				</ul>
 			</div>

@@ -12,7 +12,7 @@ uri="http://www.springframework.org/security/tags"%>
 		<!-- css init -->
 		<%@ include file="jspf/css-init.jspf"%>
 	</head>
-	<body ng-controller="appCtrl" resizable style="font-family: Microsoft YaHei;">
+	<body ng-controller="appCtrl" resizable style="font-family: Microsoft YaHei;" ng-cloak>
 
 		<!-- Busy -->
 		<div ng-show="isBusy" class="vbox" ng-style="{'height': windowHeight, 'width' : windowWidth}" style="position: absolute;top: 0;left: 0;background-color: grey;opacity: 0.7;z-index: 1000;">
