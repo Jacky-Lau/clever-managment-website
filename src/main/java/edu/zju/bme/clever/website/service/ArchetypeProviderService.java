@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.openehr.am.archetype.Archetype;
 
+import edu.zju.bme.clever.website.model.entity.ArchetypeType;
 import edu.zju.bme.clever.website.model.entity.ArchetypeTypeClassification;
 import edu.zju.bme.clever.website.view.entity.ArchetypeBriefInfo;
 import edu.zju.bme.clever.website.view.entity.ArchetypeHostInfo;
@@ -36,6 +37,8 @@ public interface ArchetypeProviderService {
 	public List<String> getDeployedArchetypeIds();
 
 	public ArchetypeBriefInfo getArchetypeBriefInfoByTypeId(Integer typeId);
+	
+	public ArchetypeBriefInfo getArchetypeBriefInfoByTypeName(String typeName);
 
 	public ArchetypeBriefInfo getArchetypeBriefInfo();
 

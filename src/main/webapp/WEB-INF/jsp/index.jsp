@@ -80,6 +80,10 @@ uri="http://www.springframework.org/security/tags"%>
 		<script type="text/ng-template" id="classification.html">
 			<%@ include file="partials/classification.html"%>
 		</script>
+		<!-- concept -->
+		<script type="text/ng-template" id="concept.html">
+			<%@ include file="partials/concept.html"%>
+		</script>
 		<!-- classification view -->
 		<script type="text/ng-template" id="classification-view.html">
 			<%@ include file="partials/classification-view.html"%>

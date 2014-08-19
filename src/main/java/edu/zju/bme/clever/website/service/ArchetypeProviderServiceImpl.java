@@ -159,8 +159,29 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 
 	@Override
 	public ArchetypeBriefInfo getArchetypeBriefInfoByTypeId(Integer typeId) {
+		ArchetypeType type = this.archetypeTypeDao.findById(typeId);
+		if (type == null) {
+			this.logger.info("Cannot find archetype type with id: {}.", typeId);
+			return null;
+		}
+		return this.getArchetypeBriefInfoByType(type);
+	}
+
+	@Override
+	public ArchetypeBriefInfo getArchetypeBriefInfoByTypeName(String typeName) {
+		ArchetypeType type = this.archetypeTypeDao.findUniqueByProperty("name",
+				typeName);
+		if (type == null) {
+			this.logger.info("Cannot find archetype type with name: {}.",
+					typeName);
+			return null;
+		}
+		return this.getArchetypeBriefInfoByType(type);
+	}
+
+	protected ArchetypeBriefInfo getArchetypeBriefInfoByType(ArchetypeType type) {
 		final ArchetypeBriefInfo archetypeBriefInfo = new ArchetypeBriefInfo();
-		archetypeBriefInfo.setArchetypeTypeId(typeId);
+		archetypeBriefInfo.setArchetypeTypeId(type.getId());
 		// get all relationships
 		this.archetypeRelationshipDao
 				.selectAll()
@@ -178,11 +199,6 @@ public class ArchetypeProviderServiceImpl implements ArchetypeProviderService {
 							archetypeBriefInfo.getArchetypeRelationshipInfos()
 									.add(relationshipInfo);
 						});
-		ArchetypeType type = this.archetypeTypeDao.findById(typeId);
-		if (type == null) {
-			this.logger.info("Cannot find archetype type with id: {}.", typeId);
-			return null;
-		}
 		// get all archetype hosts
 		type.getArchetypeHosts()
 				.forEach(

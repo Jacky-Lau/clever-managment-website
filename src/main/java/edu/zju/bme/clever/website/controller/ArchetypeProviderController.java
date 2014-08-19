@@ -89,5 +89,12 @@ public class ArchetypeProviderController {
 			@PathVariable Integer id) {
 		return this.archetypeProviderService.getArchetypeBriefInfoByTypeId(id);
 	}
+	
+	@RequestMapping(value = "/archetypes/type/name/{name}", method = RequestMethod.GET)
+	@ResponseBody
+	public ArchetypeBriefInfo getArchetypeBriefInfoByTypeId(
+			@PathVariable String name) {
+		return this.archetypeProviderService.getArchetypeBriefInfoByTypeName(name);
+	}
 
 }
