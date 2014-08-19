@@ -106,3 +106,5 @@ src="/clever-management-website/js/page-controllers/archetype-controller.js"></s
 src="/clever-management-website/js/page-controllers/login-controller.js"></script>
 <script
 src="/clever-management-website/js/page-controllers/classification-controller.js"></script>
+<script
+src="/clever-management-website/js/page-controllers/concept-controller.js"></script>

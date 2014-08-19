@@ -110,6 +110,9 @@ angular.module('clever.management.i18n.en', ['pascalprecht.translate']).config(f
 		// Classification page
 		iClsClassification : 'Clasification',
 		iClsShowDetails : 'Show Details',
+		iOpenEhr : 'openEHR',
+		iCliniic : 'Clinic',
+		iAll : 'All',
 		// Archetype page
 		iOverview : 'Overview',
 		iLayout : 'Layout',

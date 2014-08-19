@@ -25,6 +25,7 @@ angular.module('cleverManagementApp', ['ngRoute', 'ui.bootstrap', 'ui.utils', 'n
 		controller : ArchetypeCtrl
 	}).when("/concept", {
 		templateUrl : 'concept.html',
+		controller : ConceptCtrl
 	}).when("/login", {
 		templateUrl : 'login.html',
 		controller : LoginCtrl
