@@ -121,6 +121,7 @@ angular.module('clever.management.i18n.zh', ['pascalprecht.translate']).config(f
 		iCustom : '自定义',
 		iFilter : '关键字',
 		// About page
+		iAboutTitle : '关于',
 		iAboutWhatTitle : '',
 		iAboutWhatDetail : '',
 		iAboutTecTitle : '技术架构',

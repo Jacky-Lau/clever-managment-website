@@ -26,7 +26,7 @@ uri="http://www.springframework.org/security/tags"%>
 		<%@ include file="jspf/header.jspf"%>
 		<!-- content -->
 		<div class="hbox center-box" >
-			<div class="container content-container" style="width: 1200px;" ng-view>
+			<div class="container content-container" style="width: 1700px;" ng-view>
 		</div>
 		<!-- footer -->
 		<%@ include file="jspf/footer.jspf"%>

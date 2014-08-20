@@ -15,6 +15,7 @@ import org.hibernate.FetchMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -55,6 +56,12 @@ public abstract class AbstractGenericDao<T, ID extends Serializable> implements
 	 */
 	protected Session getSession() {
 		return this.sessionFactory.getCurrentSession();
+	}
+
+	@Override
+	public Long getTotalCount() {
+		return (Long) this.getSession().createCriteria(this.clazz.getName())
+				.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 	@Override
@@ -143,7 +150,8 @@ public abstract class AbstractGenericDao<T, ID extends Serializable> implements
 	@Override
 	public List<T> findByProperty(Object... params) {
 		if (params.length % 2 != 0) {
-			throw new IllegalArgumentException("Parameters' length should be in multiples of two.");
+			throw new IllegalArgumentException(
+					"Parameters' length should be in multiples of two.");
 		}
 		Criteria criteria = this.getSession().createCriteria(clazz);
 		for (int i = 0; i < params.length; i += 2) {

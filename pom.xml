@@ -84,6 +84,20 @@
 				<validation.url>http://${server.host}:${server.port}/clever-service-orm-validate/CleverService</validation.url>
 			</properties>
 		</profile>
+		<profile>
+			<id>sxdyy-production</id>
+			<properties>
+				<env>sxdyy-production</env>
+				<server.port>9095</server.port>
+				<server.host>172.17.0.79</server.host>
+				<tomcat.url>http://${server.host}:${server.port}/manager/text</tomcat.url>
+				<database.url>jdbc:sqlserver://172.17.0.96;databaseName=CLEVER_MANAGEMENT_WEBSITE_DEV</database.url>
+				<database.username>sa</database.username>
+				<database.password>doctor</database.password>
+				<service.url>http://${server.host}:9091/clever-service-orm/CleverService</service.url>
+				<validation.url>http://${server.host}:9093/clever-service-orm-validate/CleverService</validation.url>
+			</properties>
+		</profile>
 	</profiles>
 
 	<build>

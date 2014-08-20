@@ -29,6 +29,8 @@ public class Application {
 	private String imgPath;
 	@Column(name = "URL")
 	private String url;
+	@Column(name = "DISPLAY_ORDER")
+	private Long displayOrder;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "MODIFY_TIME")
 	private Calendar modifyTime;
@@ -71,6 +73,14 @@ public class Application {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public Long getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Long displayOrder) {
+		this.displayOrder = displayOrder;
 	}
 
 	public Calendar getModifyTime() {

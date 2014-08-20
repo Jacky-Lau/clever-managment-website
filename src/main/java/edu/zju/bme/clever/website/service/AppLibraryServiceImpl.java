@@ -66,6 +66,7 @@ public class AppLibraryServiceImpl implements AppLibraryService {
 		application.setDescription(description);
 		application.setUrl(url);
 		application.setImgPath(APP_FOLDER_PATH + name);
+		application.setDisplayOrder(this.applicationDao.getTotalCount() + 1);
 		this.applicationDao.save(application);
 	}
 

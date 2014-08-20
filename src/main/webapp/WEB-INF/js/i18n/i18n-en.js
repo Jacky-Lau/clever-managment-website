@@ -122,6 +122,7 @@ angular.module('clever.management.i18n.en', ['pascalprecht.translate']).config(f
 		iCustom : 'Custom',
 		iFilter : 'Filter by name',
 		// About page
+		iAboutTitle : 'About',
 		iAboutWhatTitle : '',
 		iAboutWhatDetail : '',
 		iAboutTecTitle : '',

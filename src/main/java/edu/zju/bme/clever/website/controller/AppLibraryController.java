@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
@@ -35,7 +36,11 @@ public class AppLibraryController {
 	@RequestMapping(value = "/applications", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Application> getAllApps() {
-		return this.appLibraryService.getAllApplications();
+		return this.appLibraryService
+				.getAllApplications()
+				.stream()
+				.sorted((app1, app2) -> Long.compare(app1.getDisplayOrder(),
+						app2.getDisplayOrder())).collect(Collectors.toList());
 	}
 
 	@RequestMapping(value = "/application/id/{id}", method = RequestMethod.GET)

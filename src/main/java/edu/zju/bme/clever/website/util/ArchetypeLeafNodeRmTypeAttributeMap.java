@@ -17,7 +17,7 @@ public class ArchetypeLeafNodeRmTypeAttributeMap {
 				"magnitude");
 		FilterRmTypeNames.put(ReferenceModelName.DV_DATE_TIME.getName(),
 				"value");
-		FilterRmTypeNames.put(ReferenceModelName.CLUSTER.getName(), "items");
+		//FilterRmTypeNames.put(ReferenceModelName.CLUSTER.getName(), "items");
 	}
 
 	public static String getAttribute(String rmType) {

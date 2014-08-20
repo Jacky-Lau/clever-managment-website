@@ -6,6 +6,8 @@ import java.util.Map;
 
 @SuppressWarnings({ "rawtypes" })
 public interface GenericDao<T, ID extends Serializable> {
+	
+	public Long getTotalCount();
 
 	public void save(T entity);
 

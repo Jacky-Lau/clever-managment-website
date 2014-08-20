@@ -2,7 +2,7 @@ function ArchetypeCtrl($scope, $modal, $routeParams, busyService, archetypeRetri
 
 	var undefined;
 
-	$scope.isNavbarCollapsed = true;
+	$scope.isNavbarCollapsed = false;
 
 	$scope.archetypeList = [];
 
