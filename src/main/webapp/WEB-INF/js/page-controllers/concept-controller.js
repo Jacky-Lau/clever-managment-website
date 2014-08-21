@@ -3,13 +3,13 @@ function ConceptCtrl($scope, archetypeRetrieveService) {
 		name : 'openEHR',
 	};
 
-	$scope.originalWidth = 1552;
-	$scope.observationCoords = [ 630, 135, 870, 235 ];
-	$scope.evaluationCoords = [ 330, 485, 595, 670 ];
-	$scope.instructionCoords = [ 645, 700, 875, 805 ];
-	$scope.actionCoords = [ 1115, 360, 1175, 425 ];
-	$scope.demographicCoords = [ 1300, 80, 1530, 130 ];
-	$scope.adminCoords = [ 1290, 210, 1425, 265 ];
+	$scope.originalWidth = 1136;
+	$scope.observationCoords = [ 480, 70, 665, 140 ];
+	$scope.evaluationCoords = [ 275, 385, 430, 520 ];
+	$scope.instructionCoords = [ 485, 515, 660, 590 ];
+	$scope.actionCoords = [ 820, 285, 985, 355 ];
+	$scope.demographicCoords = [ 950, 65, 1130, 100 ];
+	$scope.adminCoords = [ 950, 160, 1130, 200 ];
 
 	$scope.getCoords = function(width, originalCoords) {
 		var persent = width / $scope.originalWidth;
